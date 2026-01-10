@@ -4,8 +4,9 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { AtSignIcon, Building2Icon, CheckIcon, ClockIcon, GraduationCapIcon, InfoIcon, PaletteIcon, PencilIcon, PinIcon, SearchIcon, UserPlusIcon, UsersIcon } from "lucide-react";
+import { AtSignIcon, Building2Icon, CheckIcon, ClockIcon, GraduationCapIcon, InfoIcon, PencilIcon, PinIcon, SearchIcon, UsersIcon } from "lucide-react";
 
+import { StarIcon, UserStarIcon } from "lucide-react";
 import Section from "./Section";
 
 function VisitTypeRadioCard({ value, id, title, subtitle, icon, iconWrapClassName }) {
@@ -44,7 +45,7 @@ export default function VisitDetailsSection() {
       {/* Instagram Handle Input Group */}
       <article className="my-5 space-y-6">
         <div className="grid w-full items-center gap-3">
-          <div className="flex flex-row w-full justify-between items-baseline">
+          <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
             <Label className="text-sm font-medium" htmlFor="instagram-handle">
               Destination Studio / Shop Instagram Handle
             </Label>
@@ -66,7 +67,7 @@ export default function VisitDetailsSection() {
 
         {/* Location Details Input Group */}
         <div className="grid w-full items-center gap-3">
-          <div className="flex flex-row w-full justify-between items-baseline">
+          <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
             <Label className="text-sm font-medium" htmlFor="location">
               Visit Location
             </Label>
@@ -77,7 +78,7 @@ export default function VisitDetailsSection() {
         </div>
       </article>
       <div className="pt-8 w-full space-y-4">
-        <div className="flex-row items-center justify-between flex space-x-4">
+        <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="grid w-full items-center gap-3">
             <Label className="text-sm font-medium" htmlFor="start-time">
               Start Date & Time
@@ -100,16 +101,16 @@ export default function VisitDetailsSection() {
           <Label className="text-sm font-medium">Visit Type</Label>
 
           <RadioGroup defaultValue="guest" className="mt-2 grid gap-3 sm:grid-cols-2">
-            <VisitTypeRadioCard value="guest" id="visit-guest" title="Guest Spot" subtitle="Temporary visit" icon={<UserPlusIcon className="h-5 w-5" />} iconWrapClassName="bg-violet-100 text-violet-700" />
+            <VisitTypeRadioCard value="guest" id="visit-guest" title="Guest Spot" subtitle="Temporary visit" icon={<UserStarIcon className="h-5 w-5" />} iconWrapClassName="bg-violet-100 text-violet-700" />
             <VisitTypeRadioCard value="residency" id="visit-residency" title="Residency" subtitle="Extended stay" icon={<Building2Icon className="h-5 w-5" />} iconWrapClassName="bg-pink-100 text-pink-700" />
             <VisitTypeRadioCard value="convention" id="visit-convention" title="Convention" subtitle="Event appearance" icon={<UsersIcon className="h-5 w-5" />} iconWrapClassName="bg-indigo-100 text-indigo-700" />
             <VisitTypeRadioCard value="workshop" id="visit-workshop" title="Workshop" subtitle="Teaching event" icon={<GraduationCapIcon className="h-5 w-5" />} iconWrapClassName="bg-emerald-100 text-emerald-700" />
-            <VisitTypeRadioCard value="popup" id="visit-popup" title="Pop-up" subtitle="Short-term event" icon={<PaletteIcon className="h-5 w-5" />} iconWrapClassName="bg-amber-100 text-amber-700" />
+            <VisitTypeRadioCard value="popup" id="visit-popup" title="Pop-up" subtitle="Short-term event" icon={<StarIcon className="h-5 w-5" />} iconWrapClassName="bg-amber-100 text-amber-700" />
             <VisitTypeRadioCard value="custom" id="visit-custom" title="Custom" subtitle="Create your own" icon={<PencilIcon className="h-5 w-5" />} iconWrapClassName="bg-gray-100 text-gray-700" />
           </RadioGroup>
         </div>
         <div className="w-full space-y-3">
-          <div className="flex w-full items-baseline justify-between">
+          <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
             <Label className="text-sm font-medium" htmlFor="description">
               Visit Description <span className="text-xs text-gray-400">(Optional)</span>
             </Label>
@@ -117,7 +118,7 @@ export default function VisitDetailsSection() {
 
           <Textarea id="description" name="description" maxLength={500} placeholder="Add any additional details about your visit, special offerings, or what clients can expect…" className="min-h-32 bg-white" />
 
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex flex-col gap-1 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
             <span>Share details about your availability, pricing, or booking process</span>
             <span>0 / 500</span>
           </div>

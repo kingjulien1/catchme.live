@@ -13,11 +13,11 @@ import Section from "./Section";
 export default function ConnectInstagramSection() {
   return (
     <Section
-      title="Connect Your Instagram Account"
+      title="1. Connect Your Instagram Account"
       icon={<InstagramIcon className="h-4 w-4" />}
       subtitle="We’ll use your Instagram profile to verify your identity and populate your artist profile. Importing your details makes setup faster—no need to enter everything again."
     >
-      <div className="mt-5 rounded-2xl border border-gray-200 bg-sky-50 p-4">
+      <div className="mt-5 rounded-2xl border border-gray-200 bg-fuchsia-50 p-4">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 text-gray-700">
             <ShieldIcon color="blue" className="h-5 w-5" />
