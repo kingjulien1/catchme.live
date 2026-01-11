@@ -4,9 +4,9 @@ import { BadgeCheck, CalendarCheck2, Clock3, HandCoins, SlidersHorizontal, Spark
 import * as React from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import Section from "./Section";
 import { cn } from "@/lib/utils";
 import { CreditCardIcon } from "lucide-react";
+import Section from "./Section";
 
 function VisitOptionCard({ id, title, description, icon, checked, onCheckedChange }) {
   return (

@@ -1,8 +1,6 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ChevronLeftIcon, ChevronRightIcon, Link2 } from "lucide-react";
+import { Link2 } from "lucide-react";
+import BottomActionBar from "./bottom-action-bar";
 import ConnectInstagramSection from "./connect-instagram";
 import VisitDetailsSection from "./details";
 import VisitOptionsSection from "./options";
@@ -39,18 +37,7 @@ export default function NewVisitPage() {
       </div>
 
       {/* Bottom action bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-6 lg:px-8">
-          <Button type="button" className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold text-black hover:bg-gray-200 sm:w-auto">
-            <ChevronRightIcon className="rotate-180 h-4 w-4" />
-            Cancel
-          </Button>
-          <Button disabled type="button" className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 sm:w-auto">
-            Save & Continue
-            <ChevronLeftIcon className="rotate-180 h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <BottomActionBar />
     </div>
   );
 }
