@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Background -->
+  <rect x="0" y="0" width="1024" height="1024" rx="220" fill="#D946EF"/>
+
+  <!-- Connector path -->
+  <path d="
+    M 320 576
+    V 620
+    Q 320 680 380 680
+    H 470
+    Q 530 680 530 620
+    V 400
+    Q 530 340 590 340
+    H 644
+    Q 704 340 704 400
+    V 604
+  "
+    fill="none"
+    stroke="#1F1F2A"
+    stroke-width="78"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Left node (ring / empty) -->
+  <circle cx="320" cy="420" r="90" fill="none" stroke="#FFFFFF" stroke-width="54"/>
+
+  <!-- Right node (filled) -->
+  <circle cx="704" cy="604" r="117" fill="#1F1F2A"/>
+</svg>

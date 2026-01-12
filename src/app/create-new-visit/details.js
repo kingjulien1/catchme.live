@@ -95,7 +95,7 @@ export default function VisitDetailsSection() {
           </div>
         </div>
         <Alert className="mt-4 bg-purple-50" variant="info">
-          <ClockIcon color="purple" className="h-4 w-4" />
+          <ClockIcon className="h-4 w-4" />
           <AlertTitle className="text-sm font-semibold">Visit Duration</AlertTitle>
           <AlertDescription className="text-sm text-gray-600">7 days and 8 hours</AlertDescription>
         </Alert>
@@ -126,7 +126,7 @@ export default function VisitDetailsSection() {
           </div>
 
           <Alert className="py-3 bg-sky-50" variant="default">
-            <InfoIcon color="blue" />
+            <InfoIcon />
             <AlertTitle className="text-sm text-gray-800">Best Practices for Visit Descriptions</AlertTitle>
             <AlertDescription className="mt-3">
               <div className="grid gap-2 sm:grid-cols-2">

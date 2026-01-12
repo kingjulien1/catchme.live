@@ -10,10 +10,9 @@ export default function NewVisitPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Centered content column */}
-      <div className="mx-auto w-full max-w-3xl px-4 pb-40 pt-6 sm:px-6 sm:pb-28 sm:pt-8 lg:px-8">
+      <div className="mx-auto w-full max-w-3xl px-4 pb-40 sm:px-6 sm:pb-28 pt-2 sm:pt-4 lg:px-8">
         <div className="my-4 flex flex-col gap-2 pb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div className="min-w-0">
-            <p className="text-xs leading-relaxed text-gray-500">Dashboard &nbsp;/&nbsp; My Visits &nbsp;/&nbsp; Create New Visit</p>
             <h1 className="scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0 sm:text-3xl">Create New Visit</h1>
             <p className="mt-1 text-sm leading-relaxed text-gray-600 sm:text-base">Announce your upcoming travel plans and connect with your audience at new locations.</p>
           </div>
