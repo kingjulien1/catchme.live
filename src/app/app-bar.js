@@ -106,7 +106,7 @@ const homeLinks = [
 
 export default function TopAppBar() {
   return (
-    <nav className="w-full z-10 sticky top-0 bg-white px-3 py-2 sm:px-4 relative flex items-center gap-3">
+    <nav className="w-full z-10 sticky top-0 bg-white px-3 py-2 sm:px-4 flex items-center gap-3">
       <Link href="/" className="flex items-center gap-2 shrink-0">
         <Image src="/logo.svg" alt="Logo" width={28} height={28} />
         <h1 className="text-sm font-semibold">catchme.live</h1>

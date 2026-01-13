@@ -21,7 +21,7 @@ export default function ConnectInstagramSection() {
       icon={<InstagramIcon className="h-4 w-4" />}
       subtitle="We’ll use your Instagram profile to verify your identity and populate your artist profile. Importing your details makes setup faster—no need to enter everything again."
     >
-      <Alert className="mt-5 rounded-2xl border border-gray-200 bg-fuchsia-50 p-4">
+      {/* <Alert className="mt-5 rounded-2xl border border-gray-200 bg-fuchsia-50 p-4">
         <ShieldIcon className="h-4 w-4 text-blue-700" />
         <AlertTitle className="text-sm">Your account stays safe</AlertTitle>
         <AlertDescription className="text-sm text-gray-600 w-full">
@@ -36,7 +36,7 @@ export default function ConnectInstagramSection() {
             ))}
           </div>
         </AlertDescription>
-      </Alert>
+      </Alert> */}
       {/* Creator/Business requirement */}
       <Alert className="mt-4 rounded-2xl border border-gray-200 bg-indigo-50/60 p-4 sm:p-5">
         <UserCheck className="h-4 w-4 text-indigo-700" />
@@ -44,7 +44,7 @@ export default function ConnectInstagramSection() {
         <AlertDescription className="text-sm text-gray-600">
           <p>
             Connection only works with <strong>Instagram Creator or Business accounts</strong>. Switching to a Creator or Business account has virtually no downsides — it’s free, keeps your content the same, and unlocks helpful tools that benefit
-            your profile. Switch your personal account in less than 30 seconds
+            your profile — takes less than 30 seconds.
           </p>
 
           <Collapsible className="mt-4 w-full">
