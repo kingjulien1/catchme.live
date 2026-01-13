@@ -13,6 +13,7 @@ import { Minus } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Pencil } from "lucide-react";
+import { ShieldHalf } from "lucide-react";
 
 function SectionShell({ number, title, children }) {
   return (
@@ -89,7 +90,10 @@ export default function TermsPage() {
       <div className="bg-gradient-to-b from-fuchsia-50 via-slate-50 to-slate-50">
         <div className="mx-auto max-w-4xl px-4 pb-10 pt-10 sm:pb-12 sm:pt-12">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100">Legal Information</Badge>
+            <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100">
+              <Scale className="h-4 w-4" />
+              Legal Information
+            </Badge>
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Terms of Use</h1>
             <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-gray-600">
               These Terms explain how you can use catchme.live to discover and publish artist visits, events, and conventions. They also describe your responsibilities, our policies, and how Instagram data is used. By accessing or using our platform,

@@ -38,6 +38,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Speaker } from "lucide-react";
 import { Check } from "lucide-react";
+import { HardDriveDownload } from "lucide-react";
+import { Pause } from "lucide-react";
+import { KeyRound } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 function SectionShell({ number, title, children }) {
   return (
@@ -413,6 +418,18 @@ export default function PrivacyPolicyPage() {
                 <AlertDescription className="text-sm text-gray-700">If you suspect unauthorized access to your account, please contact us immediately. You can also revoke access from Instagram at any time.</AlertDescription>
               </Alert>
             </div>
+            <div className="pt-4">
+              <div className="text-base font-semibold text-gray-900">6.2 Data Breach Response</div>
+
+              <Alert className="mt-4 rounded-xl border border-rose-200 bg-rose-50/60">
+                <AlertTriangle className="h-4 w-4 text-rose-700" />
+                <AlertTitle className="text-sm text-rose-900">Breach Notification</AlertTitle>
+                <AlertDescription className="text-sm leading-relaxed text-rose-900">
+                  In the unlikely event of a data breach that affects your personal information, we will notify you and relevant authorities as required by applicable law. We will provide information about the breach, the data affected, and steps you
+                  can take to protect yourself.
+                </AlertDescription>
+              </Alert>
+            </div>
           </SectionShell>
 
           {/* 7 */}
@@ -459,6 +476,24 @@ export default function PrivacyPolicyPage() {
                     <div className="min-w-0">
                       <div className="text-sm font-semibold text-gray-900">Manage Preferences</div>
                       <div className="mt-0.5 text-sm text-gray-600">Disconnect Instagram and update settings</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                      <HardDriveDownload className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-gray-900">Right to Data Portability</div>
+                      <div className="mt-0.5 text-sm text-gray-600">Receive your personal information in a structured, commonly used format and transfer it to another service.</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                      <Pause className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-gray-900">Right to Restrict Processing</div>
+                      <div className="mt-0.5 text-sm text-gray-600">Request that we limit how we use your personal information in certain situations.</div>
                     </div>
                   </div>
                 </div>
