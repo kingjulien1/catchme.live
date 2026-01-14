@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
+import { Rocket } from "lucide-react";
+import { Caravan } from "lucide-react";
 
 const stats = [
   { value: "10K+", label: "Artists & studios" },
@@ -69,40 +71,21 @@ const steps = [
     icon: Sparkles,
   },
 ];
-
-const pricing = [
+const stepThemes = [
   {
-    name: "Starter",
-    price: "$0",
-    badge: "Free",
-    description: "For getting started and trying the platform.",
-    bullets: ["Public profile with visits", "Basic discovery listing", "Manual visit creation", "Community support"],
-    cta: "Get started",
-    href: "/create-new-visit",
-    icon: Gift,
-    featured: false,
+    gradient: "from-fuchsia-100 via-white to-indigo-100",
+    number: "bg-fuchsia-100 text-fuchsia-700 ring-fuchsia-200",
+    icon: "bg-fuchsia-50 text-fuchsia-700",
   },
   {
-    name: "Professional",
-    price: "$19",
-    badge: "Most popular",
-    description: "For active artists announcing travel regularly.",
-    bullets: ["Instagram connect & sync", "Waitlists / notifications", "Pinned visits & highlights", "Priority support"],
-    cta: "Start Pro",
-    href: "/create-new-visit",
-    icon: Crown,
-    featured: true,
+    gradient: "from-indigo-100/80 via-white to-fuchsia-100/60",
+    number: "bg-indigo-100 text-indigo-700 ring-indigo-200",
+    icon: "bg-indigo-50 text-indigo-700",
   },
   {
-    name: "Enterprise",
-    price: "$49",
-    badge: "Teams",
-    description: "For studios, agencies, conventions and partners.",
-    bullets: ["Multiple team profiles", "Studio-wide calendars", "Advanced reporting", "Dedicated onboarding"],
-    cta: "Contact us",
-    href: "/about/contact",
-    icon: HeartHandshake,
-    featured: false,
+    gradient: "from-emerald-100/70 via-white to-cyan-100/60",
+    number: "bg-emerald-100 text-emerald-700 ring-emerald-200",
+    icon: "bg-emerald-50 text-emerald-700",
   },
 ];
 
@@ -155,7 +138,7 @@ function SoftCard({ className = "", children }) {
   return <div className={"rounded-2xl border border-gray-200 bg-white/70 shadow-sm backdrop-blur-sm " + className}>{children}</div>;
 }
 
-export default function Home() {
+export default function Landing() {
   return (
     <main className="relative w-full overflow-hidden">
       {/* Mobile top padding + gradient */}
@@ -166,7 +149,7 @@ export default function Home() {
           <div className="space-y-6">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="rounded-full" variant="secondary">
-                <BadgeCheck className="mr-1 h-4 w-4" />
+                <Caravan className="mr-1 h-4 w-4" />
                 Built for traveling artists
               </Badge>
               <Badge className="rounded-full" variant="outline">
@@ -203,7 +186,7 @@ export default function Home() {
 
           {/* Right side preview card */}
           <div className="relative">
-            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-gradient-to-br from-fuchsia-200/60 via-white to-indigo-200/50 blur-2xl" />
+            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-gradient-to-br from-fuchsia-200 via-white to-indigo-200 blur-2xl" />
             <SoftCard className="relative overflow-hidden p-5 sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
@@ -290,7 +273,10 @@ export default function Home() {
       {/* FEATURES */}
       <Section id="features" className="bg-gray-50/40">
         <div className="text-center">
-          <div className="text-sm font-semibold text-fuchsia-700">Everything you need</div>
+          <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100">
+            <Sparkles className="inline-block mr-1 h-4 w-4" />
+            Get started
+          </Badge>
           <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Everything you need to grow</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">Build a simple, beautiful travel lineup for your audience — with discoverability, notifications and event support.</p>
         </div>
@@ -313,28 +299,41 @@ export default function Home() {
       {/* STEPS */}
       <Section id="steps">
         <div className="text-center">
-          <div className="text-sm font-semibold text-fuchsia-700">Get started</div>
+          <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100">
+            <Rocket className="inline-block mr-1 h-4 w-4" />
+            Get started
+          </Badge>
           <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Get started in 3 simple steps</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">Set up your profile, add your travel plans, and share your page.</p>
         </div>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {steps.map((s) => (
-            <Card key={s.title} className="border-gray-200">
-              <CardHeader className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-fuchsia-50 text-fuchsia-700">
-                    <span className="text-sm font-semibold">{s.n}</span>
+          {steps.map((s, idx) => {
+            const theme = stepThemes[idx] ?? stepThemes[0];
+
+            return (
+              <Card key={s.title} className="relative overflow-hidden border-gray-200">
+                {/* subtle gradient wash */}
+                <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${theme.gradient} opacity-60`} />
+
+                <CardHeader className="relative space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-full ring-1 ${theme.number}`}>
+                      <span className="text-sm font-semibold">{s.n}</span>
+                    </div>
+
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${theme.icon}`}>
+                      <s.icon className="h-5 w-5" />
+                    </div>
                   </div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
-                    <s.icon className="h-5 w-5" />
-                  </div>
-                </div>
-                <CardTitle className="text-base">{s.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0 text-sm leading-relaxed text-gray-600">{s.description}</CardContent>
-            </Card>
-          ))}
+
+                  <CardTitle className="text-base">{s.title}</CardTitle>
+                </CardHeader>
+
+                <CardContent className="relative pt-0 text-sm leading-relaxed text-gray-600">{s.description}</CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         <div className="mt-8 flex justify-center">
