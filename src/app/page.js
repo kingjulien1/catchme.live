@@ -73,19 +73,19 @@ const steps = [
 ];
 const stepThemes = [
   {
-    gradient: "from-fuchsia-100 via-white to-indigo-100",
-    number: "bg-fuchsia-100 text-fuchsia-700 ring-fuchsia-200",
-    icon: "bg-fuchsia-50 text-fuchsia-700",
+    gradient: "from-fuchsia-100 via-white to-indigo-100 dark:from-fuchsia-950/40 dark:via-background dark:to-indigo-950/35",
+    number: "bg-fuchsia-100 text-fuchsia-700 ring-fuchsia-200 dark:bg-fuchsia-950/40 dark:text-fuchsia-200 dark:ring-fuchsia-900/50",
+    icon: "bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-950/30 dark:text-fuchsia-200",
   },
   {
-    gradient: "from-indigo-100/80 via-white to-fuchsia-100/60",
-    number: "bg-indigo-100 text-indigo-700 ring-indigo-200",
-    icon: "bg-indigo-50 text-indigo-700",
+    gradient: "from-indigo-100/80 via-white to-fuchsia-100/60 dark:from-indigo-950/40 dark:via-background dark:to-fuchsia-950/35",
+    number: "bg-indigo-100 text-indigo-700 ring-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-200 dark:ring-indigo-900/50",
+    icon: "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-200",
   },
   {
-    gradient: "from-emerald-100/70 via-white to-cyan-100/60",
-    number: "bg-emerald-100 text-emerald-700 ring-emerald-200",
-    icon: "bg-emerald-50 text-emerald-700",
+    gradient: "from-emerald-100/70 via-white to-cyan-100/60 dark:from-emerald-950/35 dark:via-background dark:to-cyan-950/30",
+    number: "bg-emerald-100 text-emerald-700 ring-emerald-200 dark:bg-emerald-950/35 dark:text-emerald-200 dark:ring-emerald-900/50",
+    icon: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/25 dark:text-emerald-200",
   },
 ];
 
@@ -135,14 +135,14 @@ function Section({ id, children, className = "" }) {
 }
 
 function SoftCard({ className = "", children }) {
-  return <div className={"rounded-2xl border border-gray-200 bg-white/70 shadow-sm backdrop-blur-sm " + className}>{children}</div>;
+  return <div className={"rounded-2xl border border-border bg-card/70 text-card-foreground shadow-sm backdrop-blur-sm " + className}>{children}</div>;
 }
 
 export default function Landing() {
   return (
-    <main className="relative w-full overflow-hidden">
+    <main className="relative w-full overflow-hidden bg-background text-foreground">
       {/* Mobile top padding + gradient */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-gradient-to-b from-fuchsia-200/60 via-fuchsia-100/30 to-transparent sm:hidden" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-gradient-to-b from-fuchsia-200/60 via-fuchsia-100/30 to-transparent dark:from-fuchsia-950/50 dark:via-fuchsia-950/20 dark:to-transparent sm:hidden" />
       {/* HERO */}
       <Section className="pt-24 sm:pt-10">
         <div className="grid items-center gap-10 lg:grid-cols-2">
@@ -159,9 +159,9 @@ export default function Landing() {
             </div>
 
             <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-              Connect with fans <span className="text-fuchsia-600">wherever</span> you go
+              Connect with fans <span className="text-fuchsia-600 dark:text-fuchsia-400">wherever</span> you go
             </h1>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600 sm:text-lg">catchme.live helps artists announce current and upcoming visits, events, and conventions — with clean profiles, countdowns, and discovery.</p>
+            <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">catchme.live helps artists announce current and upcoming visits, events, and conventions — with clean profiles, countdowns, and discovery.</p>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <Button size="lg" className="gap-2" asChild>
@@ -177,8 +177,8 @@ export default function Landing() {
             <div className="hidden grid-cols-2 gap-4 pt-2 sm:grid-cols-4 lg:grid">
               {stats.map((s) => (
                 <SoftCard key={s.label} className="p-4">
-                  <div className="text-xl font-semibold text-gray-900">{s.value}</div>
-                  <div className="mt-1 text-xs text-gray-500">{s.label}</div>
+                  <div className="text-xl font-semibold text-foreground">{s.value}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
                 </SoftCard>
               ))}
             </div>
@@ -186,12 +186,12 @@ export default function Landing() {
 
           {/* Right side preview card */}
           <div className="relative">
-            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-gradient-to-br from-fuchsia-200 via-white to-indigo-200 blur-2xl" />
+            <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-gradient-to-br from-fuchsia-200/60 via-white to-indigo-200/50 blur-2xl dark:from-fuchsia-950/50 dark:via-background dark:to-indigo-950/40" />
             <SoftCard className="relative overflow-hidden p-5 sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <div className="text-sm font-semibold text-gray-900">Upcoming + live visits</div>
-                  <div className="text-xs text-gray-500">A clean lineup your fans can follow.</div>
+                  <div className="text-sm font-semibold text-foreground">Upcoming + live visits</div>
+                  <div className="text-xs text-muted-foreground">A clean lineup your fans can follow.</div>
                 </div>
                 <Badge variant="secondary" className="rounded-full">
                   <Sparkles className="mr-1 h-4 w-4" />
@@ -200,24 +200,24 @@ export default function Landing() {
               </div>
 
               <div className="mt-5 grid gap-3">
-                <Card className="border-gray-200">
+                <Card className="border-border">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-gray-900">Los Angeles, CA</div>
-                        <div className="mt-1 text-xs text-gray-500">Now • 3 days left</div>
+                        <div className="text-sm font-semibold text-foreground">Los Angeles, CA</div>
+                        <div className="mt-1 text-xs text-muted-foreground">Now • 3 days left</div>
                       </div>
-                      <Badge className="rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-100">In progress</Badge>
+                      <Badge className="rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-200 dark:hover:bg-emerald-950/50">In progress</Badge>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="border-gray-200">
+                <Card className="border-border">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-gray-900">New York, NY</div>
-                        <div className="mt-1 text-xs text-gray-500">Starts in 12 days</div>
+                        <div className="text-sm font-semibold text-foreground">New York, NY</div>
+                        <div className="mt-1 text-xs text-muted-foreground">Starts in 12 days</div>
                       </div>
                       <Badge variant="outline" className="rounded-full">
                         Countdown
@@ -226,14 +226,14 @@ export default function Landing() {
                   </CardContent>
                 </Card>
 
-                <Card className="border-gray-200">
+                <Card className="border-border">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-gray-900">Berlin, DE</div>
-                        <div className="mt-1 text-xs text-gray-500">Convention • September</div>
+                        <div className="text-sm font-semibold text-foreground">Berlin, DE</div>
+                        <div className="mt-1 text-xs text-muted-foreground">Convention • September</div>
                       </div>
-                      <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-100">Event</Badge>
+                      <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-100 dark:bg-fuchsia-950/40 dark:text-fuchsia-200 dark:hover:bg-fuchsia-950/50">Event</Badge>
                     </div>
                   </CardContent>
                 </Card>
@@ -243,12 +243,12 @@ export default function Landing() {
 
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
                     <Image src="/logo.svg" alt="catchme.live" width={20} height={20} />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">catchme.live</div>
-                    <div className="text-xs text-gray-500">Shareable visit page</div>
+                    <div className="text-sm font-semibold text-foreground">catchme.live</div>
+                    <div className="text-xs text-muted-foreground">Shareable visit page</div>
                   </div>
                 </div>
                 <Button variant="outline" size="sm" asChild>
@@ -262,8 +262,8 @@ export default function Landing() {
           <div className="grid grid-cols-2 gap-4 pt-2 sm:grid-cols-4 lg:hidden">
             {stats.map((s) => (
               <SoftCard key={s.label} className="p-4">
-                <div className="text-xl font-semibold text-gray-900">{s.value}</div>
-                <div className="mt-1 text-xs text-gray-500">{s.label}</div>
+                <div className="text-xl font-semibold text-foreground">{s.value}</div>
+                <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
               </SoftCard>
             ))}
           </div>
@@ -271,26 +271,26 @@ export default function Landing() {
       </Section>
 
       {/* FEATURES */}
-      <Section id="features" className="bg-gray-50/40">
+      <Section id="features" className="bg-muted/30">
         <div className="text-center">
-          <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100">
+          <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100 dark:bg-fuchsia-950/40 dark:text-fuchsia-200 dark:hover:bg-fuchsia-950/50">
             <Sparkles className="inline-block mr-1 h-4 w-4" />
             Get started
           </Badge>
           <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Everything you need to grow</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">Build a simple, beautiful travel lineup for your audience — with discoverability, notifications and event support.</p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">Build a simple, beautiful travel lineup for your audience — with discoverability, notifications and event support.</p>
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <Card key={f.title} className="border-gray-200">
+            <Card key={f.title} className="border-border">
               <CardHeader className="space-y-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-fuchsia-50 text-fuchsia-700">
                   <f.icon className="h-5 w-5" />
                 </div>
                 <CardTitle className="text-base">{f.title}</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0 text-sm leading-relaxed text-gray-600">{f.description}</CardContent>
+              <CardContent className="pt-0 text-sm leading-relaxed text-muted-foreground">{f.description}</CardContent>
             </Card>
           ))}
         </div>
@@ -299,12 +299,12 @@ export default function Landing() {
       {/* STEPS */}
       <Section id="steps">
         <div className="text-center">
-          <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100">
+          <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100 dark:bg-fuchsia-950/40 dark:text-fuchsia-200 dark:hover:bg-fuchsia-950/50">
             <Rocket className="inline-block mr-1 h-4 w-4" />
             Get started
           </Badge>
           <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Get started in 3 simple steps</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">Set up your profile, add your travel plans, and share your page.</p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">Set up your profile, add your travel plans, and share your page.</p>
         </div>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -312,7 +312,7 @@ export default function Landing() {
             const theme = stepThemes[idx] ?? stepThemes[0];
 
             return (
-              <Card key={s.title} className="relative overflow-hidden border-gray-200">
+              <Card key={s.title} className="relative overflow-hidden border-border">
                 {/* subtle gradient wash */}
                 <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${theme.gradient} opacity-60`} />
 
@@ -330,7 +330,7 @@ export default function Landing() {
                   <CardTitle className="text-base">{s.title}</CardTitle>
                 </CardHeader>
 
-                <CardContent className="relative pt-0 text-sm leading-relaxed text-gray-600">{s.description}</CardContent>
+                <CardContent className="relative pt-0 text-sm leading-relaxed text-muted-foreground">{s.description}</CardContent>
               </Card>
             );
           })}
@@ -346,12 +346,12 @@ export default function Landing() {
       </Section>
 
       {/* TOP ARTISTS */}
-      <Section id="top-artists" className="bg-gray-50/40">
+      <Section id="top-artists" className="bg-muted/30">
         <div className="flex items-end justify-between gap-4">
           <div>
             <div className="text-sm font-semibold text-fuchsia-700">Discover</div>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Top artists on the platform</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">A small preview of profiles — imagine this filled with real artists in your area.</p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">A small preview of profiles — imagine this filled with real artists in your area.</p>
           </div>
           <div className="hidden sm:block">
             <Button variant="outline" asChild>
@@ -362,9 +362,9 @@ export default function Landing() {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i} className="overflow-hidden border-gray-200">
+            <Card key={i} className="overflow-hidden border-border">
               <div className="relative aspect-[4/3] w-full bg-gradient-to-br from-fuchsia-100 via-white to-indigo-100">
-                <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/80 px-2 py-1 text-xs text-gray-700 ring-1 ring-gray-200">
+                <div className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/80 px-2 py-1 text-xs text-foreground ring-1 ring-border backdrop-blur">
                   <MapPin className="h-3.5 w-3.5" />
                   {i % 2 === 0 ? "Vienna" : "Berlin"}
                 </div>
@@ -372,14 +372,14 @@ export default function Landing() {
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold text-gray-900">@artist_{i + 1}</div>
-                    <div className="mt-1 text-xs text-gray-500">Fine line • Blackwork</div>
+                    <div className="truncate text-sm font-semibold text-foreground">@artist_{i + 1}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">Fine line • Blackwork</div>
                   </div>
                   <Badge variant="secondary" className="rounded-full">
                     Live
                   </Badge>
                 </div>
-                <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
+                <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
                   <Star className="h-4 w-4 text-amber-500" />
                   4.{8 - i} rating
                 </div>
@@ -401,11 +401,11 @@ export default function Landing() {
           <div>
             <div className="text-sm font-semibold text-fuchsia-700">Beyond tattoos</div>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">For musicians & performers too</h2>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-gray-600 sm:text-base">The same visit + event structure works for tour dates, pop-ups, showcases and conventions.</p>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">The same visit + event structure works for tour dates, pop-ups, showcases and conventions.</p>
 
             <div className="mt-6 grid gap-3">
               {["Tour dates in a single link", "Event pages with countdowns", "City-based discovery", "Notifications for followers"].map((t) => (
-                <div key={t} className="flex items-start gap-3 text-sm text-gray-700">
+                <div key={t} className="flex items-start gap-3 text-sm text-foreground">
                   <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200">
                     <Check className="h-4 w-4" />
                   </span>
@@ -426,12 +426,12 @@ export default function Landing() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {["Lineups", "Highlights", "Waitlists", "Analytics"].map((t, i) => (
-              <Card key={t} className="border-gray-200">
+              <Card key={t} className="border-border">
                 <CardHeader className="space-y-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">{(i === 0 ? CalendarDays : i === 1 ? Sparkles : i === 2 ? BellIcon : BadgeCheckIcon).icon}</div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-muted text-foreground">{(i === 0 ? CalendarDays : i === 1 ? Sparkles : i === 2 ? BellIcon : BadgeCheckIcon).icon}</div>
                   <CardTitle className="text-base">{t}</CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 text-sm leading-relaxed text-gray-600">
+                <CardContent className="pt-0 text-sm leading-relaxed text-muted-foreground">
                   {i === 0
                     ? "Show upcoming stops and events with clean dates and cities."
                     : i === 1
@@ -451,12 +451,12 @@ export default function Landing() {
         <div className="text-center">
           <div className="text-sm font-semibold text-fuchsia-700">Loved worldwide</div>
           <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Loved by artists worldwide</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">Real feedback from creators and studios using travel pages daily.</p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">Real feedback from creators and studios using travel pages daily.</p>
         </div>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {testimonials.map((t) => (
-            <Card key={t.name} className="border-gray-200">
+            <Card key={t.name} className="border-border">
               <CardContent className="p-5">
                 <div className="flex items-center gap-1 text-amber-500">
                   <Star className="h-4 w-4" />
@@ -465,14 +465,14 @@ export default function Landing() {
                   <Star className="h-4 w-4" />
                   <Star className="h-4 w-4" />
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-gray-700">“{t.text}”</p>
+                <p className="mt-4 text-sm leading-relaxed text-foreground">“{t.text}”</p>
                 <div className="mt-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-700">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-foreground">
                     <CircleUser className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">{t.name}</div>
-                    <div className="text-xs text-gray-500">{t.role}</div>
+                    <div className="text-sm font-semibold text-foreground">{t.name}</div>
+                    <div className="text-xs text-muted-foreground">{t.role}</div>
                   </div>
                 </div>
               </CardContent>
@@ -481,7 +481,7 @@ export default function Landing() {
         </div>
 
         <div className="mt-10">
-          <div className="rounded-3xl border border-fuchsia-200 bg-gradient-to-r from-fuchsia-600 to-indigo-600 p-6 text-white sm:p-8">
+          <div className="rounded-3xl border border-fuchsia-200/60 bg-gradient-to-r from-fuchsia-600 to-indigo-600 p-6 text-white dark:border-fuchsia-900/50 sm:p-8">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="text-sm font-semibold text-white/90">Join 10,000+ happy artists</div>
@@ -501,21 +501,21 @@ export default function Landing() {
       </Section>
 
       {/* FAQ */}
-      <Section id="faq" className="bg-gray-50/40">
+      <Section id="faq" className="bg-muted/30">
         <div className="text-center">
           <div className="text-sm font-semibold text-fuchsia-700">FAQ</div>
           <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Frequently asked questions</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">Everything you need to know about catchme.live.</p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">Everything you need to know about catchme.live.</p>
         </div>
 
         <div className="mx-auto mt-10 max-w-3xl">
-          <Card className="border-gray-200">
+          <Card className="border-border">
             <CardContent className="p-0">
               <Accordion type="single" collapsible className="w-full">
                 {faq.map((item, idx) => (
                   <AccordionItem key={item.q} value={`faq-${idx}`}>
-                    <AccordionTrigger className="px-5 py-4 text-left text-sm font-semibold">{item.q}</AccordionTrigger>
-                    <AccordionContent className="px-5 pb-5 text-sm leading-relaxed text-gray-600">{item.a}</AccordionContent>
+                    <AccordionTrigger className="px-5 py-4 text-left text-sm font-semibold text-foreground">{item.q}</AccordionTrigger>
+                    <AccordionContent className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground">{item.a}</AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
@@ -530,7 +530,7 @@ export default function Landing() {
           <div>
             <div className="text-sm font-semibold text-fuchsia-700">Ready to take your art on the road?</div>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Ready to take your art on the road?</h2>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-gray-600 sm:text-base">Create your first visit page, connect Instagram and start getting discovered.</p>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">Create your first visit page, connect Instagram and start getting discovered.</p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Button size="lg" className="gap-2" asChild>
@@ -546,10 +546,10 @@ export default function Landing() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {stats.map((s) => (
-              <Card key={s.label} className="border-gray-200">
+              <Card key={s.label} className="border-border">
                 <CardContent className="p-5">
-                  <div className="text-xl font-semibold text-gray-900">{s.value}</div>
-                  <div className="mt-1 text-xs text-gray-500">{s.label}</div>
+                  <div className="text-xl font-semibold text-foreground">{s.value}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
                 </CardContent>
               </Card>
             ))}

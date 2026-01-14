@@ -21,14 +21,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <TopAppBar />
           {children}
           <Footer />
-        </body>
-      </html>
-    </ThemeProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
