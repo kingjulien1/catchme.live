@@ -117,7 +117,7 @@ export default function TermsPage() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-4xl px-4 pb-16">
+      <div className="mx-auto max-w-4xl px-4 pb-6">
         <div className="mx-auto max-w-3xl space-y-6">
           {/* 1 */}
           <SectionShell number="1" title="Acceptance of Terms">
@@ -734,10 +734,6 @@ export default function TermsPage() {
               </div>
             </div>
           </div>
-
-          <Separator className="my-4" />
-
-          <div className="text-center text-xs text-gray-500">© {new Date().getFullYear()} catchme.live — All rights reserved.</div>
         </div>
       </div>
     </main>
