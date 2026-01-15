@@ -1,18 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight, BadgeCheck, CalendarDays, Check, CircleUser, Compass, Crown, Gift, Globe, HeartHandshake, MapPin, ShieldCheck, Sparkles, Star, Zap } from "lucide-react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Rocket } from "lucide-react";
-import { Caravan } from "lucide-react";
-import { MicVocal } from "lucide-react";
-import { Heart } from "lucide-react";
-import { ShieldQuestion } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarDays, Caravan, Check, CircleUser, Compass, Globe, Heart, ListTree, MapPin, MicVocal, Rocket, ShieldCheck, ShieldQuestion, Sparkles, Star, Zap } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const stats = [
   { value: "10K+", label: "Artists & studios" },
@@ -434,23 +429,36 @@ export default function Landing() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {["Lineups", "Highlights", "Waitlists", "Analytics"].map((t, i) => (
-              <Card key={t} className="border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
+            {[
+              {
+                title: "Lineups",
+                icon: ListTree,
+                description: "Show upcoming stops and events with clean dates and cities.",
+              },
+              {
+                title: "Highlights",
+                icon: Sparkles,
+                description: "Highlight important visits and keep old ones archived.",
+              },
+              {
+                title: "Waitlists",
+                icon: Zap,
+                description: "Let fans join a waitlist and get notified when you arrive.",
+              },
+              {
+                title: "Analytics",
+                icon: BadgeCheck,
+                description: "Understand what cities are most interested in your next trip.",
+              },
+            ].map((item) => (
+              <Card key={item.title} className="border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
                 <CardHeader className="space-y-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gray-100 text-gray-900 dark:bg-slate-800/70 dark:text-slate-100">
-                    {(i === 0 ? CalendarDays : i === 1 ? Sparkles : i === 2 ? BellIcon : BadgeCheckIcon).icon}
+                    <item.icon className="h-5 w-5" />
                   </div>
-                  <CardTitle className="text-base">{t}</CardTitle>
+                  <CardTitle className="text-base">{item.title}</CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 text-sm leading-relaxed text-gray-600 dark:text-slate-300">
-                  {i === 0
-                    ? "Show upcoming stops and events with clean dates and cities."
-                    : i === 1
-                    ? "Highlight important visits and keep old ones archived."
-                    : i === 2
-                    ? "Let fans join a waitlist and get notified when you arrive."
-                    : "Understand what cities are most interested in your next trip."}
-                </CardContent>
+                <CardContent className="pt-0 text-sm leading-relaxed text-gray-600 dark:text-slate-300">{item.description}</CardContent>
               </Card>
             ))}
           </div>
@@ -576,6 +584,3 @@ export default function Landing() {
     </main>
   );
 }
-
-const BellIcon = { icon: <Zap className="h-5 w-5" /> };
-const BadgeCheckIcon = { icon: <BadgeCheck className="h-5 w-5" /> };
