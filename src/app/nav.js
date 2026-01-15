@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-import { Bell, BookOpen, CalendarDays, HandHeart, HelpCircle, Home, Instagram, Mail, MapPin, Menu, Moon, ShieldCheck, Sun, Users } from "lucide-react";
+import { Bell, BookOpen, CalendarDays, HandHeart, HelpCircle, Home, Instagram, Mail, MapPin, Menu, Moon, Search, ShieldCheck, Sun, Users } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -137,7 +137,7 @@ export default function TopAppBar() {
 
         {/* Desktop nav centered */}
         <div aria-label="Main" data-orientation="horizontal" dir="ltr" data-slot="navigation-menu" data-viewport="false" className="relative hidden md:absolute md:left-1/2 md:block md:-translate-x-1/2">
-          <NavigationMenu>
+          <NavigationMenu viewport={false}>
             <NavigationMenuList className="flex-nowrap">
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Home</NavigationMenuTrigger>
@@ -167,12 +167,12 @@ export default function TopAppBar() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Community</NavigationMenuTrigger>
+              <NavigationMenuItem className="hidden md:block">
+                <NavigationMenuTrigger>For Artists / Studios</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                    {community.map((item) => (
-                      <ListItem key={item.title} title={item.title} href={item.href} icon={item.icon}>
+                  <ul className="grid w-[340px] gap-2 p-1">
+                    {forArtists.map((item) => (
+                      <ListItem key={item.title} href={item.href} title={item.title} icon={item.icon}>
                         {item.description}
                       </ListItem>
                     ))}
@@ -180,12 +180,12 @@ export default function TopAppBar() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              <NavigationMenuItem className="hidden md:block">
-                <NavigationMenuTrigger>For Artists / Studios</NavigationMenuTrigger>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Community</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[340px] gap-2 p-1">
-                    {forArtists.map((item) => (
-                      <ListItem key={item.title} href={item.href} title={item.title} icon={item.icon}>
+                    {community.map((item) => (
+                      <ListItem key={item.title} title={item.title} href={item.href} icon={item.icon}>
                         {item.description}
                       </ListItem>
                     ))}
@@ -211,6 +211,11 @@ export default function TopAppBar() {
 
         {/* Right-side actions (theme toggle + mobile menu) */}
         <div className="ml-auto flex items-center gap-1">
+          <Button asChild variant="ghost" size="icon" className="h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-slate-900" aria-label="Search">
+            <Link href="/find">
+              <Search className="h-5 w-5" />
+            </Link>
+          </Button>
           <ThemeToggleButton />
 
           {/* Mobile menu */}
@@ -244,16 +249,16 @@ export default function TopAppBar() {
 
                       <Separator className="dark:bg-slate-800/80" />
 
-                      <MobileSection title="Community">
-                        {community.map((item) => (
+                      <MobileSection title="For Artists / Studios">
+                        {forArtists.map((item) => (
                           <MobileNavItem key={item.href} {...item} />
                         ))}
                       </MobileSection>
 
                       <Separator className="dark:bg-slate-800/80" />
 
-                      <MobileSection title="For Artists / Studios">
-                        {forArtists.map((item) => (
+                      <MobileSection title="Community">
+                        {community.map((item) => (
                           <MobileNavItem key={item.href} {...item} />
                         ))}
                       </MobileSection>
