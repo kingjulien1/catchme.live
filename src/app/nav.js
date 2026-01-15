@@ -120,7 +120,7 @@ function ThemeToggleButton() {
   const resolvedTheme = theme === "system" ? systemTheme : theme;
 
   return (
-    <Button type="button" variant="ghost" size="icon" className="h-9 w-9 rounded-md" aria-label="Toggle theme" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+    <Button type="button" variant="ghost" size="icon" className="h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-slate-900" aria-label="Toggle theme" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
       {mounted ? resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" /> : <span className="sr-only">Toggle theme</span>}
     </Button>
   );
@@ -128,11 +128,11 @@ function ThemeToggleButton() {
 
 export default function TopAppBar() {
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-4">
+    <nav className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-slate-800/80 dark:bg-slate-950/80 dark:supports-[backdrop-filter]:bg-slate-950/60 sm:px-4">
       <div className="relative flex items-center gap-3">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image src="/logo.svg" alt="Logo" width={28} height={28} />
-          <h1 className="text-sm font-semibold text-foreground">catchme.live</h1>
+          <h1 className="text-sm font-semibold text-gray-900 dark:text-slate-100">catchme.live</h1>
         </Link>
 
         {/* Desktop nav centered */}
@@ -145,9 +145,12 @@ export default function TopAppBar() {
                   <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
-                        <Link className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-4 no-underline outline-hidden transition-all duration-200 select-none focus:shadow-md md:p-6" href="/discover">
+                        <Link
+                          className="flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b from-gray-50 to-white p-4 no-underline outline-hidden transition-all duration-200 select-none focus:shadow-md dark:from-slate-900/70 dark:to-slate-950 md:p-6"
+                          href="/discover"
+                        >
                           <div className="mb-2 text-lg font-medium sm:mt-4">catchme.live/discover</div>
-                          <p className="text-muted-foreground text-sm leading-tight">Discover residencies, lineups events all around the world and more.</p>
+                          <p className="text-sm leading-tight text-gray-600 dark:text-slate-300">Discover residencies, lineups events all around the world and more.</p>
                         </Link>
                       </NavigationMenuLink>
                     </li>
@@ -214,18 +217,22 @@ export default function TopAppBar() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <button type="button" aria-label="Open menu" className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground">
+                <button
+                  type="button"
+                  aria-label="Open menu"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-900 hover:bg-gray-100 dark:border-slate-800/80 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900"
+                >
                   <Menu className="h-5 w-5" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[320px] sm:w-[360px] p-0">
+              <SheetContent side="right" className="w-[320px] p-0 dark:bg-slate-950 sm:w-[360px]">
                 <div className="flex h-full flex-col">
                   <div className="flex items-center gap-2 px-4 pt-4">
                     <Image src="/logo.svg" alt="Logo" width={24} height={24} />
-                    <div className="text-sm font-semibold text-foreground">catchme.live</div>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">catchme.live</div>
                   </div>
 
-                  <Separator className="my-4" />
+                  <Separator className="my-4 dark:bg-slate-800/80" />
 
                   <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
                     <div className="grid gap-6">
@@ -235,7 +242,7 @@ export default function TopAppBar() {
                         ))}
                       </MobileSection>
 
-                      <Separator />
+                      <Separator className="dark:bg-slate-800/80" />
 
                       <MobileSection title="Community">
                         {community.map((item) => (
@@ -243,7 +250,7 @@ export default function TopAppBar() {
                         ))}
                       </MobileSection>
 
-                      <Separator />
+                      <Separator className="dark:bg-slate-800/80" />
 
                       <MobileSection title="For Artists / Studios">
                         {forArtists.map((item) => (
@@ -251,7 +258,7 @@ export default function TopAppBar() {
                         ))}
                       </MobileSection>
 
-                      <Separator />
+                      <Separator className="dark:bg-slate-800/80" />
 
                       <MobileSection title="About">
                         {about.map((item) => (
@@ -274,16 +281,16 @@ function ListItem({ title, children, href, icon: Icon, ...props }) {
   return (
     <li {...props}>
       <NavigationMenuLink asChild>
-        <Link href={href} className="block select-none rounded-md p-3 no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+        <Link href={href} className="block select-none rounded-md p-3 no-underline outline-hidden transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-slate-900 dark:focus:bg-slate-900">
           <div className="flex items-start gap-3">
             {Icon ? (
-              <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-950/40 dark:text-fuchsia-200">
+              <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-500/15 dark:text-fuchsia-200">
                 <Icon className="h-4 w-4" />
               </div>
             ) : null}
             <div className="min-w-0">
-              <div className="text-sm font-medium leading-none text-foreground">{title}</div>
-              <p className="text-muted-foreground line-clamp-2 mt-1 text-sm leading-snug">{children}</p>
+              <div className="text-sm font-medium leading-none text-gray-900 dark:text-slate-100">{title}</div>
+              <p className="mt-1 line-clamp-2 text-sm leading-snug text-gray-600 dark:text-slate-300">{children}</p>
             </div>
           </div>
         </Link>
@@ -295,7 +302,7 @@ function ListItem({ title, children, href, icon: Icon, ...props }) {
 function MobileSection({ title, children }) {
   return (
     <div className="grid gap-2">
-      <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{title}</div>
+      <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-slate-400">{title}</div>
       <div className="grid gap-1">{children}</div>
     </div>
   );
@@ -303,11 +310,11 @@ function MobileSection({ title, children }) {
 
 function MobileNavItem({ title, description, href, icon: Icon }) {
   return (
-    <Link href={href} className="flex items-start gap-3 rounded-md px-2 py-2 transition-colors hover:bg-accent">
-      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-950/40 dark:text-fuchsia-200">{Icon ? <Icon className="h-4 w-4" /> : null}</div>
+    <Link href={href} className="flex items-start gap-3 rounded-md px-2 py-2 transition-colors hover:bg-gray-100 dark:hover:bg-slate-900">
+      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-500/15 dark:text-fuchsia-200">{Icon ? <Icon className="h-4 w-4" /> : null}</div>
       <div className="min-w-0">
-        <div className="text-sm font-medium text-foreground">{title}</div>
-        <div className="line-clamp-2 text-xs text-muted-foreground">{description}</div>
+        <div className="text-sm font-medium text-gray-900 dark:text-slate-100">{title}</div>
+        <div className="line-clamp-2 text-xs text-gray-500 dark:text-slate-400">{description}</div>
       </div>
     </Link>
   );
