@@ -10,7 +10,12 @@ import Section from "./Section";
 
 function VisitOptionCard({ id, title, description, icon, checked, onCheckedChange }) {
   return (
-    <div className={cn("rounded-2xl border bg-white p-4 sm:p-5 shadow-sm transition", checked ? "border-violet-300 bg-violet-50/30" : "border-gray-200 hover:bg-gray-50")}>
+    <div
+      className={cn(
+        "rounded-2xl border bg-white p-4 shadow-sm transition sm:p-5 dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none",
+        checked ? "border-violet-300 bg-violet-50/30 dark:border-violet-400/60 dark:bg-violet-500/10" : "border-gray-200 hover:bg-gray-50 dark:hover:bg-slate-900/90"
+      )}
+    >
       <div className="flex items-start gap-3 sm:gap-4">
         {/* Checkbox */}
         <div className="shrink-0 pt-0.5">
@@ -21,8 +26,8 @@ function VisitOptionCard({ id, title, description, icon, checked, onCheckedChang
         <label htmlFor={id} name={id} className="flex w-full flex-1 min-w-0 cursor-pointer items-start gap-3">
           <div className="shrink-0">{icon}</div>
           <div className="min-w-0">
-            <p className="text-sm sm:text-base font-semibold text-gray-900">{title}</p>
-            <p className="mt-1 text-xs sm:text-sm text-gray-600">{description}</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 sm:text-base">{title}</p>
+            <p className="mt-1 text-xs text-gray-600 dark:text-slate-300 sm:text-sm">{description}</p>
           </div>
         </label>
       </div>
@@ -56,7 +61,7 @@ export default function VisitOptionsSection() {
           checked={options.bookingsOpen}
           onCheckedChange={setOption("bookingsOpen")}
           icon={
-            <div className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-violet-100 text-violet-700">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200 sm:h-10 sm:w-10">
               <CalendarCheck2 className="h-5 w-5" />
             </div>
           }
@@ -69,7 +74,7 @@ export default function VisitOptionsSection() {
           checked={options.appointmentOnly}
           onCheckedChange={setOption("appointmentOnly")}
           icon={
-            <div className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-amber-100 text-amber-700">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200 sm:h-10 sm:w-10">
               <Clock3 className="h-5 w-5" />
             </div>
           }
@@ -82,7 +87,7 @@ export default function VisitOptionsSection() {
           checked={options.age18Id}
           onCheckedChange={setOption("age18Id")}
           icon={
-            <div className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-emerald-100 text-emerald-700">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200 sm:h-10 sm:w-10">
               <BadgeCheck className="h-5 w-5" />
             </div>
           }
@@ -95,7 +100,7 @@ export default function VisitOptionsSection() {
           checked={options.depositRequired}
           onCheckedChange={setOption("depositRequired")}
           icon={
-            <div className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-orange-100 text-orange-700">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-200 sm:h-10 sm:w-10">
               <HandCoins className="h-5 w-5" />
             </div>
           }
@@ -108,7 +113,7 @@ export default function VisitOptionsSection() {
           checked={options.digitalPayments}
           onCheckedChange={setOption("digitalPayments")}
           icon={
-            <div className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-blue-100 text-blue-700">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-200 sm:h-10 sm:w-10">
               <CreditCardIcon className="h-5 w-5" />
             </div>
           }
@@ -121,7 +126,7 @@ export default function VisitOptionsSection() {
           checked={options.customRequests}
           onCheckedChange={setOption("customRequests")}
           icon={
-            <div className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-pink-100 text-pink-700">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-pink-100 text-pink-700 dark:bg-pink-500/20 dark:text-pink-200 sm:h-10 sm:w-10">
               <Sparkles className="h-5 w-5" />
             </div>
           }

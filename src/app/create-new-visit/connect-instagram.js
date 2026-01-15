@@ -38,10 +38,10 @@ export default function ConnectInstagramSection() {
         </AlertDescription>
       </Alert> */}
       {/* Creator/Business requirement */}
-      <Alert className="mt-4 rounded-2xl border border-gray-200 bg-indigo-50/60 p-4 sm:p-5">
-        <UserCheck className="h-4 w-4 text-indigo-700" />
-        <AlertTitle className="text-sm">Creator or Business Account Required</AlertTitle>
-        <AlertDescription className="text-sm text-gray-600">
+      <Alert className="mt-4 rounded-2xl border border-gray-200 bg-indigo-50/60 p-4 sm:p-5 dark:border-slate-800/80 dark:bg-indigo-500/10">
+        <UserCheck className="h-4 w-4 text-indigo-700 dark:text-indigo-200" />
+        <AlertTitle className="text-sm text-gray-900 dark:text-slate-100">Creator or Business Account Required</AlertTitle>
+        <AlertDescription className="text-sm text-gray-600 dark:text-slate-300">
           <p>
             Connection only works with <strong>Instagram Creator or Business accounts</strong>. Switching to a Creator or Business account has virtually no downsides — it’s free, keeps your content the same, and unlocks helpful tools that benefit
             your profile — takes less than 30 seconds.
@@ -49,12 +49,15 @@ export default function ConnectInstagramSection() {
 
           <Collapsible className="mt-4 w-full">
             <CollapsibleTrigger asChild>
-              <button type="button" className="group flex w-full items-center justify-between bg-transparent px-0 py-2 text-left text-xs font-semibold text-gray-800 outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0">
+              <button
+                type="button"
+                className="group flex w-full items-center justify-between bg-transparent px-0 py-2 text-left text-xs font-semibold text-gray-800 outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 dark:text-slate-100"
+              >
                 <span className="inline-flex items-center gap-2">
-                  <ListOrdered className="h-4 w-4 text-indigo-700" />
+                  <ListOrdered className="h-4 w-4 text-indigo-700 dark:text-indigo-200" />
                   Show step-by-step setup
                 </span>
-                <ChevronDown className="h-4 w-4 text-gray-500 transition-transform group-data-[state=open]:rotate-180" />
+                <ChevronDown className="h-4 w-4 text-gray-500 transition-transform group-data-[state=open]:rotate-180 dark:text-slate-400" />
               </button>
             </CollapsibleTrigger>
 
@@ -79,9 +82,9 @@ export default function ConnectInstagramSection() {
                     label: 'Choose "Creator or Business"',
                   },
                 ].map((step) => (
-                  <div key={step.label} className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-4 text-center">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-700">{step.icon}</div>
-                    <p className="text-xs font-medium text-gray-700">{step.label}</p>
+                  <div key={step.label} className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-4 text-center dark:border-slate-800/80 dark:bg-slate-900/70">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200">{step.icon}</div>
+                    <p className="text-xs font-medium text-gray-700 dark:text-slate-200">{step.label}</p>
                   </div>
                 ))}
               </div>
@@ -91,12 +94,16 @@ export default function ConnectInstagramSection() {
       </Alert>
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-col sm:w-full">
-        <Button type="button" size="lg" className={"inline-flex items-center justify-center gap-2 rounded-xl px-4 py-4 text-sm font-semibold shadow-sm transition bg-linear-65 from-fuchsia-500 to-pink-500 text-white hover:opacity-80"}>
+        <Button
+          type="button"
+          size="lg"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-linear-65 from-fuchsia-500 to-pink-500 px-4 py-4 text-sm font-semibold text-white shadow-sm transition hover:opacity-80 dark:from-fuchsia-400 dark:to-pink-400"
+        >
           <InstagramIcon className="h-5 w-5" />
           Connect with Instagram
         </Button>
-        <div className="text-xs text-gray-500 text-center">
-          By connecting, you agree to our <span className="text-fuchsia-700 hover:underline">Terms of Service</span> and <span className="text-fuchsia-700 hover:underline">Privacy Policy</span>.
+        <div className="text-center text-xs text-gray-500 dark:text-slate-400">
+          By connecting, you agree to our <span className="text-fuchsia-700 hover:underline dark:text-fuchsia-300">Terms of Service</span> and <span className="text-fuchsia-700 hover:underline dark:text-fuchsia-300">Privacy Policy</span>.
         </div>
       </div>
     </Section>

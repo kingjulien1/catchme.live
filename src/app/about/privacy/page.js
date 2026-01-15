@@ -46,14 +46,14 @@ import { AlertTriangle } from "lucide-react";
 
 function SectionShell({ number, title, children }) {
   return (
-    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <Card className="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-slate-800/80 dark:bg-slate-900/60 dark:shadow-none">
       <CardHeader className="pb-3">
         <div className="flex items-start gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
             <span className="text-sm font-semibold">{number}</span>
           </div>
           <div className="min-w-0">
-            <CardTitle className="text-lg font-semibold text-gray-900">{title}</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-slate-100">{title}</CardTitle>
           </div>
         </div>
       </CardHeader>
@@ -64,22 +64,22 @@ function SectionShell({ number, title, children }) {
 
 function MiniRow({ icon: Icon, title, description, tone = "default" }) {
   const toneStyles = {
-    default: "bg-gray-50 text-gray-700 ring-gray-200",
-    info: "bg-blue-50 text-blue-700 ring-blue-200",
-    warn: "bg-amber-50 text-amber-700 ring-amber-200",
-    danger: "bg-rose-50 text-rose-700 ring-rose-200",
-    success: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-    purple: "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200",
+    default: "bg-gray-50 text-gray-700 ring-gray-200 dark:bg-slate-800/70 dark:text-slate-200 dark:ring-slate-700",
+    info: "bg-blue-50 text-blue-700 ring-blue-200 dark:bg-blue-500/15 dark:text-blue-200 dark:ring-blue-500/30",
+    warn: "bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-500/15 dark:text-amber-200 dark:ring-amber-500/30",
+    danger: "bg-rose-50 text-rose-700 ring-rose-200 dark:bg-rose-500/15 dark:text-rose-200 dark:ring-rose-500/30",
+    success: "bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-200 dark:ring-emerald-500/30",
+    purple: "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30",
   };
 
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-3">
+    <div className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-3 dark:border-slate-800/80 dark:bg-slate-900/50">
       <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-1 ${toneStyles[tone]}`}>
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0">
-        <div className="text-sm font-semibold text-gray-900">{title}</div>
-        <div className="mt-0.5 text-sm text-gray-600">{description}</div>
+        <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">{title}</div>
+        <div className="mt-0.5 text-sm text-gray-600 dark:text-slate-300">{description}</div>
       </div>
     </div>
   );
@@ -89,8 +89,8 @@ function Bullets({ items, icon: Icon = BadgeCheck }) {
   return (
     <ul className="grid gap-2">
       {items.map((t) => (
-        <li key={t} className="flex items-start gap-2 text-sm text-gray-700">
-          <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100">
+        <li key={t} className="flex items-start gap-2 text-sm text-gray-700 dark:text-slate-300">
+          <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-200 dark:ring-emerald-500/30">
             <Icon className="h-3.5 w-3.5" />
           </span>
           <span className="leading-relaxed">{t}</span>
@@ -104,29 +104,29 @@ export default function PrivacyPolicyPage() {
   const lastUpdated = "January 13, 2026";
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
       {/* Hero */}
-      <div className="bg-gradient-to-b from-fuchsia-50 via-slate-50 to-slate-50">
+      <div className="bg-gradient-to-b from-fuchsia-50 via-slate-50 to-slate-50 dark:from-fuchsia-900/30 dark:via-slate-950 dark:to-slate-950">
         <div className="mx-auto max-w-4xl px-4 pb-10 pt-10 sm:pb-12 sm:pt-12">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100">
+            <Badge className="rounded-full bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-100 dark:bg-fuchsia-500/20 dark:text-fuchsia-100">
               <ShieldCheck className="h-4 w-4" />
               Your Privacy Matters
             </Badge>
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Privacy Policy</h1>
-            <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-gray-600">
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-slate-100 sm:text-4xl">Privacy Policy</h1>
+            <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-slate-300">
               This Privacy Policy explains what information catchme.live collects, how we use it, and the choices you have. We designed this platform to keep things minimal: we only collect what we need to operate the service. By using our platform,
               you acknowledge that you have read and understood this Privacy Policy and consent to the collection, use, and disclosure of your information as described herein.
             </p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-gray-500">
-              <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1">
-                <FileText className="h-4 w-4 text-fuchsia-700" />
-                Last updated: <span className="font-medium text-gray-700">{lastUpdated}</span>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-gray-500 dark:text-slate-400">
+              <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800/80 dark:bg-slate-900/60">
+                <FileText className="h-4 w-4 text-fuchsia-700 dark:text-fuchsia-200" />
+                Last updated: <span className="font-medium text-gray-700 dark:text-slate-200">{lastUpdated}</span>
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1">
-                <Scale className="h-4 w-4 text-fuchsia-700" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800/80 dark:bg-slate-900/60">
+                <Scale className="h-4 w-4 text-fuchsia-700 dark:text-fuchsia-200" />
                 Read together with our{" "}
-                <Link className="underline underline-offset-4" href="/about/terms">
+                <Link className="underline underline-offset-4 text-gray-700 dark:text-slate-200" href="/about/terms">
                   Terms of Use
                 </Link>
               </span>
@@ -141,12 +141,14 @@ export default function PrivacyPolicyPage() {
           {/* 1 */}
           <SectionShell number="1" title="Overview and Consent">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">By using catchme.live, you consent to the collection and use of information as described in this Privacy Policy. If you do not agree, please do not use the Platform.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">
+                By using catchme.live, you consent to the collection and use of information as described in this Privacy Policy. If you do not agree, please do not use the Platform.
+              </p>
 
-              <Alert className="rounded-xl border border-blue-200 bg-blue-50/60">
-                <Info className="h-4 w-4 text-blue-700" />
-                <AlertTitle className="text-sm">Our Privacy Commitment</AlertTitle>
-                <AlertDescription className="text-sm text-gray-700">
+              <Alert className="rounded-xl border border-blue-200 bg-blue-50/60 dark:border-blue-500/30 dark:bg-blue-500/10">
+                <Info className="h-4 w-4 text-blue-700 dark:text-blue-200" />
+                <AlertTitle className="text-sm text-gray-900 dark:text-slate-100">Our Privacy Commitment</AlertTitle>
+                <AlertDescription className="text-sm text-gray-700 dark:text-slate-300">
                   We are committed to transparency in our data practices, giving you control over your personal information, implementing robust security measures, and complying with applicable data protection laws including GDPR, CCPA, and other
                   regional privacy regulations.
                 </AlertDescription>
@@ -163,7 +165,7 @@ export default function PrivacyPolicyPage() {
           {/* 2 */}
           <SectionShell number="2" title="Information We Collect">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">We collect information in three categories: information you provide, information from Instagram (if connected), and technical usage data.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">We collect information in three categories: information you provide, information from Instagram (if connected), and technical usage data.</p>
 
               <div className="grid gap-3">
                 <MiniRow icon={User} title="Account & profile details" description="Basic account identifiers and profile fields you choose to publish." tone="purple" />
@@ -171,10 +173,10 @@ export default function PrivacyPolicyPage() {
                 <MiniRow icon={Database} title="Usage & technical data" description="Device/browser signals, logs, and basic analytics to keep the service running." tone="warn" />
               </div>
 
-              <Card className="rounded-xl border border-gray-200">
+              <Card className="rounded-xl border border-gray-200 dark:border-slate-800/80 dark:bg-slate-900/60">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold">Examples</CardTitle>
-                  <CardDescription className="text-sm">Typical items we may process to operate catchme.live.</CardDescription>
+                  <CardTitle className="text-sm font-semibold text-gray-900 dark:text-slate-100">Examples</CardTitle>
+                  <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Typical items we may process to operate catchme.live.</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <Bullets
@@ -189,47 +191,47 @@ export default function PrivacyPolicyPage() {
               </Card>
 
               <div className="pt-2">
-                <div className="text-base font-semibold text-gray-900">2.2 Information Collected Automatically</div>
+                <div className="text-base font-semibold text-gray-900 dark:text-slate-100">2.2 Information Collected Automatically</div>
 
-                <div className="mt-4 space-y-6 border-l-2 border-gray-200 pl-6">
+                <div className="mt-4 space-y-6 border-l-2 border-gray-200 pl-6 dark:border-slate-800/80">
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">Device and Browser Information</div>
-                    <p className="mt-1 text-sm leading-relaxed text-gray-600">IP address, browser type and version, operating system, device identifiers, screen resolution, and language preferences.</p>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Device and Browser Information</div>
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-slate-300">IP address, browser type and version, operating system, device identifiers, screen resolution, and language preferences.</p>
                   </div>
 
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">Usage Data</div>
-                    <p className="mt-1 text-sm leading-relaxed text-gray-600">Pages visited, time spent on pages, links clicked, search queries, features used, and interaction patterns with the platform.</p>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Usage Data</div>
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-slate-300">Pages visited, time spent on pages, links clicked, search queries, features used, and interaction patterns with the platform.</p>
                   </div>
 
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">Location Information</div>
-                    <p className="mt-1 text-sm leading-relaxed text-gray-600">General location derived from IP address, and specific locations you choose to share in your travel plans.</p>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Location Information</div>
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-slate-300">General location derived from IP address, and specific locations you choose to share in your travel plans.</p>
                   </div>
 
                   <div>
-                    <div className="text-sm font-semibold text-gray-900">Cookies and Tracking Technologies</div>
-                    <p className="mt-1 text-sm leading-relaxed text-gray-600">Session cookies, persistent cookies, web beacons, and similar technologies to enhance your experience and analyze platform usage.</p>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Cookies and Tracking Technologies</div>
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-slate-300">Session cookies, persistent cookies, web beacons, and similar technologies to enhance your experience and analyze platform usage.</p>
                   </div>
                 </div>
               </div>
 
               <div className="pt-2">
-                <div className="text-base font-semibold text-gray-900">2.3 Information from Third Parties</div>
+                <div className="text-base font-semibold text-gray-900 dark:text-slate-100">2.3 Information from Third Parties</div>
 
-                <Alert className="mt-4 rounded-xl border border-amber-200 bg-amber-50/70">
-                  <AlertCircle className="h-4 w-4 text-amber-700" />
-                  <AlertDescription className="text-sm leading-relaxed text-amber-900">
+                <Alert className="mt-4 rounded-xl border border-amber-200 bg-amber-50/70 dark:border-amber-500/30 dark:bg-amber-500/10">
+                  <AlertCircle className="h-4 w-4 text-amber-700 dark:text-amber-200" />
+                  <AlertDescription className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">
                     We may receive information about you from third-party services you connect to our platform (such as Instagram), analytics providers, advertising partners, and publicly available sources. This information helps us verify your
                     identity, prevent fraud, and improve our services.
                   </AlertDescription>
                 </Alert>
               </div>
 
-              <Alert className="rounded-xl border border-amber-200 bg-amber-50/70">
-                <AlertCircle className="h-4 w-4 text-amber-700" />
-                <AlertTitle className="text-sm">Important</AlertTitle>
-                <AlertDescription className="text-sm text-gray-700">
+              <Alert className="rounded-xl border border-amber-200 bg-amber-50/70 dark:border-amber-500/30 dark:bg-amber-500/10">
+                <AlertCircle className="h-4 w-4 text-amber-700 dark:text-amber-200" />
+                <AlertTitle className="text-sm text-gray-900 dark:text-slate-100">Important</AlertTitle>
+                <AlertDescription className="text-sm text-gray-700 dark:text-slate-300">
                   Do not submit sensitive personal data (e.g., government IDs, payment card numbers, health info). catchme.live is not designed to process highly sensitive categories of data.
                 </AlertDescription>
               </Alert>
@@ -239,7 +241,7 @@ export default function PrivacyPolicyPage() {
           {/* 3 */}
           <SectionShell number="3" title="How We Use Your Information">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">We use information to run the Platform, keep it safe, and improve the experience.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">We use information to run the Platform, keep it safe, and improve the experience.</p>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <MiniRow icon={CalendarDays} title="Provide the service" description="Create profiles, publish visits/events, and power discovery." tone="success" />
@@ -248,45 +250,45 @@ export default function PrivacyPolicyPage() {
                 <MiniRow icon={Bell} title="Communications" description="Send essential updates, confirmations, or support replies." tone="purple" />
               </div>
 
-              <div className="rounded-xl border border-gray-200 bg-gray-50/40 p-4">
-                <div className="text-sm font-semibold text-gray-900">Legal bases (where applicable)</div>
-                <p className="mt-1 text-sm text-gray-700">Depending on your location, we process data based on consent, contract necessity, legitimate interests, and legal obligations.</p>
+              <div className="rounded-xl border border-gray-200 bg-gray-50/40 p-4 dark:border-slate-800/80 dark:bg-slate-900/40">
+                <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Legal bases (where applicable)</div>
+                <p className="mt-1 text-sm text-gray-700 dark:text-slate-300">Depending on your location, we process data based on consent, contract necessity, legitimate interests, and legal obligations.</p>
               </div>
               <div className="pt-2">
-                <div className="text-base font-semibold text-gray-900">Legal Basis for Processing (GDPR)</div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-700">For users in the European Economic Area (EEA), we process your personal data based on the following legal grounds:</p>
+                <div className="text-base font-semibold text-gray-900 dark:text-slate-100">Legal Basis for Processing (GDPR)</div>
+                <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-slate-300">For users in the European Economic Area (EEA), we process your personal data based on the following legal grounds:</p>
 
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5">
-                    <div className="text-gray-600">
+                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-slate-800/80 dark:bg-slate-900/60">
+                    <div className="text-gray-600 dark:text-slate-300">
                       <FileText className="h-6 w-6" />
                     </div>
-                    <div className="mt-4 text-base font-semibold text-gray-900">Contractual Necessity</div>
-                    <div className="mt-1 text-sm text-gray-600">To provide services you&apos;ve requested</div>
+                    <div className="mt-4 text-base font-semibold text-gray-900 dark:text-slate-100">Contractual Necessity</div>
+                    <div className="mt-1 text-sm text-gray-600 dark:text-slate-300">To provide services you&apos;ve requested</div>
                   </div>
 
-                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5">
-                    <div className="text-gray-600">
+                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-slate-800/80 dark:bg-slate-900/60">
+                    <div className="text-gray-600 dark:text-slate-300">
                       <Handshake className="h-6 w-6" />
                     </div>
-                    <div className="mt-4 text-base font-semibold text-gray-900">Consent</div>
-                    <div className="mt-1 text-sm text-gray-600">When you&apos;ve given explicit permission</div>
+                    <div className="mt-4 text-base font-semibold text-gray-900 dark:text-slate-100">Consent</div>
+                    <div className="mt-1 text-sm text-gray-600 dark:text-slate-300">When you&apos;ve given explicit permission</div>
                   </div>
 
-                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5">
-                    <div className="text-gray-600">
+                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-slate-800/80 dark:bg-slate-900/60">
+                    <div className="text-gray-600 dark:text-slate-300">
                       <Scale className="h-6 w-6" />
                     </div>
-                    <div className="mt-4 text-base font-semibold text-gray-900">Legitimate Interests</div>
-                    <div className="mt-1 text-sm text-gray-600">For business operations and improvements</div>
+                    <div className="mt-4 text-base font-semibold text-gray-900 dark:text-slate-100">Legitimate Interests</div>
+                    <div className="mt-1 text-sm text-gray-600 dark:text-slate-300">For business operations and improvements</div>
                   </div>
 
-                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5">
-                    <div className="text-gray-600">
+                  <div className="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-slate-800/80 dark:bg-slate-900/60">
+                    <div className="text-gray-600 dark:text-slate-300">
                       <Gavel className="h-6 w-6" />
                     </div>
-                    <div className="mt-4 text-base font-semibold text-gray-900">Legal Obligation</div>
-                    <div className="mt-1 text-sm text-gray-600">To comply with applicable laws</div>
+                    <div className="mt-4 text-base font-semibold text-gray-900 dark:text-slate-100">Legal Obligation</div>
+                    <div className="mt-1 text-sm text-gray-600 dark:text-slate-300">To comply with applicable laws</div>
                   </div>
                 </div>
               </div>
@@ -296,42 +298,46 @@ export default function PrivacyPolicyPage() {
           {/* 4 */}
           <SectionShell number="4" title="How We Share Your Information">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">We do not sell your personal information. We share data only when needed to operate the Platform or comply with law.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">We do not sell your personal information. We share data only when needed to operate the Platform or comply with law.</p>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <MiniRow icon={Users} title="Public content" description="Anything you publish (visits/events) may be visible publicly." tone="info" />
                 <MiniRow icon={Share2} title="Service providers" description="Hosting, analytics, and support tools that help us run catchme.live." tone="warn" />
               </div>
 
-              <Accordion type="single" collapsible className="rounded-xl border border-gray-200 bg-white">
+              <Accordion type="single" collapsible className="rounded-xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
                 <AccordionItem value="a" className="px-4">
-                  <AccordionTrigger className="text-sm">Service providers</AccordionTrigger>
-                  <AccordionContent className="text-sm text-gray-700">
+                  <AccordionTrigger className="text-sm text-gray-900 dark:text-slate-100">Service providers</AccordionTrigger>
+                  <AccordionContent className="text-sm text-gray-700 dark:text-slate-300">
                     We may share limited data with trusted vendors who process it on our behalf (e.g., cloud hosting, monitoring). They are bound by confidentiality and security obligations.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="b" className="px-4">
-                  <AccordionTrigger className="text-sm">Legal and safety</AccordionTrigger>
-                  <AccordionContent className="text-sm text-gray-700">We may disclose information if required by law, or if we believe disclosure is necessary to protect users, investigate fraud, or enforce our Terms.</AccordionContent>
+                  <AccordionTrigger className="text-sm text-gray-900 dark:text-slate-100">Legal and safety</AccordionTrigger>
+                  <AccordionContent className="text-sm text-gray-700 dark:text-slate-300">
+                    We may disclose information if required by law, or if we believe disclosure is necessary to protect users, investigate fraud, or enforce our Terms.
+                  </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="c" className="px-4">
-                  <AccordionTrigger className="text-sm">Business changes</AccordionTrigger>
-                  <AccordionContent className="text-sm text-gray-700">If catchme.live is involved in a merger, acquisition, or asset sale, your information may be transferred as part of that transaction, subject to this Policy.</AccordionContent>
+                  <AccordionTrigger className="text-sm text-gray-900 dark:text-slate-100">Business changes</AccordionTrigger>
+                  <AccordionContent className="text-sm text-gray-700 dark:text-slate-300">
+                    If catchme.live is involved in a merger, acquisition, or asset sale, your information may be transferred as part of that transaction, subject to this Policy.
+                  </AccordionContent>
                 </AccordionItem>
               </Accordion>
 
-              <Alert className="rounded-xl border border-blue-200 bg-blue-50/60">
-                <Info className="h-4 w-4 text-blue-700" />
-                <AlertTitle className="text-sm">Public vs. private</AlertTitle>
-                <AlertDescription className="text-sm text-gray-700">Public profile and visit details are visible to help people discover you. Private operational data (like logs) is not displayed publicly.</AlertDescription>
+              <Alert className="rounded-xl border border-blue-200 bg-blue-50/60 dark:border-blue-500/30 dark:bg-blue-500/10">
+                <Info className="h-4 w-4 text-blue-700 dark:text-blue-200" />
+                <AlertTitle className="text-sm text-gray-900 dark:text-slate-100">Public vs. private</AlertTitle>
+                <AlertDescription className="text-sm text-gray-700 dark:text-slate-300">Public profile and visit details are visible to help people discover you. Private operational data (like logs) is not displayed publicly.</AlertDescription>
               </Alert>
 
               <div className="pt-2">
-                <div className="text-base font-semibold text-gray-900">4.4 Business Transfers</div>
+                <div className="text-base font-semibold text-gray-900 dark:text-slate-100">4.4 Business Transfers</div>
 
-                <Alert className="mt-4 rounded-xl border border-amber-200 bg-amber-50/70">
-                  <AlertCircle className="h-4 w-4 text-amber-700" />
-                  <AlertDescription className="text-sm leading-relaxed text-amber-900">
+                <Alert className="mt-4 rounded-xl border border-amber-200 bg-amber-50/70 dark:border-amber-500/30 dark:bg-amber-500/10">
+                  <AlertCircle className="h-4 w-4 text-amber-700 dark:text-amber-200" />
+                  <AlertDescription className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">
                     In the event of a merger, acquisition, reorganization, sale of assets, or bankruptcy, your information may be transferred to the successor entity. We will notify you of any such change and provide you with choices regarding your
                     information.
                   </AlertDescription>
@@ -339,8 +345,8 @@ export default function PrivacyPolicyPage() {
               </div>
 
               <div className="pt-2">
-                <div className="text-base font-semibold text-gray-900">4.5 With Your Consent</div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-700">We may share your information for other purposes with your explicit consent or at your direction.</p>
+                <div className="text-base font-semibold text-gray-900 dark:text-slate-100">4.5 With Your Consent</div>
+                <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-slate-300">We may share your information for other purposes with your explicit consent or at your direction.</p>
               </div>
             </div>
           </SectionShell>
@@ -348,7 +354,7 @@ export default function PrivacyPolicyPage() {
           {/* 5 */}
           <SectionShell number="5" title="Cookies and Tracking Technologies">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">We use cookies and similar technologies to keep you signed in, remember preferences, and understand basic usage patterns.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">We use cookies and similar technologies to keep you signed in, remember preferences, and understand basic usage patterns.</p>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <MiniRow icon={Cookie} title="Essential cookies" description="Required for the platform to function properly. These cookies enable core functionality such as security, network management, and accessibility." tone="success" />
@@ -357,41 +363,41 @@ export default function PrivacyPolicyPage() {
                 <MiniRow icon={Speaker} title="Marketing" description="Track your activity across websites to deliver more relevant advertising and measure campaign effectiveness" tone="info" />
               </div>
 
-              <div className="rounded-xl border border-gray-200 bg-gray-50/40 p-4">
-                <div className="text-sm font-semibold text-gray-900">Your choices</div>
-                <p className="mt-1 text-sm text-gray-700">You can control cookies through your browser settings. Blocking some cookies may affect functionality.</p>
+              <div className="rounded-xl border border-gray-200 bg-gray-50/40 p-4 dark:border-slate-800/80 dark:bg-slate-900/40">
+                <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Your choices</div>
+                <p className="mt-1 text-sm text-gray-700 dark:text-slate-300">You can control cookies through your browser settings. Blocking some cookies may affect functionality.</p>
               </div>
             </div>
             <div className="pt-2">
-              <div className="text-base font-semibold text-gray-900">5.2 Managing Cookie Preferences</div>
+              <div className="text-base font-semibold text-gray-900 dark:text-slate-100">5.2 Managing Cookie Preferences</div>
 
-              <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50/60 p-5">
-                <div className="text-sm font-semibold text-blue-900">You can control and manage cookies in several ways:</div>
+              <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50/60 p-5 dark:border-blue-500/30 dark:bg-blue-500/10">
+                <div className="text-sm font-semibold text-blue-900 dark:text-blue-100">You can control and manage cookies in several ways:</div>
 
                 <ul className="mt-4 grid gap-3">
-                  <li className="flex items-start gap-3 text-sm text-blue-900">
-                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200">
+                  <li className="flex items-start gap-3 text-sm text-blue-900 dark:text-blue-100">
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200 dark:bg-blue-500/20 dark:text-blue-100 dark:ring-blue-500/40">
                       <Check className="h-4 w-4" />
                     </span>
                     <span className="leading-relaxed">Use our cookie consent banner to accept or reject non-essential cookies</span>
                   </li>
 
-                  <li className="flex items-start gap-3 text-sm text-blue-900">
-                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200">
+                  <li className="flex items-start gap-3 text-sm text-blue-900 dark:text-blue-100">
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200 dark:bg-blue-500/20 dark:text-blue-100 dark:ring-blue-500/40">
                       <Check className="h-4 w-4" />
                     </span>
                     <span className="leading-relaxed">Adjust your browser settings to block or delete cookies</span>
                   </li>
 
-                  <li className="flex items-start gap-3 text-sm text-blue-900">
-                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200">
+                  <li className="flex items-start gap-3 text-sm text-blue-900 dark:text-blue-100">
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200 dark:bg-blue-500/20 dark:text-blue-100 dark:ring-blue-500/40">
                       <Check className="h-4 w-4" />
                     </span>
                     <span className="leading-relaxed">Use browser extensions or privacy tools to manage tracking</span>
                   </li>
 
-                  <li className="flex items-start gap-3 text-sm text-blue-900">
-                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200">
+                  <li className="flex items-start gap-3 text-sm text-blue-900 dark:text-blue-100">
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 ring-1 ring-blue-200 dark:bg-blue-500/20 dark:text-blue-100 dark:ring-blue-500/40">
                       <Check className="h-4 w-4" />
                     </span>
                     <span className="leading-relaxed">Opt out of targeted advertising through industry opt-out tools</span>
@@ -404,7 +410,7 @@ export default function PrivacyPolicyPage() {
           {/* 6 */}
           <SectionShell number="6" title="Data Security and Retention">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">We use reasonable administrative, technical, and physical safeguards. However, no method of transmission or storage is 100% secure.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">We use reasonable administrative, technical, and physical safeguards. However, no method of transmission or storage is 100% secure.</p>
 
               <div className="grid gap-3 sm:grid-cols-3">
                 <MiniRow icon={Lock} title="Protection" description="Access controls and monitoring." tone="warn" />
@@ -412,19 +418,19 @@ export default function PrivacyPolicyPage() {
                 <MiniRow icon={Trash2} title="Retention" description="We keep data only as needed." tone="danger" />
               </div>
 
-              <Alert className="rounded-xl border border-amber-200 bg-amber-50/70">
-                <AlertCircle className="h-4 w-4 text-amber-700" />
-                <AlertTitle className="text-sm">Security note</AlertTitle>
-                <AlertDescription className="text-sm text-gray-700">If you suspect unauthorized access to your account, please contact us immediately. You can also revoke access from Instagram at any time.</AlertDescription>
+              <Alert className="rounded-xl border border-amber-200 bg-amber-50/70 dark:border-amber-500/30 dark:bg-amber-500/10">
+                <AlertCircle className="h-4 w-4 text-amber-700 dark:text-amber-200" />
+                <AlertTitle className="text-sm text-gray-900 dark:text-slate-100">Security note</AlertTitle>
+                <AlertDescription className="text-sm text-gray-700 dark:text-slate-300">If you suspect unauthorized access to your account, please contact us immediately. You can also revoke access from Instagram at any time.</AlertDescription>
               </Alert>
             </div>
             <div className="pt-4">
-              <div className="text-base font-semibold text-gray-900">6.2 Data Breach Response</div>
+              <div className="text-base font-semibold text-gray-900 dark:text-slate-100">6.2 Data Breach Response</div>
 
-              <Alert className="mt-4 rounded-xl border border-rose-200 bg-rose-50/60">
-                <AlertTriangle className="h-4 w-4 text-rose-700" />
-                <AlertTitle className="text-sm text-rose-900">Breach Notification</AlertTitle>
-                <AlertDescription className="text-sm leading-relaxed text-rose-900">
+              <Alert className="mt-4 rounded-xl border border-rose-200 bg-rose-50/60 dark:border-rose-500/30 dark:bg-rose-500/10">
+                <AlertTriangle className="h-4 w-4 text-rose-700 dark:text-rose-200" />
+                <AlertTitle className="text-sm text-rose-900 dark:text-rose-100">Breach Notification</AlertTitle>
+                <AlertDescription className="text-sm leading-relaxed text-rose-900 dark:text-rose-100">
                   In the unlikely event of a data breach that affects your personal information, we will notify you and relevant authorities as required by applicable law. We will provide information about the breach, the data affected, and steps you
                   can take to protect yourself.
                 </AlertDescription>
@@ -435,65 +441,65 @@ export default function PrivacyPolicyPage() {
           {/* 7 */}
           <SectionShell number="7" title="Your Rights and Choices">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">Depending on your location, you may have certain rights regarding your personal information.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">Depending on your location, you may have certain rights regarding your personal information.</p>
 
-              <div className="mt-1 rounded-2xl border border-fuchsia-200 bg-gradient-to-r from-fuchsia-50 to-violet-50 p-5">
+              <div className="mt-1 rounded-2xl border border-fuchsia-200 bg-gradient-to-r from-fuchsia-50 to-violet-50 p-5 dark:border-fuchsia-500/30 dark:from-fuchsia-900/30 dark:to-violet-900/30">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200 dark:bg-fuchsia-500/20 dark:text-fuchsia-200 dark:ring-fuchsia-500/40">
                       <Eye className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">Right to Access</div>
-                      <div className="mt-0.5 text-sm text-gray-600">Request copies of your personal information</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Right to Access</div>
+                      <div className="mt-0.5 text-sm text-gray-600 dark:text-slate-300">Request copies of your personal information</div>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200 dark:bg-fuchsia-500/20 dark:text-fuchsia-200 dark:ring-fuchsia-500/40">
                       <Pencil className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">Right to Rectification</div>
-                      <div className="mt-0.5 text-sm text-gray-600">Correct inaccurate information</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Right to Rectification</div>
+                      <div className="mt-0.5 text-sm text-gray-600 dark:text-slate-300">Correct inaccurate information</div>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200 dark:bg-fuchsia-500/20 dark:text-fuchsia-200 dark:ring-fuchsia-500/40">
                       <Trash2 className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">Right to Erasure</div>
-                      <div className="mt-0.5 text-sm text-gray-600">Request deletion of your data</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Right to Erasure</div>
+                      <div className="mt-0.5 text-sm text-gray-600 dark:text-slate-300">Request deletion of your data</div>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200 dark:bg-fuchsia-500/20 dark:text-fuchsia-200 dark:ring-fuchsia-500/40">
                       <Settings2 className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">Manage Preferences</div>
-                      <div className="mt-0.5 text-sm text-gray-600">Disconnect Instagram and update settings</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Manage Preferences</div>
+                      <div className="mt-0.5 text-sm text-gray-600 dark:text-slate-300">Disconnect Instagram and update settings</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200 dark:bg-fuchsia-500/20 dark:text-fuchsia-200 dark:ring-fuchsia-500/40">
                       <HardDriveDownload className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">Right to Data Portability</div>
-                      <div className="mt-0.5 text-sm text-gray-600">Receive your personal information in a structured, commonly used format and transfer it to another service.</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Right to Data Portability</div>
+                      <div className="mt-0.5 text-sm text-gray-600 dark:text-slate-300">Receive your personal information in a structured, commonly used format and transfer it to another service.</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fuchsia-100 text-fuchsia-700 ring-1 ring-fuchsia-200 dark:bg-fuchsia-500/20 dark:text-fuchsia-200 dark:ring-fuchsia-500/40">
                       <Pause className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">Right to Restrict Processing</div>
-                      <div className="mt-0.5 text-sm text-gray-600">Request that we limit how we use your personal information in certain situations.</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Right to Restrict Processing</div>
+                      <div className="mt-0.5 text-sm text-gray-600 dark:text-slate-300">Request that we limit how we use your personal information in certain situations.</div>
                     </div>
                   </div>
                 </div>
@@ -509,7 +515,7 @@ export default function PrivacyPolicyPage() {
           {/* 8 */}
           <SectionShell number="8" title="International Transfers">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">
                 If you access the Platform from outside the country where our servers or providers are located, your information may be transferred internationally. Where required, we use appropriate safeguards.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -522,11 +528,11 @@ export default function PrivacyPolicyPage() {
           {/* 9 */}
           <SectionShell number="9" title="Children’s Privacy">
             <div className="space-y-4">
-              <p className="text-sm leading-relaxed text-gray-700">catchme.live is not intended for children. We do not knowingly collect personal information from children.</p>
-              <Alert className="rounded-xl border border-rose-200 bg-rose-50/60">
-                <AlertCircle className="h-4 w-4 text-rose-700" />
-                <AlertTitle className="text-sm">Under 18</AlertTitle>
-                <AlertDescription className="text-sm text-gray-700">If you believe a child has provided personal data, contact us and we’ll take appropriate action.</AlertDescription>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">catchme.live is not intended for children. We do not knowingly collect personal information from children.</p>
+              <Alert className="rounded-xl border border-rose-200 bg-rose-50/60 dark:border-rose-500/30 dark:bg-rose-500/10">
+                <AlertCircle className="h-4 w-4 text-rose-700 dark:text-rose-200" />
+                <AlertTitle className="text-sm text-gray-900 dark:text-slate-100">Under 18</AlertTitle>
+                <AlertDescription className="text-sm text-gray-700 dark:text-slate-300">If you believe a child has provided personal data, contact us and we’ll take appropriate action.</AlertDescription>
               </Alert>
             </div>
           </SectionShell>
@@ -534,7 +540,7 @@ export default function PrivacyPolicyPage() {
           {/* 10 */}
           <SectionShell number="10" title="Changes to This Policy">
             <div className="space-y-3">
-              <p className="text-sm leading-relaxed text-gray-700">We may update this Privacy Policy to reflect product changes or legal requirements. If changes are material, we’ll provide reasonable notice.</p>
+              <p className="text-sm leading-relaxed text-gray-700 dark:text-slate-300">We may update this Privacy Policy to reflect product changes or legal requirements. If changes are material, we’ll provide reasonable notice.</p>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">Policy updates</Badge>
                 <Badge variant="secondary">Feature changes</Badge>
@@ -545,15 +551,15 @@ export default function PrivacyPolicyPage() {
 
           {/* FAQ cards block */}
           <div className="grid gap-4 pt-4 sm:grid-cols-2">
-            <Card className="rounded-2xl border border-gray-200 bg-white">
+            <Card className="rounded-2xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
                     <HelpCircle className="h-4 w-4" />
                   </div>
-                  <CardTitle className="text-sm">Questions about privacy?</CardTitle>
+                  <CardTitle className="text-sm text-gray-900 dark:text-slate-100">Questions about privacy?</CardTitle>
                 </div>
-                <CardDescription className="text-sm">Find common answers in our resources.</CardDescription>
+                <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Find common answers in our resources.</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <Button asChild variant="secondary" className="w-full">
@@ -562,15 +568,15 @@ export default function PrivacyPolicyPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl border border-gray-200 bg-white">
+            <Card className="rounded-2xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
                     <ExternalLink className="h-4 w-4" />
                   </div>
-                  <CardTitle className="text-sm">Related legal</CardTitle>
+                  <CardTitle className="text-sm text-gray-900 dark:text-slate-100">Related legal</CardTitle>
                 </div>
-                <CardDescription className="text-sm">Read the Terms that govern usage.</CardDescription>
+                <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Read the Terms that govern usage.</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <Button asChild variant="secondary" className="w-full">
@@ -579,15 +585,15 @@ export default function PrivacyPolicyPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl border border-gray-200 bg-white">
+            <Card className="rounded-2xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
                     <Instagram className="h-4 w-4" />
                   </div>
-                  <CardTitle className="text-sm">Instagram connection</CardTitle>
+                  <CardTitle className="text-sm text-gray-900 dark:text-slate-100">Instagram connection</CardTitle>
                 </div>
-                <CardDescription className="text-sm">Learn how linking Instagram works.</CardDescription>
+                <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Learn how linking Instagram works.</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <Button asChild variant="secondary" className="w-full">
@@ -596,15 +602,15 @@ export default function PrivacyPolicyPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl border border-gray-200 bg-white">
+            <Card className="rounded-2xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
                     <Mail className="h-4 w-4" />
                   </div>
-                  <CardTitle className="text-sm">Contact privacy</CardTitle>
+                  <CardTitle className="text-sm text-gray-900 dark:text-slate-100">Contact privacy</CardTitle>
                 </div>
-                <CardDescription className="text-sm">Data requests and privacy inquiries.</CardDescription>
+                <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Data requests and privacy inquiries.</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <Button asChild className="w-full">
@@ -617,20 +623,20 @@ export default function PrivacyPolicyPage() {
           {/* Questions */}
           <div className="pt-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">Questions About Our Privacy Policy?</div>
-              <p className="mx-auto mt-2 max-w-2xl text-sm text-gray-600">We’re happy to help. Choose the best option below and we’ll get back to you.</p>
+              <div className="text-2xl font-bold text-gray-900 dark:text-slate-100">Questions About Our Privacy Policy?</div>
+              <p className="mx-auto mt-2 max-w-2xl text-sm text-gray-600 dark:text-slate-300">We’re happy to help. Choose the best option below and we’ll get back to you.</p>
             </div>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              <Card className="rounded-2xl border border-gray-200 bg-white">
+              <Card className="rounded-2xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
                       <HelpCircle className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm">Help Center</CardTitle>
+                    <CardTitle className="text-sm text-gray-900 dark:text-slate-100">Help Center</CardTitle>
                   </div>
-                  <CardDescription className="text-sm">Common questions and support articles.</CardDescription>
+                  <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Common questions and support articles.</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <Button asChild variant="secondary" className="w-full">
@@ -639,15 +645,15 @@ export default function PrivacyPolicyPage() {
                 </CardContent>
               </Card>
 
-              <Card className="rounded-2xl border border-gray-200 bg-white">
+              <Card className="rounded-2xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
                       <Mail className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm">Email Privacy</CardTitle>
+                    <CardTitle className="text-sm text-gray-900 dark:text-slate-100">Email Privacy</CardTitle>
                   </div>
-                  <CardDescription className="text-sm">Privacy and data requests.</CardDescription>
+                  <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Privacy and data requests.</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <Button asChild className="w-full">
@@ -656,15 +662,15 @@ export default function PrivacyPolicyPage() {
                 </CardContent>
               </Card>
 
-              <Card className="rounded-2xl border border-gray-200 bg-white">
+              <Card className="rounded-2xl border border-gray-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-100 dark:bg-fuchsia-500/15 dark:text-fuchsia-200 dark:ring-fuchsia-500/30">
                       <ShieldCheck className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm">Security</CardTitle>
+                    <CardTitle className="text-sm text-gray-900 dark:text-slate-100">Security</CardTitle>
                   </div>
-                  <CardDescription className="text-sm">Report security concerns.</CardDescription>
+                  <CardDescription className="text-sm text-gray-600 dark:text-slate-300">Report security concerns.</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <Button asChild variant="secondary" className="w-full">

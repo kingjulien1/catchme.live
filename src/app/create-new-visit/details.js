@@ -18,16 +18,16 @@ function VisitTypeRadioCard({ value, id, title, subtitle, icon, iconWrapClassNam
 
       <Label
         htmlFor={id}
-        className="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 pr-12 shadow-sm transition hover:bg-gray-50 peer-data-[state=checked]:border-violet-300 peer-data-[state=checked]:bg-violet-50/40"
+        className="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 pr-12 shadow-sm transition hover:bg-gray-50 peer-data-[state=checked]:border-violet-300 peer-data-[state=checked]:bg-violet-50/40 dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none dark:hover:bg-slate-900/90 dark:peer-data-[state=checked]:border-violet-400/60 dark:peer-data-[state=checked]:bg-violet-500/10"
       >
         <div className={`grid h-10 w-10 place-items-center rounded-lg ${iconWrapClassName}`}>{icon}</div>
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-gray-900">{title}</p>
-          <p className="text-xs text-gray-500">{subtitle}</p>
+          <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">{title}</p>
+          <p className="text-xs text-gray-500 dark:text-slate-400">{subtitle}</p>
         </div>
       </Label>
 
-      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 grid h-4 w-4 place-items-center rounded-full border border-gray-200 bg-white text-gray-400 opacity-0 transition peer-data-[state=checked]:opacity-100 peer-data-[state=checked]:border-violet-600 peer-data-[state=checked]:bg-violet-600 peer-data-[state=checked]:text-white">
+      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 grid h-4 w-4 place-items-center rounded-full border border-gray-200 bg-white text-gray-400 opacity-0 transition peer-data-[state=checked]:opacity-100 peer-data-[state=checked]:border-violet-600 peer-data-[state=checked]:bg-violet-600 peer-data-[state=checked]:text-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:peer-data-[state=checked]:border-violet-400 dark:peer-data-[state=checked]:bg-violet-500">
         <CheckIcon className="h-3 w-3" />
       </span>
     </div>
@@ -51,7 +51,7 @@ export default function VisitDetailsSection() {
             <Label className="text-sm font-medium" htmlFor="instagram-handle">
               Destination Studio / Shop Instagram Handle
             </Label>
-            <p className="text-xs text-gray-500">Instagram Username</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
           </div>
           <InputGroup>
             <InputGroupInput id="instagram-handle" placeholder="Search..." />
@@ -64,7 +64,7 @@ export default function VisitDetailsSection() {
               </div>
             </InputGroupAddon>
           </InputGroup>
-          <p className="text-xs text-gray-500 -mt-1">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
+          <p className="text-xs text-gray-500 -mt-1 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
         </div>
 
         {/* Location Details Input Group */}
@@ -73,10 +73,10 @@ export default function VisitDetailsSection() {
             <Label className="text-sm font-medium" htmlFor="location">
               Visit Location
             </Label>
-            <p className="text-xs text-gray-500">Instagram Username</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
           </div>
           <Input id="location" placeholder="Vienna, Austria (or full address)" />
-          <p className="text-xs text-gray-500 -mt-1">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
+          <p className="text-xs text-gray-500 -mt-1 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
         </div>
       </article>
       <div className="pt-8 w-full space-y-4">
@@ -85,30 +85,44 @@ export default function VisitDetailsSection() {
             <Label className="text-sm font-medium" htmlFor="start-time">
               Start Date & Time
             </Label>
-            <Input id="start-time" type="datetime-local" className="w-full bg-white" />
+            <Input id="start-time" type="datetime-local" className="w-full bg-white dark:bg-slate-950" />
           </div>
           <div className="grid w-full items-center gap-3">
             <Label className="text-sm font-medium" htmlFor="end-time">
               End Date & Time
             </Label>
-            <Input id="end-time" type="datetime-local" className="w-full bg-white" />
+            <Input id="end-time" type="datetime-local" className="w-full bg-white dark:bg-slate-950" />
           </div>
         </div>
-        <Alert className="mt-4 bg-purple-50" variant="info">
-          <ClockIcon className="h-4 w-4" />
-          <AlertTitle className="text-sm font-semibold">Visit Duration</AlertTitle>
-          <AlertDescription className="text-sm text-gray-600">7 days and 8 hours</AlertDescription>
+        <Alert className="mt-4 bg-purple-50 dark:bg-purple-500/10" variant="info">
+          <ClockIcon className="h-4 w-4 text-purple-700 dark:text-purple-200" />
+          <AlertTitle className="text-sm font-semibold text-gray-900 dark:text-slate-100">Visit Duration</AlertTitle>
+          <AlertDescription className="text-sm text-gray-600 dark:text-slate-300">7 days and 8 hours</AlertDescription>
         </Alert>
         <div className="py-4 w-full space-y-4">
           <Label className="text-sm font-medium">Visit Type</Label>
 
           <RadioGroup defaultValue="guest" className="mt-2 grid gap-3 sm:grid-cols-2">
-            <VisitTypeRadioCard value="guest" id="visit-guest" title="Guest Spot" subtitle="Temporary visit" icon={<UserStarIcon className="h-5 w-5" />} iconWrapClassName="bg-violet-100 text-violet-700" />
-            <VisitTypeRadioCard value="residency" id="visit-residency" title="Residency" subtitle="Extended stay" icon={<Building2Icon className="h-5 w-5" />} iconWrapClassName="bg-pink-100 text-pink-700" />
-            <VisitTypeRadioCard value="convention" id="visit-convention" title="Convention" subtitle="Event appearance" icon={<UsersIcon className="h-5 w-5" />} iconWrapClassName="bg-indigo-100 text-indigo-700" />
-            <VisitTypeRadioCard value="workshop" id="visit-workshop" title="Workshop" subtitle="Teaching event" icon={<GraduationCapIcon className="h-5 w-5" />} iconWrapClassName="bg-emerald-100 text-emerald-700" />
-            <VisitTypeRadioCard value="popup" id="visit-popup" title="Pop-up" subtitle="Short-term event" icon={<StarIcon className="h-5 w-5" />} iconWrapClassName="bg-amber-100 text-amber-700" />
-            <VisitTypeRadioCard value="custom" id="visit-custom" title="Custom" subtitle="Create your own" icon={<PencilIcon className="h-5 w-5" />} iconWrapClassName="bg-gray-100 text-gray-700" />
+            <VisitTypeRadioCard value="guest" id="visit-guest" title="Guest Spot" subtitle="Temporary visit" icon={<UserStarIcon className="h-5 w-5" />} iconWrapClassName="bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200" />
+            <VisitTypeRadioCard value="residency" id="visit-residency" title="Residency" subtitle="Extended stay" icon={<Building2Icon className="h-5 w-5" />} iconWrapClassName="bg-pink-100 text-pink-700 dark:bg-pink-500/20 dark:text-pink-200" />
+            <VisitTypeRadioCard
+              value="convention"
+              id="visit-convention"
+              title="Convention"
+              subtitle="Event appearance"
+              icon={<UsersIcon className="h-5 w-5" />}
+              iconWrapClassName="bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200"
+            />
+            <VisitTypeRadioCard
+              value="workshop"
+              id="visit-workshop"
+              title="Workshop"
+              subtitle="Teaching event"
+              icon={<GraduationCapIcon className="h-5 w-5" />}
+              iconWrapClassName="bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200"
+            />
+            <VisitTypeRadioCard value="popup" id="visit-popup" title="Pop-up" subtitle="Short-term event" icon={<StarIcon className="h-5 w-5" />} iconWrapClassName="bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200" />
+            <VisitTypeRadioCard value="custom" id="visit-custom" title="Custom" subtitle="Create your own" icon={<PencilIcon className="h-5 w-5" />} iconWrapClassName="bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-200" />
           </RadioGroup>
         </div>
         <div className="w-full space-y-3">
@@ -118,42 +132,42 @@ export default function VisitDetailsSection() {
             </Label>
           </div>
 
-          <Textarea id="description" name="description" maxLength={500} placeholder="Add any additional details about your visit, special offerings, or what clients can expect…" className="min-h-32 bg-white" />
+          <Textarea id="description" name="description" maxLength={500} placeholder="Add any additional details about your visit, special offerings, or what clients can expect…" className="min-h-32 bg-white dark:bg-slate-950" />
 
-          <div className="flex flex-col gap-1 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1 text-xs text-gray-500 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <span>Share details about your availability, pricing, or booking process</span>
             <span>0 / 500</span>
           </div>
 
-          <Alert className="py-3 bg-sky-50" variant="default">
-            <InfoIcon />
-            <AlertTitle className="text-sm text-gray-800">Best Practices for Visit Descriptions</AlertTitle>
+          <Alert className="py-3 bg-sky-50 dark:bg-sky-500/10" variant="default">
+            <InfoIcon className="text-sky-700 dark:text-sky-200" />
+            <AlertTitle className="text-sm text-gray-800 dark:text-slate-100">Best Practices for Visit Descriptions</AlertTitle>
             <AlertDescription className="mt-3">
               <div className="grid gap-2 sm:grid-cols-2">
-                <div className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500" />
+                <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
+                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
                   <span>How to book (Instagram DMs, email, etc.)</span>
                 </div>
-                <div className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500" />
+                <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
+                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
                   <span>Age policy (18+, all ages welcome)</span>
                 </div>
 
-                <div className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500" />
+                <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
+                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
                   <span>Deposit requirements and amount</span>
                 </div>
-                <div className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500" />
+                <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
+                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
                   <span>Languages spoken</span>
                 </div>
 
-                <div className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500" />
+                <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
+                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
                   <span>Pricing range or minimum</span>
                 </div>
-                <div className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500" />
+                <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
+                  <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
                   <span>Specialties or style preferences</span>
                 </div>
               </div>
