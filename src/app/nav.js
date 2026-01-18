@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 
 import { Bell, BookOpen, CalendarDays, HandHeart, HelpCircle, Home, Instagram, Mail, MapPin, Menu, Moon, Search, ShieldCheck, Sun, Users } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -128,7 +128,7 @@ function ThemeToggleButton() {
 
 export default function TopAppBar() {
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-slate-800/80 dark:bg-slate-950/80 dark:supports-[backdrop-filter]:bg-slate-950/60 sm:px-4">
+    <nav className="absolute top-0 z-50 h-14 w-full border-b border-gray-200 bg-white/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-slate-800/80 dark:bg-slate-950/80 dark:supports-[backdrop-filter]:bg-slate-950/60 sm:px-4">
       <div className="relative flex items-center gap-3">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image src="/logo.svg" alt="Logo" width={28} height={28} />

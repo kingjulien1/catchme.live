@@ -51,7 +51,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-16 w-full border-t border-white/10 bg-gray-900">
+    <footer className="relative  w-full border-t border-white/10 bg-gray-900">
       {/* subtle top glow like the mock */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_40%_at_20%_0%,rgba(217,70,239,0.14),transparent_60%),radial-gradient(60%_40%_at_80%_0%,rgba(168,85,247,0.10),transparent_60%)]" />

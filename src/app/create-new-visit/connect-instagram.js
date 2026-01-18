@@ -4,7 +4,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ArrowLeftRight, CheckIcon, ChevronDown, InstagramIcon, ListOrdered, Settings, ShieldIcon, Star, User, UserCheck } from "lucide-react";
+import { useTransition } from "react";
 import Section from "./Section";
+import { connectInstagramAction } from "./actions";
 
 /**
  * ConnectInstagramSection component to connect an Instagram account.
@@ -15,6 +17,14 @@ import Section from "./Section";
  * @returns {JSX.Element} The rendered ConnectInstagramSection component.
  */
 export default function ConnectInstagramSection() {
+  const [isPending, startTransition] = useTransition();
+
+  const handleConnectInstagram = () => {
+    startTransition(() => {
+      connectInstagramAction();
+    });
+  };
+
   return (
     <Section
       title="Connect Your Instagram Account"
@@ -98,6 +108,8 @@ export default function ConnectInstagramSection() {
           type="button"
           size="lg"
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-linear-65 from-fuchsia-500 to-pink-500 px-4 py-4 text-sm font-semibold text-white shadow-sm transition hover:opacity-80 dark:from-fuchsia-400 dark:to-pink-400"
+          onClick={handleConnectInstagram}
+          disabled={isPending}
         >
           <InstagramIcon className="h-5 w-5" />
           Connect with Instagram
