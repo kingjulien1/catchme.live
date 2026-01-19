@@ -18,11 +18,11 @@ export default function ConnectInstagramButton() {
     <Button
       type="button"
       size="lg"
-      className="inline-flex items-center justify-center gap-2 rounded-xl bg-linear-65 from-fuchsia-500 to-pink-500 px-4 py-4 text-sm font-semibold text-white shadow-sm transition hover:opacity-80 dark:from-fuchsia-400 dark:to-pink-400"
+      className="inline-flex items-center justify-center gap-2 px-4 py-4 text-sm font-semibold text-white transition shadow-sm rounded-xl bg-linear-65 from-fuchsia-500 to-pink-500 hover:opacity-80 dark:from-fuchsia-400 dark:to-pink-400"
       onClick={handleConnectInstagram}
       disabled={isConnecting}
     >
-      <InstagramIcon className="h-5 w-5" />
+      <InstagramIcon className="w-5 h-5" />
       Connect with Instagram
     </Button>
   );

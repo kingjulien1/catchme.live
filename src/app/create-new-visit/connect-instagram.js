@@ -1,11 +1,11 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ArrowLeftRight, ChevronDown, InstagramIcon, ListOrdered, Settings, Star, User, UserCheck } from "lucide-react";
+import { sql } from "@/lib/db";
+import crypto from "crypto";
+import { ArrowLeftRight, Check, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
+import { cookies } from "next/headers";
 import Section from "./Section";
 import ConnectInstagramButton from "./connect-instagram-button";
-import { cookies } from "next/headers";
-import crypto from "crypto";
-import { sql } from "@/lib/db";
 
 const SESSION_COOKIE_NAME = "session";
 
@@ -61,12 +61,17 @@ export default async function ConnectInstagramSection() {
           <div className="flex items-center gap-4">
             <div className="relative">
               <img src={user.profile_picture_url || "/default-avatar.png"} alt={user.username ? `@${user.username}` : "Instagram profile"} className="object-cover rounded-full h-14 w-14 ring-2 ring-white dark:ring-slate-900" />
-              <span className="absolute flex items-center justify-center w-6 h-6 text-xs text-white rounded-full -bottom-1 -right-1 bg-emerald-500 ring-2 ring-white dark:ring-slate-900">✓</span>
+              <span className="absolute flex items-center justify-center w-6 h-6 text-xs text-white rounded-full -bottom-1 -right-1 bg-emerald-500 ring-2 ring-white dark:ring-slate-900">
+                <CloudCheck className="w-4 h-4" />
+              </span>
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-base font-semibold text-gray-900 dark:text-slate-100">@{user.username}</span>
-                <span className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-200">Synced</span>
+                <span className="text-base font-semibold text-fuchsia-500">@{user.username}</span>
+                <span className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-green-700 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-200">
+                  <Link className="inline-block w-3 h-3 mr-1" />
+                  connected
+                </span>
               </div>
               <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-500 dark:text-slate-400">
                 <span>{formatFollowers(user.followers_count)}</span>
@@ -79,10 +84,7 @@ export default async function ConnectInstagramSection() {
             type="button"
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-600 transition bg-white border border-gray-200 rounded-full shadow-sm hover:text-gray-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
           >
-            <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
-              <path d="M4 12a8 8 0 0 1 14.32-4.906l1.2-1.2A10 10 0 1 0 22 12h-2a8 8 0 0 1-16 0Z" fill="currentColor" />
-              <path d="M20 4v6h-6l2.29-2.29A7 7 0 0 1 20 12h2A9 9 0 0 0 20 4Z" fill="currentColor" />
-            </svg>
+            <RotateCw className="w-4 h-4" />
             Refresh
           </button>
         </div>
@@ -90,22 +92,17 @@ export default async function ConnectInstagramSection() {
         <div className="flex flex-col gap-3 mt-4 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between dark:text-slate-400">
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-2">
-              <span className="inline-flex items-center justify-center w-6 h-6 text-gray-500 bg-gray-100 rounded-full dark:bg-slate-800 dark:text-slate-300">🔒</span>
+              <Lock className="w-4 h-4" />
               Secure connection • Read-only
             </span>
-            <span className="hidden w-px h-4 bg-gray-200 sm:inline-block dark:bg-slate-700" />
-            <span>Instagram remains the source of truth</span>
           </div>
-          <span className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold tracking-wide uppercase border rounded-full whitespace-nowrap border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-            Data preserved on disconnect
-          </span>
         </div>
 
         <button
           type="button"
-          className="flex items-center justify-center w-full gap-2 px-5 py-4 mt-6 text-base font-semibold text-white transition shadow-sm rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+          className="flex items-center justify-center w-full gap-2 px-5 py-3 mt-6 text-base font-semibold text-white transition shadow-sm rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
         >
-          <span className="text-xl">⨯</span>
+          <Unlink className="w-4 h-4" />
           Disconnect Instagram Account
         </button>
       </Section>
