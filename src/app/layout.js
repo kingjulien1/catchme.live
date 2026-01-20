@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <TopAppBar />
-          <div className="flex-1 py-14 min-h-screen">{children}</div>
+          <div className="flex-1 min-h-screen py-12">{children}</div>
           <Footer />
         </ThemeProvider>
       </body>
