@@ -9,14 +9,19 @@ import VisitPreviewSection from "./preview";
 export default function NewVisitPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
-      {/* Centered content column */}
-      <div className="w-full max-w-3xl px-4 pt-2 pb-40 mx-auto sm:px-6 sm:pb-28 sm:pt-4 lg:px-8">
-        <div className="flex flex-col gap-2 pb-6 my-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight text-gray-900 scroll-m-20 first:mt-0 dark:text-slate-100 sm:text-3xl">Create a Visit</h1>
-            <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-slate-300 sm:text-base">Announce your upcoming travel plans and connect with your audience at new locations.</p>
+      <div className="w-full px-4 pt-2 mx-auto sm:px-6 sm:pt-4 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col items-center gap-2 pb-6 my-4 text-center sm:gap-4">
+            <div className="min-w-0">
+              <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-gray-900 scroll-m-20 first:mt-0 dark:text-slate-100 sm:text-5xl">Make a Live Stay</h1>
+              <p className="max-w-3xl mt-2 text-base leading-relaxed text-gray-500 dark:text-slate-500 sm:text-lg">Announce your upcoming travel plans and connect with your audience at new locations.</p>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Centered content column */}
+      <div className="w-full max-w-3xl px-4 pb-40 mx-auto sm:px-6 sm:pb-28 lg:px-8">
         {/* Connect Instagram */}
         <ConnectInstagramSection />
         {/* Divider */}

@@ -4,43 +4,6 @@ import { getSessionUser } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
 import Section from "./Section";
-import ConnectInstagramButton from "./connect-instagram-button";
-
-const SESSION_COOKIE_NAME = "session";
-
-function hashToken(token) {
-  return crypto.createHash("sha256").update(token).digest("hex");
-}
-
-function formatFollowers(count) {
-  if (typeof count !== "number") return "— followers";
-  return `${new Intl.NumberFormat("en-US", { notation: "compact" }).format(count)} followers`;
-}
-
-async function getSessionUser() {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  if (!sessionToken) return null;
-
-  const tokenHash = hashToken(sessionToken);
-  const [user] = await sql`
-    select
-      users.id,
-      users.username,
-      users.name,
-      users.profile_picture_url,
-      users.followers_count,
-      users.account_type,
-      users.media_count
-    from sessions
-    join users on users.id = sessions.user_id
-    where sessions.token_hash = ${tokenHash}
-      and sessions.expires_at > now()
-    limit 1
-  `;
-
-  return user || null;
-}
 
 /**
  * ConnectInstagramSection component to connect an Instagram account.
@@ -56,7 +19,7 @@ export default async function ConnectInstagramSection() {
   if (user) {
     return (
       <Section title="Instagram Account" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect your Instagram to sync your profile">
-        <div className="flex flex-col gap-4 p-4 mt-6 border border-gray-200 rounded-2xl bg-gray-50 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800/80 dark:bg-slate-900/60">
+        <div className="flex flex-col gap-4 p-4 mt-6 border border-fuchsia-400 rounded-2xl bg-fuchsia-500/50 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
               <img src={user.profile_picture_url || "/default-avatar.png"} alt={user.username ? `@${user.username}` : "Instagram profile"} className="object-cover rounded-full h-14 w-14 ring-2 ring-white dark:ring-slate-900" />
@@ -66,8 +29,8 @@ export default async function ConnectInstagramSection() {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-base font-semibold text-fuchsia-500">@{user.username}</span>
-                <span className="rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-green-700 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-200">
+                <span className="font-semibold text-fuchsia-600 dark:text-fuchsia-400">@{user.username}</span>
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
                   <Link className="inline-block w-3 h-3 mr-1" />
                   connected
                 </span>
@@ -189,7 +152,13 @@ export default async function ConnectInstagramSection() {
       </Alert>
 
       <div className="flex flex-col gap-3 mt-5 sm:flex-col sm:w-full">
-        <ConnectInstagramButton />
+        <a
+          href="/api/auth/instagram/start"
+          className="inline-flex items-center justify-center gap-2 px-4 py-4 text-sm font-semibold text-white transition shadow-sm rounded-xl bg-linear-65 from-fuchsia-500 to-pink-500 hover:opacity-80 dark:from-fuchsia-400 dark:to-pink-400"
+        >
+          <InstagramIcon className="w-5 h-5" />
+          Connect with Instagram
+        </a>
         <div className="text-xs text-center text-gray-500 dark:text-slate-400">
           By connecting, you agree to our <span className="text-fuchsia-700 hover:underline dark:text-fuchsia-300">Terms of Service</span> and <span className="text-fuchsia-700 hover:underline dark:text-fuchsia-300">Privacy Policy</span>.
         </div>
