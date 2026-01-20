@@ -19,7 +19,7 @@ export default async function ConnectInstagramSection() {
   if (user) {
     return (
       <Section title="Instagram Account" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect your Instagram to sync your profile">
-        <div className="flex flex-col gap-4 p-4 mt-6 border border-fuchsia-400 rounded-2xl bg-fuchsia-500/50 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 p-4 mt-6 bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-800 rounded-2xl sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
               <img src={user.profile_picture_url || "/default-avatar.png"} alt={user.username ? `@${user.username}` : "Instagram profile"} className="object-cover rounded-full h-14 w-14 ring-2 ring-white dark:ring-slate-900" />
@@ -29,7 +29,7 @@ export default async function ConnectInstagramSection() {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold text-fuchsia-600 dark:text-fuchsia-400">@{user.username}</span>
+                <span className="font-semibold text-gray-800 dark:text-fuchsia-400">@{user.username}</span>
                 <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
                   <Link className="inline-block w-3 h-3 mr-1" />
                   connected

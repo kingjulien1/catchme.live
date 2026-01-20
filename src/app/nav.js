@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Instagram, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { getSessionUser } from "@/lib/db";
@@ -37,7 +37,9 @@ export default async function TopAppBar() {
               href="/api/auth/instagram/start"
               className="inline-flex items-center px-4 py-0 ml-2 text-sm font-semibold text-white transition bg-black rounded-full shadow-sm h-11 hover:bg-gray-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
             >
-              Connect Instagram
+              <Instagram className="w-4 h-4 mr-2" />
+              <span className="sm:hidden">Connect</span>
+              <span className="hidden sm:inline">Connect Instagram</span>
             </Link>
           )}
         </div>
