@@ -1,9 +1,8 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { sql } from "@/lib/db";
-import crypto from "crypto";
-import { ArrowLeftRight, Check, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
-import { cookies } from "next/headers";
+import { getSessionUser } from "@/lib/db";
+import { formatFollowers } from "@/lib/utils";
+import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
 import Section from "./Section";
 import ConnectInstagramButton from "./connect-instagram-button";
 
@@ -98,13 +97,15 @@ export default async function ConnectInstagramSection() {
           </div>
         </div>
 
-        <button
-          type="button"
-          className="flex items-center justify-center w-full gap-2 px-5 py-3 mt-6 text-base font-semibold text-white transition shadow-sm rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
-        >
-          <Unlink className="w-4 h-4" />
-          Disconnect Instagram Account
-        </button>
+        <form action="/api/auth/instagram/logout?redirect=/create-new-visit" method="post" className="mt-6">
+          <button
+            type="submit"
+            className="flex items-center justify-center w-full gap-2 px-5 py-3 text-base font-semibold text-white transition shadow-sm rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+          >
+            <Unlink className="w-4 h-4" />
+            Disconnect Instagram Account
+          </button>
+        </form>
       </Section>
     );
   }
