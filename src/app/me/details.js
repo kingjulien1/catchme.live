@@ -1,20 +1,21 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { AtSignIcon, Building2Icon, CheckIcon, ClockIcon, GraduationCapIcon, InfoIcon, PencilIcon, PinIcon, SearchIcon, UsersIcon } from "lucide-react";
+import { Building2Icon, CheckIcon, ClockIcon, GraduationCapIcon, InfoIcon, PencilIcon, PinIcon, UsersIcon } from "lucide-react";
 
 import { StarIcon, UserStarIcon } from "lucide-react";
 import Section from "./Section";
+import DestinationAccountField from "./destination-account-field";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 function VisitTypeRadioCard({ value, id, title, subtitle, icon, iconWrapClassName }) {
   return (
     <div className="relative">
-      <RadioGroupItem value={value} id={id} className="peer sr-only" />
+      <RadioGroupItem value={value} id={id} className="sr-only peer" />
 
       <Label
         htmlFor={id}
@@ -28,7 +29,7 @@ function VisitTypeRadioCard({ value, id, title, subtitle, icon, iconWrapClassNam
       </Label>
 
       <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 grid h-4 w-4 place-items-center rounded-full border border-gray-200 bg-white text-gray-400 opacity-0 transition peer-data-[state=checked]:opacity-100 peer-data-[state=checked]:border-violet-600 peer-data-[state=checked]:bg-violet-600 peer-data-[state=checked]:text-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:peer-data-[state=checked]:border-violet-400 dark:peer-data-[state=checked]:bg-violet-500">
-        <CheckIcon className="h-3 w-3" />
+        <CheckIcon className="w-3 h-3" />
       </span>
     </div>
   );
@@ -42,52 +43,35 @@ function VisitTypeRadioCard({ value, id, title, subtitle, icon, iconWrapClassNam
  * @returns {JSX.Element} The rendered VisitDetailsSection component.
  */
 export default function VisitDetailsSection() {
+  const [locationValue, setLocationValue] = useState("");
+
   return (
-    <Section title="Visit Details" icon={<PinIcon className="h-4 w-4" />} subtitle="Provide information about your upcoming visit location and schedule.">
+    <Section title="Visit Details" icon={<PinIcon className="w-4 h-4" />} subtitle="Provide information about your upcoming visit location and schedule.">
       {/* Instagram Handle Input Group */}
       <article className="my-5 space-y-6">
-        <div className="grid w-full items-center gap-3">
-          <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-            <Label className="text-sm font-medium" htmlFor="instagram-handle">
-              Destination Studio / Shop Instagram Handle
-            </Label>
-            <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
-          </div>
-          <InputGroup>
-            <InputGroupInput id="instagram-handle" placeholder="Search..." />
-            <InputGroupAddon>
-              <AtSignIcon className="h-4 w-4 font-gray-200" />
-            </InputGroupAddon>
-            <InputGroupAddon align="inline-end">
-              <div className="flex size-4 items-center justify-center rounded-full">
-                <SearchIcon className="size-3" />
-              </div>
-            </InputGroupAddon>
-          </InputGroup>
-          <p className="text-xs text-gray-500 -mt-1 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
-        </div>
+        <DestinationAccountField onLocationChange={setLocationValue} />
 
         {/* Location Details Input Group */}
-        <div className="grid w-full items-center gap-3">
-          <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+        <div className="grid items-center w-full gap-3">
+          <div className="flex flex-col w-full gap-1 sm:flex-row sm:items-baseline sm:justify-between">
             <Label className="text-sm font-medium" htmlFor="location">
               Visit Location
             </Label>
             <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
           </div>
-          <Input id="location" placeholder="Vienna, Austria (or full address)" />
-          <p className="text-xs text-gray-500 -mt-1 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
+          <Input id="location" placeholder="Vienna, Austria (or full address)" value={locationValue} onChange={(event) => setLocationValue(event.target.value)} />
+          <p className="-mt-1 text-xs text-gray-500 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
         </div>
       </article>
-      <div className="pt-8 w-full space-y-4">
-        <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="grid w-full items-center gap-3">
+      <div className="w-full pt-8 space-y-4">
+        <div className="flex flex-col w-full gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="grid items-center w-full gap-3">
             <Label className="text-sm font-medium" htmlFor="start-time">
               Start Date & Time
             </Label>
             <Input id="start-time" type="datetime-local" className="w-full bg-white dark:bg-slate-950" />
           </div>
-          <div className="grid w-full items-center gap-3">
+          <div className="grid items-center w-full gap-3">
             <Label className="text-sm font-medium" htmlFor="end-time">
               End Date & Time
             </Label>
@@ -95,22 +79,22 @@ export default function VisitDetailsSection() {
           </div>
         </div>
         <Alert className="mt-4 bg-purple-50 dark:bg-purple-500/10" variant="info">
-          <ClockIcon className="h-4 w-4 text-purple-700 dark:text-purple-200" />
+          <ClockIcon className="w-4 h-4 text-purple-700 dark:text-purple-200" />
           <AlertTitle className="text-sm font-semibold text-gray-900 dark:text-slate-100">Visit Duration</AlertTitle>
           <AlertDescription className="text-sm text-gray-600 dark:text-slate-300">7 days and 8 hours</AlertDescription>
         </Alert>
-        <div className="py-4 w-full space-y-4">
+        <div className="w-full py-4 space-y-4">
           <Label className="text-sm font-medium">Visit Type</Label>
 
-          <RadioGroup defaultValue="guest" className="mt-2 grid gap-3 sm:grid-cols-2">
-            <VisitTypeRadioCard value="guest" id="visit-guest" title="Guest Spot" subtitle="Temporary visit" icon={<UserStarIcon className="h-5 w-5" />} iconWrapClassName="bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200" />
-            <VisitTypeRadioCard value="residency" id="visit-residency" title="Residency" subtitle="Extended stay" icon={<Building2Icon className="h-5 w-5" />} iconWrapClassName="bg-pink-100 text-pink-700 dark:bg-pink-500/20 dark:text-pink-200" />
+          <RadioGroup defaultValue="guest" className="grid gap-3 mt-2 sm:grid-cols-2">
+            <VisitTypeRadioCard value="guest" id="visit-guest" title="Guest Spot" subtitle="Temporary visit" icon={<UserStarIcon className="w-5 h-5" />} iconWrapClassName="bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200" />
+            <VisitTypeRadioCard value="residency" id="visit-residency" title="Residency" subtitle="Extended stay" icon={<Building2Icon className="w-5 h-5" />} iconWrapClassName="bg-pink-100 text-pink-700 dark:bg-pink-500/20 dark:text-pink-200" />
             <VisitTypeRadioCard
               value="convention"
               id="visit-convention"
               title="Convention"
               subtitle="Event appearance"
-              icon={<UsersIcon className="h-5 w-5" />}
+              icon={<UsersIcon className="w-5 h-5" />}
               iconWrapClassName="bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200"
             />
             <VisitTypeRadioCard
@@ -118,21 +102,21 @@ export default function VisitDetailsSection() {
               id="visit-workshop"
               title="Workshop"
               subtitle="Teaching event"
-              icon={<GraduationCapIcon className="h-5 w-5" />}
+              icon={<GraduationCapIcon className="w-5 h-5" />}
               iconWrapClassName="bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200"
             />
-            <VisitTypeRadioCard value="popup" id="visit-popup" title="Pop-up" subtitle="Short-term event" icon={<StarIcon className="h-5 w-5" />} iconWrapClassName="bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200" />
-            <VisitTypeRadioCard value="custom" id="visit-custom" title="Custom" subtitle="Create your own" icon={<PencilIcon className="h-5 w-5" />} iconWrapClassName="bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-200" />
+            <VisitTypeRadioCard value="popup" id="visit-popup" title="Pop-up" subtitle="Short-term event" icon={<StarIcon className="w-5 h-5" />} iconWrapClassName="bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200" />
+            <VisitTypeRadioCard value="custom" id="visit-custom" title="Custom" subtitle="Create your own" icon={<PencilIcon className="w-5 h-5" />} iconWrapClassName="bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-200" />
           </RadioGroup>
         </div>
         <div className="w-full space-y-3">
-          <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+          <div className="flex flex-col w-full gap-1 sm:flex-row sm:items-baseline sm:justify-between">
             <Label className="text-sm font-medium" htmlFor="description">
               Visit Description <span className="text-xs text-gray-400">(Optional)</span>
             </Label>
           </div>
 
-          <Textarea id="description" name="description" maxLength={500} placeholder="Add any additional details about your visit, special offerings, or what clients can expect…" className="min-h-32 bg-white dark:bg-slate-950" />
+          <Textarea id="description" name="description" maxLength={500} placeholder="Add any additional details about your visit, special offerings, or what clients can expect…" className="bg-white min-h-32 dark:bg-slate-950" />
 
           <div className="flex flex-col gap-1 text-xs text-gray-500 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <span>Share details about your availability, pricing, or booking process</span>

@@ -22,7 +22,7 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
   const cookieState = req.cookies.get("ig_oauth_state")?.value || null;
-  const redirectTo = req.cookies.get("ig_oauth_redirect")?.value || "/create-new-visit";
+  const redirectTo = req.cookies.get("ig_oauth_redirect")?.value || "/me";
 
   // Ensure we have the authorization code to proceed.
   if (!code) return NextResponse.json({ ok: false, error: "missing_code" }, { status: 400 });
@@ -35,6 +35,7 @@ export async function GET(req) {
   const tokenData = await exchangeCodeForShortLivedToken(code);
   const longLivedTokenData = await exchangeShortLivedTokenForLongLivedToken(tokenData.access_token);
   const userProfile = await fetchInstagramUserProfile(longLivedTokenData.access_token);
+  console.log("TOKEN", longLivedTokenData.access_token);
 
   // Upsert the user by Instagram ID and keep profile fields updated.
   const [user] = await sql`
@@ -79,7 +80,7 @@ export async function GET(req) {
   // Convert expires_in (seconds) to a timestamp for storage.
   const tokenExpiresAt = longLivedTokenData?.expires_in ? new Date(Date.now() + longLivedTokenData.expires_in * 1000) : null;
 
-  // Upsert the long-lived token for this user.
+  // Upsert the long-lived token for this user (stored in plaintext for now).
   await sql`
     insert into instagram_tokens (user_id, access_token_encrypted, token_expires_at, updated_at)
     values (${userId}, ${longLivedTokenData.access_token}, ${tokenExpiresAt}, now())
