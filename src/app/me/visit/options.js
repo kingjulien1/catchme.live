@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { CreditCardIcon } from "lucide-react";
 import Section from "../Section";
 
-function VisitOptionCard({ id, title, description, icon, checked, onCheckedChange }) {
+function VisitOptionCard({ id, name, title, description, icon, checked, onCheckedChange }) {
   return (
     <div
       className={cn(
@@ -19,7 +19,7 @@ function VisitOptionCard({ id, title, description, icon, checked, onCheckedChang
       <div className="flex items-start gap-3 sm:gap-4">
         {/* Checkbox */}
         <div className="shrink-0 pt-0.5">
-          <Checkbox id={id} checked={checked} onCheckedChange={onCheckedChange} />
+          <Checkbox id={id} name={name} checked={checked} onCheckedChange={onCheckedChange} />
         </div>
 
         {/* Content (clickable via label) */}
@@ -56,6 +56,7 @@ export default function VisitOptionsSection() {
       <div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4">
         <VisitOptionCard
           id="opt-bookings-open"
+          name="bookings_open"
           title="Bookings Open"
           description="Shows you’re available for new bookings or inquiries during this visit."
           checked={options.bookingsOpen}
@@ -69,6 +70,7 @@ export default function VisitOptionsSection() {
 
         <VisitOptionCard
           id="opt-appointment-only"
+          name="appointment_only"
           title="Appointment Only"
           description="Clients must schedule in advance—no walk-ins or drop-ins."
           checked={options.appointmentOnly}
@@ -82,6 +84,7 @@ export default function VisitOptionsSection() {
 
         <VisitOptionCard
           id="opt-18-id"
+          name="age_18_plus"
           title="18+ Only & ID Required"
           description="Guests must be 18+ and show valid ID where required."
           checked={options.age18Id}
@@ -95,6 +98,7 @@ export default function VisitOptionsSection() {
 
         <VisitOptionCard
           id="opt-deposit"
+          name="deposit_required"
           title="Deposit Required"
           description="A deposit is needed to confirm a booking or reservation."
           checked={options.depositRequired}
@@ -108,6 +112,7 @@ export default function VisitOptionsSection() {
 
         <VisitOptionCard
           id="opt-payment"
+          name="digital_payments"
           title="Card / Digital Payments Accepted"
           description="Payments can be made via card or digital methods like Apple Pay or Google Pay."
           checked={options.digitalPayments}
@@ -121,6 +126,7 @@ export default function VisitOptionsSection() {
 
         <VisitOptionCard
           id="opt-custom"
+          name="custom_requests"
           title="Custom Requests Accepted"
           description="You’re open to custom requests in addition to standard offerings."
           checked={options.customRequests}

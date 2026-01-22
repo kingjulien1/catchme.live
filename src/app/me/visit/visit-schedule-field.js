@@ -39,6 +39,7 @@ export default function VisitScheduleField() {
           </Label>
           <Input
             id="start-time"
+            name="visit_start_time"
             type="datetime-local"
             className="w-full bg-white dark:bg-slate-950"
             value={startTime}
@@ -58,6 +59,7 @@ export default function VisitScheduleField() {
           </Label>
           <Input
             id="end-time"
+            name="visit_end_time"
             type="datetime-local"
             className="w-full bg-white dark:bg-slate-950"
             value={endTime}

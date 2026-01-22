@@ -31,7 +31,7 @@ export default async function ConnectInstagramSection() {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold text-gray-800 dark:text-fuchsia-400">@{user.username}</span>
+                <span className="font-semibold text-fuchsia-500 dark:text-fuchsia-400">@{user.username}</span>
                 <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
                   <Link className="inline-block w-3 h-3 mr-1" />
                   connected

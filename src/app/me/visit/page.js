@@ -12,8 +12,15 @@ export default async function NewVisitPage() {
     redirect("/me");
   }
 
+  async function createVisit(formData) {
+    "use server";
+    const payload = Object.fromEntries(formData.entries());
+    console.log("CREATE VISIT", payload);
+    return payload;
+  }
+
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <form className="w-full mx-auto" action={createVisit}>
       <div className="mb-8">
         <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-slate-100 sm:text-4xl">Create a Visit</h1>
         <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 sm:text-base">Share your upcoming travel plans and connect with clients in new locations.</p>
@@ -27,6 +34,6 @@ export default async function NewVisitPage() {
           <ArrowRight className="w-5 h-5" />
         </Button>
       </div>
-    </div>
+    </form>
   );
 }

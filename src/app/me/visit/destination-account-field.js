@@ -54,6 +54,7 @@ export default function DestinationAccountField({ onLocationChange }) {
       <InputGroup>
         <InputGroupInput
           id="instagram-handle"
+          name="destination_instagram_handle"
           placeholder="Search..."
           value={handle}
           onChange={(event) => setHandle(event.target.value)}
@@ -85,7 +86,6 @@ export default function DestinationAccountField({ onLocationChange }) {
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
-      <p className="-mt-1 text-xs text-gray-500 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
       {verifiedProfile ? (
         <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 border rounded-xl border-emerald-200 bg-emerald-50/40 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-slate-200">
           <img src={verifiedProfile.profile_picture_url || "/default-avatar.png"} alt={verifiedProfile.username ? `@${verifiedProfile.username}` : "Profile"} className="object-cover rounded-full h-9 w-9" />

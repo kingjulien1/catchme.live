@@ -37,8 +37,7 @@ export default function VisitDetailsSection() {
               </Label>
               <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
             </div>
-            <Input id="location" placeholder="Vienna, Austria (or full address)" value={locationValue} onChange={(event) => setLocationValue(event.target.value)} />
-            <p className="-mt-1 text-xs text-gray-500 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
+            <Input id="location" name="visit_location" placeholder="Vienna, Austria (or full address)" value={locationValue} onChange={(event) => setLocationValue(event.target.value)} />
           </div>
         </div>
       </article>

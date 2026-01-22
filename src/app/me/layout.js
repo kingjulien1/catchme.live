@@ -1,16 +1,57 @@
-import { CalendarDays, CheckCircle2, HelpCircle, LifeBuoy, Link2, MapPin, PlayCircle, Sparkles, Telescope } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { getSessionUser } from "@/lib/db";
+import { Dot, Radio } from "lucide-react";
+import Link from "next/link";
 import ConnectInstagramSection from "./connect-instagram";
 
-export default function CreateNewVisitLayout({ children }) {
+function LiveNotice() {
+  return (
+    <section className="p-3 mb-6 bg-white border border-gray-200 rounded-2xl sm:p-6 dark:border-slate-800/80 dark:bg-slate-900/70">
+      <div className="flex items-center gap-3">
+        <div className={`mt-0.5 grid min-h-9 min-w-9 place-items-center rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 `}>
+          <Radio className="w-4 h-4" />
+        </div>
+        <div className="min-w-0">
+          <h4 className="text-xl font-semibold tracking-tight scroll-m-20">You're live!</h4>
+        </div>
+      </div>
+      <p className="mt-2 text-sm text-gray-900 dark:text-emerald-100/80">You can now be linked for visits and collaborations as soon as you&apos;re discovered.</p>
+      <div className="flex flex-col gap-3 p-2 mt-3 sm:p-4 sm:mt-4">
+        {[
+          { title: "Make a Visit", href: "/me/visit" },
+          { title: "My Visits", href: "/me/visits" },
+          { title: "My Public Profile", href: "/me/visit" },
+        ].map((item) => (
+          <div key={item.title} className="w-full rounded-2xl dark:border-slate-700">
+            <Link href={item.href} className="inline-flex items-center gap-1 text-sm font-medium text-fuchsia-600 hover:text-fuchsia-700 dark:text-fuchsia-400 dark:hover:text-fuchsia-300">
+              <Dot className="w-6 h-6" />
+              {item.title}
+            </Link>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default async function CreateNewVisitLayout({ children }) {
+  const user = await getSessionUser();
+
   return (
     <div className="min-h-screen pt-10 bg-gray-50 dark:bg-slate-950">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.12),_transparent_55%),radial-gradient(circle_at_20%_20%,_rgba(99,102,241,0.14),_transparent_50%),linear-gradient(180deg,_rgba(255,255,255,0.9),_rgba(255,255,255,0))] pointer-events-none dark:bg-[radial-gradient(circle_at_top,_rgba(217,70,239,0.16),_transparent_55%),radial-gradient(circle_at_20%_20%,_rgba(59,130,246,0.2),_transparent_50%),linear-gradient(180deg,_rgba(15,23,42,0.95),_rgba(15,23,42,0))]" />
       <div className="relative w-full max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
         <div className="grid gap-8">
-          <div className="w-full px-4 pb-24 mx-auto sm:px-6 sm:pb-20 lg:px-8">
-            <div className="w-full max-w-3xl mx-auto">
-              <ConnectInstagramSection />
+          <div className="w-full pb-24 mx-auto sm:px-6 sm:pb-20 lg:px-8">
+            <div className="w-full max-w-6xl mx-auto lg:py-14">
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+                <ConnectInstagramSection />
+                {user ? (
+                  <div className="hidden lg:block">
+                    <LiveNotice />
+                  </div>
+                ) : null}
+              </div>
             </div>
             <Separator className="w-full my-6 dark:bg-slate-800/80" />
             <div className="w-full max-w-6xl mx-auto">{children}</div>
