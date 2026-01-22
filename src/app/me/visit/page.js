@@ -1,12 +1,19 @@
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { getSessionUser } from "@/lib/db";
 import { ArrowRight } from "lucide-react";
 import VisitDetailsSection from "./details";
 import VisitOptionsSection from "./options";
 import VisitPreviewSection from "./preview";
 
-export default function NewVisitPage() {
+export default async function NewVisitPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect("/me");
+  }
+
   return (
-    <>
+    <div className="w-full max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-slate-100 sm:text-4xl">Create a Visit</h1>
         <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 sm:text-base">Share your upcoming travel plans and connect with clients in new locations.</p>
@@ -20,6 +27,6 @@ export default function NewVisitPage() {
           <ArrowRight className="w-5 h-5" />
         </Button>
       </div>
-    </>
+    </div>
   );
 }
