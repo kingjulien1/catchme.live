@@ -3,7 +3,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { getSessionUser } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
-import Section from "../Section";
+import Section from "./Section";
 import { Check } from "lucide-react";
 import { Shield } from "lucide-react";
 
@@ -81,15 +81,15 @@ export default async function ConnectInstagramSection() {
       icon={<InstagramIcon className="w-4 h-4" />}
       subtitle="We’ll use your Instagram profile to verify your identity and populate your artist profile. Importing your details makes setup faster—no need to enter everything again."
     >
-      <Alert className="p-4 mt-5 border border-gray-200 rounded-2xl bg-fuchsia-50">
-        <Shield className="w-4 h-4 text-blue-700" />
-        <AlertTitle className="flex items-center justify-between text-sm">
+      <Alert className="p-4 mt-5 border border-gray-200 rounded-2xl bg-fuchsia-50 dark:border-slate-800/80 dark:bg-fuchsia-100/10">
+        <Shield className="w-4 h-4 text-blue-700 dark:text-slate-100" />
+        <AlertTitle className="flex items-center justify-between text-sm text-gray-900 dark:text-slate-100">
           <span>Your account stays safe</span>
-          <a href="#security" className="text-xs font-semibold text-fuchsia-700 hover:underline">
+          <a href="#security" className="text-xs font-semibold text-fuchsia-700 hover:underline dark:text-fuchsia-300">
             Learn more
           </a>
         </AlertTitle>
-        <AlertDescription className="w-full text-sm text-gray-600">
+        <AlertDescription className="w-full text-sm text-gray-600 dark:text-slate-300">
           <p>We only access public profile information and never post without your permission - no edits, no posts, and you’re always in control. You can disconnect at any time.</p>
         </AlertDescription>
       </Alert>

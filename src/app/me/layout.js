@@ -1,6 +1,6 @@
 import { CalendarDays, CheckCircle2, HelpCircle, LifeBuoy, Link2, MapPin, PlayCircle, Sparkles, Telescope } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import ConnectInstagramSection from "./visit/connect-instagram";
+import ConnectInstagramSection from "./connect-instagram";
 
 export default function CreateNewVisitLayout({ children }) {
   return (
