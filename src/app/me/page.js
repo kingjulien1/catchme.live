@@ -31,7 +31,7 @@ export default function Me() {
             },
           ].map((card) => (
             <div key={card.title} className="p-6 transition bg-white border border-gray-200 shadow-sm rounded-2xl hover:-translate-y-1 hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/70">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 text-white shadow-sm">
+              <div className="inline-flex items-center justify-center w-12 h-12 text-white shadow-sm rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700">
                 <card.icon className="w-5 h-5" />
               </div>
               <h3 className="mt-4 text-base font-semibold text-gray-900 dark:text-slate-100">{card.title}</h3>
@@ -48,8 +48,57 @@ export default function Me() {
           ))}
         </div>
 
+        <section id="pro-account" className="px-6 py-10 mt-16 bg-white border border-gray-200 shadow-sm rounded-3xl dark:border-slate-800/80 dark:bg-slate-900/70">
+          <div className="text-center">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 sm:text-3xl">Creator or Business Account Required</h3>
+            <p className="mt-3 text-sm text-gray-600 dark:text-slate-300 sm:text-base">
+              Instagram&apos;s API only allows access to professional accounts. That means you&apos;ll need a Creator or Business account for us to sync your profile data, media, and insights. The switch is free, takes less than a minute, and
+              doesn&apos;t change your content.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <div className="p-5 border border-gray-200 rounded-2xl bg-gray-50 dark:border-slate-800/80 dark:bg-slate-900/50">
+              <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Why it&apos;s required</div>
+              <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Instagram restricts API access to Creator/Business accounts for privacy and security.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Professional accounts unlock insights and profile fields required for syncing.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  You can switch back anytime if you change your mind.
+                </li>
+              </ul>
+            </div>
+
+            <div className="p-5 bg-white border border-gray-200 rounded-2xl dark:border-slate-800/80 dark:bg-slate-900/70">
+              <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">How to switch in Instagram</div>
+              <ol className="mt-3 space-y-3 text-sm text-gray-600 dark:text-slate-300">
+                {[
+                  "Open Instagram and go to your profile.",
+                  "Tap the menu (≡) in the top-right corner.",
+                  "Select Settings and privacy → Account.",
+                  "Tap Switch to professional account.",
+                  "Choose Creator or Business and follow the prompts.",
+                  "Confirm your category and contact info, then finish setup.",
+                ].map((step, index) => (
+                  <li key={step} className="flex items-start gap-3">
+                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white dark:bg-slate-100 dark:text-slate-900">{index + 1}</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+
         <div className="mt-16 space-y-12">
-          <section className="px-6 py-10 text-white shadow-2xl rounded-3xl bg-slate-950 shadow-slate-900/30">
+          <section id="security" className="px-6 py-10 text-white shadow-2xl rounded-3xl bg-slate-950 shadow-slate-900/30">
             <div className="text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/80">Your Security Is Our Priority</p>
               <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">Secure, Permissioned, Transparent</h3>

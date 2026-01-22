@@ -4,6 +4,8 @@ import { getSessionUser } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
 import Section from "../Section";
+import { Check } from "lucide-react";
+import { Shield } from "lucide-react";
 
 /**
  * ConnectInstagramSection component to connect an Instagram account.
@@ -79,75 +81,32 @@ export default async function ConnectInstagramSection() {
       icon={<InstagramIcon className="w-4 h-4" />}
       subtitle="We’ll use your Instagram profile to verify your identity and populate your artist profile. Importing your details makes setup faster—no need to enter everything again."
     >
-      {/* <Alert className="p-4 mt-5 border border-gray-200 rounded-2xl bg-fuchsia-50">
-        <ShieldIcon className="w-4 h-4 text-blue-700" />
-        <AlertTitle className="text-sm">Your account stays safe</AlertTitle>
+      <Alert className="p-4 mt-5 border border-gray-200 rounded-2xl bg-fuchsia-50">
+        <Shield className="w-4 h-4 text-blue-700" />
+        <AlertTitle className="flex items-center justify-between text-sm">
+          <span>Your account stays safe</span>
+          <a href="#security" className="text-xs font-semibold text-fuchsia-700 hover:underline">
+            Learn more
+          </a>
+        </AlertTitle>
         <AlertDescription className="w-full text-sm text-gray-600">
           <p>We only access public profile information and never post without your permission - no edits, no posts, and you’re always in control. You can disconnect at any time.</p>
-
-          <div className="flex flex-wrap justify-center w-full gap-2 mt-3 sm:justify-around">
-            {["Profile Name & Picture", "Bio & Links", "Public Posts & Stories"].map((pill) => (
-              <span key={pill} className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium text-gray-700 border border-gray-200 rounded-full bg-white/70">
-                <CheckIcon className="w-4 h-4 text-emerald-500" />
-                {pill}
-              </span>
-            ))}
-          </div>
         </AlertDescription>
-      </Alert> */}
+      </Alert>
       {/* Creator/Business requirement */}
       <Alert className="p-4 mt-4 border border-gray-200 rounded-2xl bg-indigo-50/60 sm:p-5 dark:border-slate-800/80 dark:bg-indigo-500/10">
         <UserCheck className="w-4 h-4 text-indigo-700 dark:text-indigo-200" />
-        <AlertTitle className="text-sm text-gray-900 dark:text-slate-100">Creator or Business Account Required</AlertTitle>
+        <AlertTitle className="flex items-center justify-between text-sm text-gray-900 dark:text-slate-100">
+          <span>Creator or Business Account Required</span>
+          <a href="#pro-account" className="text-xs font-semibold text-indigo-700 hover:underline dark:text-indigo-200">
+            View steps
+          </a>
+        </AlertTitle>
         <AlertDescription className="text-sm text-gray-600 dark:text-slate-300">
           <p>
             Connection only works with <strong>Instagram Creator or Business accounts</strong>. Switching to a Creator or Business account has virtually no downsides — it’s free, keeps your content the same, and unlocks helpful tools that benefit
             your profile — takes less than 30 seconds.
           </p>
-
-          <Collapsible className="w-full mt-4">
-            <CollapsibleTrigger asChild>
-              <button
-                type="button"
-                className="flex items-center justify-between w-full px-0 py-2 text-xs font-semibold text-left text-gray-800 bg-transparent outline-none group focus:outline-none focus-visible:outline-none focus-visible:ring-0 dark:text-slate-100"
-              >
-                <span className="inline-flex items-center gap-2">
-                  <ListOrdered className="w-4 h-4 text-indigo-700 dark:text-indigo-200" />
-                  Show step-by-step setup
-                </span>
-                <ChevronDown className="h-4 w-4 text-gray-500 transition-transform group-data-[state=open]:rotate-180 dark:text-slate-400" />
-              </button>
-            </CollapsibleTrigger>
-
-            <CollapsibleContent className="pt-3">
-              {/* Steps (responsive) */}
-              <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-4">
-                {[
-                  {
-                    icon: <User className="w-4 h-4" />,
-                    label: "Profile → Menu → Settings",
-                  },
-                  {
-                    icon: <Settings className="w-4 h-4" />,
-                    label: "Account type and tools",
-                  },
-                  {
-                    icon: <ArrowLeftRight className="w-4 h-4" />,
-                    label: "Switch to professional",
-                  },
-                  {
-                    icon: <Star className="w-4 h-4" />,
-                    label: 'Choose "Creator or Business"',
-                  },
-                ].map((step) => (
-                  <div key={step.label} className="flex flex-col items-center justify-center w-full gap-2 px-3 py-4 text-center bg-white border border-gray-200 rounded-xl dark:border-slate-800/80 dark:bg-slate-900/70">
-                    <div className="flex items-center justify-center w-8 h-8 text-indigo-700 bg-indigo-100 rounded-full dark:bg-indigo-500/20 dark:text-indigo-200">{step.icon}</div>
-                    <p className="text-xs font-medium text-gray-700 dark:text-slate-200">{step.label}</p>
-                  </div>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
         </AlertDescription>
       </Alert>
 
