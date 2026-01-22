@@ -6,14 +6,14 @@ import * as React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { CreditCardIcon } from "lucide-react";
-import Section from "./Section";
+import Section from "../Section";
 
 function VisitOptionCard({ id, title, description, icon, checked, onCheckedChange }) {
   return (
     <div
       className={cn(
         "rounded-2xl border bg-white p-4 shadow-sm transition sm:p-5 dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none",
-        checked ? "border-violet-300 bg-violet-50/30 dark:border-violet-400/60 dark:bg-violet-500/10" : "border-gray-200 hover:bg-gray-50 dark:hover:bg-slate-900/90"
+        checked ? "border-violet-300 bg-violet-50/30 dark:border-violet-400/60 dark:bg-violet-500/10" : "border-gray-200 hover:bg-gray-50 dark:hover:bg-slate-900/90",
       )}
     >
       <div className="flex items-start gap-3 sm:gap-4">
@@ -23,7 +23,7 @@ function VisitOptionCard({ id, title, description, icon, checked, onCheckedChang
         </div>
 
         {/* Content (clickable via label) */}
-        <label htmlFor={id} name={id} className="flex w-full flex-1 min-w-0 cursor-pointer items-start gap-3">
+        <label htmlFor={id} name={id} className="flex items-start flex-1 w-full min-w-0 gap-3 cursor-pointer">
           <div className="shrink-0">{icon}</div>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 sm:text-base">{title}</p>
@@ -52,7 +52,7 @@ export default function VisitOptionsSection() {
   };
 
   return (
-    <Section title="Additional Options" subtitle="Configure booking preferences and policies for your visit" icon={<SlidersHorizontal className="h-6 w-6" />}>
+    <Section title="Additional Options" subtitle="Configure booking preferences and policies for your visit" icon={<SlidersHorizontal className="w-6 h-6" />}>
       <div className="mt-6 space-y-3 sm:space-y-4">
         <VisitOptionCard
           id="opt-bookings-open"
@@ -62,7 +62,7 @@ export default function VisitOptionsSection() {
           onCheckedChange={setOption("bookingsOpen")}
           icon={
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200 sm:h-10 sm:w-10">
-              <CalendarCheck2 className="h-5 w-5" />
+              <CalendarCheck2 className="w-5 h-5" />
             </div>
           }
         />
@@ -75,7 +75,7 @@ export default function VisitOptionsSection() {
           onCheckedChange={setOption("appointmentOnly")}
           icon={
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200 sm:h-10 sm:w-10">
-              <Clock3 className="h-5 w-5" />
+              <Clock3 className="w-5 h-5" />
             </div>
           }
         />
@@ -88,7 +88,7 @@ export default function VisitOptionsSection() {
           onCheckedChange={setOption("age18Id")}
           icon={
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200 sm:h-10 sm:w-10">
-              <BadgeCheck className="h-5 w-5" />
+              <BadgeCheck className="w-5 h-5" />
             </div>
           }
         />
@@ -100,8 +100,8 @@ export default function VisitOptionsSection() {
           checked={options.depositRequired}
           onCheckedChange={setOption("depositRequired")}
           icon={
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-200 sm:h-10 sm:w-10">
-              <HandCoins className="h-5 w-5" />
+            <div className="grid text-orange-700 bg-orange-100 h-9 w-9 place-items-center rounded-xl dark:bg-orange-500/20 dark:text-orange-200 sm:h-10 sm:w-10">
+              <HandCoins className="w-5 h-5" />
             </div>
           }
         />
@@ -113,8 +113,8 @@ export default function VisitOptionsSection() {
           checked={options.digitalPayments}
           onCheckedChange={setOption("digitalPayments")}
           icon={
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-200 sm:h-10 sm:w-10">
-              <CreditCardIcon className="h-5 w-5" />
+            <div className="grid text-blue-700 bg-blue-100 h-9 w-9 place-items-center rounded-xl dark:bg-blue-500/20 dark:text-blue-200 sm:h-10 sm:w-10">
+              <CreditCardIcon className="w-5 h-5" />
             </div>
           }
         />
@@ -126,8 +126,8 @@ export default function VisitOptionsSection() {
           checked={options.customRequests}
           onCheckedChange={setOption("customRequests")}
           icon={
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-pink-100 text-pink-700 dark:bg-pink-500/20 dark:text-pink-200 sm:h-10 sm:w-10">
-              <Sparkles className="h-5 w-5" />
+            <div className="grid text-pink-700 bg-pink-100 h-9 w-9 place-items-center rounded-xl dark:bg-pink-500/20 dark:text-pink-200 sm:h-10 sm:w-10">
+              <Sparkles className="w-5 h-5" />
             </div>
           }
         />

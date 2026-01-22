@@ -3,7 +3,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { getSessionUser } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
-import Section from "./Section";
+import Section from "../Section";
 
 /**
  * ConnectInstagramSection component to connect an Instagram account.
@@ -18,7 +18,7 @@ export default async function ConnectInstagramSection() {
 
   if (user) {
     return (
-      <Section title="Instagram Account" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect your Instagram to sync your profile">
+      <Section title="Link your Instagram" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect your Instagram to sync your profile">
         <div className="flex flex-col gap-4 p-4 mt-6 bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-800 rounded-2xl sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">

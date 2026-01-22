@@ -23,7 +23,7 @@ export default function ProfileMenu({ name, username, imageUrl }) {
           <Link href="/settings">Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/create-new-visit">Make an Appearence</Link>
+          <Link href="/me/visit">Make an Appearence</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

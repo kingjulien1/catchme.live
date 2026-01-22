@@ -20,8 +20,7 @@ export default function VisitTypeRadioCard({ value, id, title, subtitle, icon, i
         </div>
       </Label>
 
-      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 grid h-4 w-4 place-items-center rounded-full border border-gray-200 bg-white text-gray-400 opacity-0 transition peer-data-[state=checked]:opacity-100 peer-data-[state=checked]:border-violet-600 peer-data-[state=checked]:bg-violet-600 peer-data-[state=checked]:text-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:peer-data-[state=checked]:border-violet-400 dark:peer-data-[state=checked]:bg-violet-500"
-      >
+      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 grid h-4 w-4 place-items-center rounded-full border border-gray-200 bg-white text-gray-400 opacity-0 transition peer-data-[state=checked]:opacity-100 peer-data-[state=checked]:border-violet-600 peer-data-[state=checked]:bg-violet-600 peer-data-[state=checked]:text-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400 dark:peer-data-[state=checked]:border-violet-400 dark:peer-data-[state=checked]:bg-violet-500">
         <CheckIcon className="w-3 h-3" />
       </span>
     </div>

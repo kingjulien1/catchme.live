@@ -1,24 +1,20 @@
 import { CalendarDays, CheckCircle2, HelpCircle, LifeBuoy, Link2, MapPin, PlayCircle, Sparkles, Telescope } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import ConnectInstagramSection from "./connect-instagram";
+import ConnectInstagramSection from "./visit/connect-instagram";
 
 export default function CreateNewVisitLayout({ children }) {
   return (
     <div className="min-h-screen pt-10 bg-gray-50 dark:bg-slate-950">
       <div className="w-full max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] xl:gap-10">
-          <div className="w-full max-w-3xl px-4 pb-24 mx-auto sm:px-6 sm:pb-20 lg:px-8">
-            <ConnectInstagramSection />
-            <div className="flex items-center gap-3 my-6 sm:my-8">
-              <Separator className="flex-1 dark:bg-slate-800/80" />
-              <div className="grid text-gray-600 bg-white border border-gray-200 rounded-full shadow-sm h-7 w-7 shrink-0 place-items-center dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-300 dark:shadow-none sm:h-8 sm:w-8">
-                <Link2 className="w-3.5 h-3.5 sm:h-4 sm:w-4" />
-              </div>
-              <Separator className="flex-1 dark:bg-slate-800/80" />
+        <div className="grid gap-8">
+          <div className="w-full px-4 pb-24 mx-auto sm:px-6 sm:pb-20 lg:px-8">
+            <div className="w-full max-w-3xl mx-auto">
+              <ConnectInstagramSection />
             </div>
-            {children}
+            <Separator className="w-full my-6 dark:bg-slate-800/80" />
+            <div className="w-full max-w-6xl mx-auto">{children}</div>
           </div>
-          <aside className="hidden lg:block">
+          {/* <aside className="hidden lg:block">
             <div className="sticky space-y-6 top-24">
               <div className="p-5 text-white shadow-lg rounded-2xl bg-gradient-to-br from-violet-500/80 via-fuchsia-500/80 to-pink-500/80">
                 <div className="flex items-center gap-2 text-sm font-bold">
@@ -109,7 +105,7 @@ export default function CreateNewVisitLayout({ children }) {
                 </div>
               </div>
             </div>
-          </aside>
+          </aside> */}
         </div>
       </div>
     </div>

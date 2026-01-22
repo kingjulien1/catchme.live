@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@radix-ui/react-label";
 import { CheckIcon, InfoIcon, PinIcon } from "lucide-react";
 
-import Section from "./Section";
+import Section from "../Section";
 import DestinationAccountField from "./destination-account-field";
 import VisitScheduleField from "./visit-schedule-field";
 import VisitTypeField from "./visit-type-field";
