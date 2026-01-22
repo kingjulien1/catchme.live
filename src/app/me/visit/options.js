@@ -16,6 +16,7 @@ function VisitOptionCard({ id, name, title, description, icon, checked, onChecke
         checked ? "border-violet-300 bg-violet-50/30 dark:border-violet-400/60 dark:bg-violet-500/10" : "border-gray-200 hover:bg-gray-50 dark:hover:bg-slate-900/90",
       )}
     >
+      <input type="hidden" name={name} value={checked ? "true" : "false"} />
       <div className="flex items-start gap-3 sm:gap-4">
         {/* Checkbox */}
         <div className="shrink-0 pt-0.5">

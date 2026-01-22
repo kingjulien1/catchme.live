@@ -6,7 +6,7 @@ import { Label } from "@radix-ui/react-label";
 import { AtSignIcon, CheckIcon, Loader2, SearchIcon, InfoIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export default function DestinationAccountField({ onLocationChange }) {
+export default function DestinationAccountField({ onLocationChange, error }) {
   const [handle, setHandle] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -43,6 +43,8 @@ export default function DestinationAccountField({ onLocationChange }) {
     }
   };
 
+  const hasError = Boolean(error);
+
   return (
     <div className="grid items-center w-full gap-3">
       <div className="flex flex-col w-full gap-1 sm:flex-row sm:items-baseline sm:justify-between">
@@ -51,12 +53,13 @@ export default function DestinationAccountField({ onLocationChange }) {
         </Label>
         <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
       </div>
-      <InputGroup>
+      <InputGroup className={hasError ? "border-red-400 focus-within:border-red-400 focus-within:ring-red-300/40 focus-within:ring-[3px]" : ""}>
         <InputGroupInput
           id="instagram-handle"
           name="destination_instagram_handle"
           placeholder="Search..."
           value={handle}
+          aria-invalid={hasError}
           onChange={(event) => setHandle(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
@@ -86,6 +89,7 @@ export default function DestinationAccountField({ onLocationChange }) {
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
+      {error ? <p className="text-xs text-red-600 dark:text-red-400">{error}</p> : null}
       {verifiedProfile ? (
         <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 border rounded-xl border-emerald-200 bg-emerald-50/40 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-slate-200">
           <img src={verifiedProfile.profile_picture_url || "/default-avatar.png"} alt={verifiedProfile.username ? `@${verifiedProfile.username}` : "Profile"} className="object-cover rounded-full h-9 w-9" />
@@ -101,8 +105,8 @@ export default function DestinationAccountField({ onLocationChange }) {
       {verifyError ? (
         <Alert variant="info" className="bg-sky-50 dark:bg-sky-500/10">
           <InfoIcon className="text-sky-700 dark:text-sky-200" />
-          <AlertTitle className="text-sm font-semibold text-gray-900 dark:text-slate-100">Account not found yet</AlertTitle>
-          <AlertDescription className="text-sm text-gray-600 dark:text-slate-300">{verifyError}</AlertDescription>
+          <AlertTitle className="text-sm font-semibold text-red-700 dark:text-red-300">Account not found yet</AlertTitle>
+          <AlertDescription className="text-sm text-red-600 dark:text-red-300">{verifyError}</AlertDescription>
         </Alert>
       ) : null}
     </div>

@@ -7,12 +7,18 @@ import { StarIcon, UserStarIcon } from "lucide-react";
 
 import VisitTypeRadioCard from "./visit-type-radio-card";
 
-export default function VisitTypeField() {
+export default function VisitTypeField({ errors = {} }) {
   return (
     <div className="w-full py-4 space-y-4">
       <Label className="text-sm font-medium">Visit Type</Label>
+      {errors.visit_type ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_type}</p> : null}
 
-      <RadioGroup name="visit_type" defaultValue="guest" className="grid gap-3 mt-2 sm:grid-cols-2 lg:grid-cols-3">
+      <RadioGroup
+        name="visit_type"
+        defaultValue="guest"
+        aria-invalid={Boolean(errors.visit_type)}
+        className={`grid gap-3 mt-2 sm:grid-cols-2 lg:grid-cols-3 ${errors.visit_type ? "rounded-xl border border-red-300/70 p-2" : ""}`}
+      >
         <VisitTypeRadioCard value="guest" id="visit-guest" title="Guest Spot" subtitle="Temporary visit" icon={<UserStarIcon className="w-5 h-5" />} iconWrapClassName="bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200" />
         <VisitTypeRadioCard value="residency" id="visit-residency" title="Residency" subtitle="Extended stay" icon={<Building2Icon className="w-5 h-5" />} iconWrapClassName="bg-pink-100 text-pink-700 dark:bg-pink-500/20 dark:text-pink-200" />
         <VisitTypeRadioCard

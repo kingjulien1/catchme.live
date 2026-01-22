@@ -1,7 +1,9 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { getSessionUser } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
+import { formatDistanceToNowStrict } from "date-fns";
 import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
 import Section from "./Section";
 import { Check } from "lucide-react";
@@ -19,8 +21,21 @@ export default async function ConnectInstagramSection() {
   const user = await getSessionUser();
 
   if (user) {
+    const connectedBadge = (
+      <Badge className="tracking-wide uppercase border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
+        <span className="relative inline-flex w-2 h-2">
+          <span className="absolute inline-flex w-full h-full rounded-full animate-ping bg-emerald-500 opacity-70" />
+          <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+        </span>
+        connected
+      </Badge>
+    );
+
+    console.log("LAST SYNCED ", user);
+    const lastSyncedLabel = user.instagram_token_updated_at ? formatDistanceToNowStrict(new Date(user.instagram_token_updated_at), { addSuffix: true }) : "just now";
+
     return (
-      <Section title="Link your Instagram" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect your Instagram to sync your profile">
+      <Section title="Link your Instagram" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect your Instagram to sync your profile" headerRight={connectedBadge}>
         <div className="flex flex-col gap-4 p-4 mt-6 bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-800 rounded-2xl sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -32,15 +47,11 @@ export default async function ConnectInstagramSection() {
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-semibold text-fuchsia-500 dark:text-fuchsia-400">@{user.username}</span>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
-                  <Link className="inline-block w-3 h-3 mr-1" />
-                  connected
-                </span>
               </div>
               <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-500 dark:text-slate-400">
                 <span>{formatFollowers(user.followers_count)}</span>
                 <span className="hidden w-1 h-1 bg-gray-300 rounded-full sm:inline-block" />
-                <span>Last synced: just now</span>
+                <span>Last synced: {lastSyncedLabel}</span>
               </div>
             </div>
           </div>

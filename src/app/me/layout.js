@@ -12,10 +12,10 @@ function LiveNotice() {
           <Radio className="w-4 h-4" />
         </div>
         <div className="min-w-0">
-          <h4 className="text-xl font-semibold tracking-tight scroll-m-20">You're live!</h4>
+          <h4 className="text-xl font-semibold tracking-tight scroll-m-20">You&apos;re live!</h4>
         </div>
       </div>
-      <p className="mt-2 text-sm text-gray-900 dark:text-emerald-100/80">You can now be linked for visits and collaborations as soon as you&apos;re discovered.</p>
+      <p className="mt-2 text-sm">You can now be linked for visits and collaborations as soon as you&apos;re discovered.</p>
       <div className="flex flex-col gap-3 p-2 mt-3 sm:p-4 sm:mt-4">
         {[
           { title: "Make a Visit", href: "/me/visit" },

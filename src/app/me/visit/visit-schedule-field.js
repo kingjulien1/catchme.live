@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { ClockIcon } from "lucide-react";
 
-export default function VisitScheduleField() {
+export default function VisitScheduleField({ errors = {} }) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
@@ -41,9 +41,10 @@ export default function VisitScheduleField() {
             id="start-time"
             name="visit_start_time"
             type="datetime-local"
-            className="w-full bg-white dark:bg-slate-950"
+            className={`w-full bg-white dark:bg-slate-950 ${errors.visit_start_time ? "border-red-400 focus-visible:ring-red-300/40" : ""}`}
             value={startTime}
             max={endTime || undefined}
+            aria-invalid={Boolean(errors.visit_start_time)}
             onChange={(event) => {
               const next = event.target.value;
               setStartTime(next);
@@ -52,6 +53,7 @@ export default function VisitScheduleField() {
               }
             }}
           />
+          {errors.visit_start_time ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_start_time}</p> : null}
         </div>
         <div className="grid items-center w-full gap-3">
           <Label className="text-sm font-medium" htmlFor="end-time">
@@ -61,9 +63,10 @@ export default function VisitScheduleField() {
             id="end-time"
             name="visit_end_time"
             type="datetime-local"
-            className="w-full bg-white dark:bg-slate-950"
+            className={`w-full bg-white dark:bg-slate-950 ${errors.visit_end_time ? "border-red-400 focus-visible:ring-red-300/40" : ""}`}
             value={endTime}
             min={startTime || undefined}
+            aria-invalid={Boolean(errors.visit_end_time)}
             onChange={(event) => {
               const next = event.target.value;
               setEndTime(next);
@@ -72,8 +75,10 @@ export default function VisitScheduleField() {
               }
             }}
           />
+          {errors.visit_end_time ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_end_time}</p> : null}
         </div>
       </div>
+      {errors.visit_time_range ? <p className="mt-2 text-xs text-red-600 dark:text-red-400">{errors.visit_time_range}</p> : null}
       {durationLabel ? (
         <Alert className="mt-4 bg-purple-50 dark:bg-purple-500/10" variant="info">
           <ClockIcon className="w-4 h-4 text-purple-700 dark:text-purple-200" />
