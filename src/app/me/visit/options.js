@@ -53,7 +53,7 @@ export default function VisitOptionsSection() {
 
   return (
     <Section title="Additional Options" subtitle="Configure booking preferences and policies for your visit" icon={<SlidersHorizontal className="w-6 h-6" />}>
-      <div className="mt-6 space-y-3 sm:space-y-4">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4">
         <VisitOptionCard
           id="opt-bookings-open"
           title="Bookings Open"

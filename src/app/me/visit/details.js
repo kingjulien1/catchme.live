@@ -26,18 +26,20 @@ export default function VisitDetailsSection() {
     <Section title="Visit Details" icon={<PinIcon className="w-4 h-4" />} subtitle="Provide information about your upcoming visit location and schedule.">
       {/* Instagram Handle Input Group */}
       <article className="pt-6 my-4 space-y-6">
-        <DestinationAccountField onLocationChange={setLocationValue} />
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+          <DestinationAccountField onLocationChange={setLocationValue} />
 
-        {/* Location Details Input Group */}
-        <div className="grid items-center w-full gap-3">
-          <div className="flex flex-col w-full gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-            <Label className="text-sm font-medium" htmlFor="location">
-              Visit Location
-            </Label>
-            <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
+          {/* Location Details Input Group */}
+          <div className="grid items-center self-start w-full gap-3">
+            <div className="flex flex-col w-full gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+              <Label className="text-sm font-medium" htmlFor="location">
+                Visit Location
+              </Label>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
+            </div>
+            <Input id="location" placeholder="Vienna, Austria (or full address)" value={locationValue} onChange={(event) => setLocationValue(event.target.value)} />
+            <p className="-mt-1 text-xs text-gray-500 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
           </div>
-          <Input id="location" placeholder="Vienna, Austria (or full address)" value={locationValue} onChange={(event) => setLocationValue(event.target.value)} />
-          <p className="-mt-1 text-xs text-gray-500 dark:text-slate-400">Tip: If the studio doesn’t have an Instagram account, you can manually enter location details in the next field.</p>
         </div>
       </article>
       <div className="w-full space-y-4">
@@ -61,10 +63,10 @@ export default function VisitDetailsSection() {
             <InfoIcon className="text-sky-700 dark:text-sky-200" />
             <AlertTitle className="text-sm text-gray-800 dark:text-slate-100">Best Practices for Visit Descriptions</AlertTitle>
             <AlertDescription className="mt-3">
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
                   <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
-                  <span>How to book (Instagram DMs, email, etc.)</span>
+                  <span>How to book (Instagram DMs, etc.)</span>
                 </div>
                 <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
                   <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
