@@ -73,7 +73,7 @@ export default async function ConnectInstagramSection() {
           </div>
         </div>
 
-        <form action="/api/auth/instagram/logout?redirect=/create-new-visit" method="post" className="mt-6">
+        <form action="/api/auth/instagram/logout?redirect=/me" method="post" className="mt-6">
           <button
             type="submit"
             className="flex items-center justify-center w-full gap-2 px-5 py-3 text-base font-semibold text-white transition shadow-sm rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"

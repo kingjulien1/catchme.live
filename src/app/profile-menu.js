@@ -27,7 +27,7 @@ export default function ProfileMenu({ name, username, imageUrl }) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/api/auth/instagram/logout?redirect=/">Logout</Link>
+          <Link href="/api/auth/instagram/logout?redirect=/me">Logout</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
