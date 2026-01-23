@@ -52,7 +52,7 @@ export default async function CreateNewVisitLayout({ children }) {
                   </div>
                 ) : (
                   <div className="items-center justify-center hidden h-full lg:flex">
-                    <img src="/connect.WEBP" alt="Connect Instagram preview" className="w-full max-w-[320px] object-contain scale-x-[-1]" />
+                    <img src="/connect.png" alt="Connect Instagram preview" className="w-full max-w-[320px] object-contain scale-x-[-1]" />
                   </div>
                 )}
               </div>

@@ -134,8 +134,8 @@ export default function Me() {
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 sm:text-3xl">Permissions We Request</h3>
               <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 sm:text-base">We only ask for what we need to sync your profile and performance insights.</p>
             </div>
-            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_90%_100%,_rgba(236,72,153,0.16),_transparent_55%),radial-gradient(circle_at_85%_90%,_rgba(59,130,246,0.12),_transparent_55%)]" />
-            <div className="relative mt-8 grid gap-4 lg:grid-cols-2">
+            <div className="absolute inset-0 pointer-events-none rounded-3xl" />
+            <div className="relative grid gap-4 mt-8 lg:grid-cols-2">
               {[
                 { title: "Basic Profile", copy: "Access your profile, photo, and bio details.", status: "Required", icon: User, tone: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-200" },
                 { title: "Media Insights", copy: "Read post engagement and performance metrics.", status: "Required", icon: BarChart3, tone: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-200" },
@@ -219,6 +219,29 @@ export default function Me() {
             </div>
           </section>
 
+          <section>
+            <div className="text-center">
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 sm:text-3xl">Need Help Connecting?</h3>
+              <p className="mt-2 text-sm text-gray-600 dark:text-slate-300 sm:text-base">Our support team is here to help you every step of the way.</p>
+            </div>
+            <div className="grid gap-4 mt-8 md:grid-cols-3">
+              {[
+                { title: "Documentation", copy: "Step-by-step guides and tutorials for connecting Instagram", cta: "View Docs →", icon: BookOpen, href: "/about/help" },
+                { title: "Live Chat", copy: "Chat with our support team in real-time", cta: "Start Chat →", icon: MessageCircle, href: "/support" },
+                { title: "Email Support", copy: "Get detailed help via email within 24 hours", cta: "Send Email →", icon: Mail, href: "/about/contact" },
+              ].map((card) => (
+                <a key={card.title} href={card.href} className="p-6 text-center transition bg-white border border-gray-200 shadow-sm rounded-2xl hover:-translate-y-1 hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/70">
+                  <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-violet-100 text-violet-600 dark:bg-violet-500/20 dark:text-violet-200">
+                    <card.icon className="w-5 h-5" />
+                  </span>
+                  <h4 className="mt-4 text-base font-semibold text-gray-900 dark:text-slate-100">{card.title}</h4>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">{card.copy}</p>
+                  <span className="inline-block mt-4 text-sm font-semibold text-violet-600 dark:text-violet-300">{card.cta}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+
           <section className="px-6 py-10 text-center border shadow-lg rounded-3xl border-fuchsia-200 bg-gradient-to-br from-fuchsia-50 via-white to-rose-50 dark:border-slate-800/80 dark:from-slate-900/80 dark:via-slate-950 dark:to-slate-900/80">
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 sm:text-3xl">Ready to Connect Your Instagram?</h3>
             <p className="mt-2 text-sm text-gray-600 dark:text-slate-300 sm:text-base">Join thousands of artists who have streamlined their profile with Instagram integration.</p>
@@ -240,29 +263,6 @@ export default function Me() {
                   <Check className="w-4 h-4 text-emerald-500" />
                   {item}
                 </span>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <div className="text-center">
-              <h3 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 sm:text-3xl">Need Help Connecting?</h3>
-              <p className="mt-2 text-sm text-gray-600 dark:text-slate-300 sm:text-base">Our support team is here to help you every step of the way.</p>
-            </div>
-            <div className="grid gap-4 mt-8 md:grid-cols-3">
-              {[
-                { title: "Documentation", copy: "Step-by-step guides and tutorials for connecting Instagram", cta: "View Docs →", icon: BookOpen, href: "/about/help" },
-                { title: "Live Chat", copy: "Chat with our support team in real-time", cta: "Start Chat →", icon: MessageCircle, href: "/support" },
-                { title: "Email Support", copy: "Get detailed help via email within 24 hours", cta: "Send Email →", icon: Mail, href: "/about/contact" },
-              ].map((card) => (
-                <a key={card.title} href={card.href} className="p-6 text-center transition bg-white border border-gray-200 shadow-sm rounded-2xl hover:-translate-y-1 hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/70">
-                  <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-violet-100 text-violet-600 dark:bg-violet-500/20 dark:text-violet-200">
-                    <card.icon className="w-5 h-5" />
-                  </span>
-                  <h4 className="mt-4 text-base font-semibold text-gray-900 dark:text-slate-100">{card.title}</h4>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">{card.copy}</p>
-                  <span className="inline-block mt-4 text-sm font-semibold text-violet-600 dark:text-violet-300">{card.cta}</span>
-                </a>
               ))}
             </div>
           </section>

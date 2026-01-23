@@ -1,21 +1,26 @@
 import { redirect } from "next/navigation";
-import { getSessionUser } from "@/lib/db";
+import { getSessionUser, sql } from "@/lib/db";
 import VisitForm from "./visit-form";
 
 const allowedVisitTypes = ["guest", "residency", "convention", "workshop", "popup", "custom"];
 
 export default async function NewVisitPage() {
   const user = await getSessionUser();
-  if (!user) {
-    redirect("/me");
-  }
+  if (!user) redirect("/me");
 
   async function createVisit(_prevState, formData) {
     "use server";
+    const sessionUser = await getSessionUser();
+    if (!sessionUser) {
+      return { errors: { form: "Please sign in again to create a visit." }, message: "Session expired. Please try again." };
+    }
+
     const raw = Object.fromEntries(formData.entries());
     const errors = {};
 
-    if (!raw.destination_instagram_handle?.trim()) {
+    const destinationHandle = raw.destination_instagram_handle?.trim().replace(/^@/, "").toLowerCase();
+
+    if (!destinationHandle) {
       errors.destination_instagram_handle = "Please add a destination Instagram handle.";
     }
 
@@ -25,10 +30,6 @@ export default async function NewVisitPage() {
 
     if (!raw.visit_start_time) {
       errors.visit_start_time = "Please select a start date and time.";
-    }
-
-    if (!raw.visit_end_time) {
-      errors.visit_end_time = "Please select an end date and time.";
     }
 
     if (raw.visit_start_time && raw.visit_end_time) {
@@ -50,6 +51,55 @@ export default async function NewVisitPage() {
     if (Object.keys(errors).length > 0) {
       return { errors, message: "Please fix the highlighted fields." };
     }
+
+    const toBoolean = (value) => value === "true";
+    const visitEndTime = raw.visit_end_time ? new Date(raw.visit_end_time) : null;
+
+    const [destinationUser] = await sql`
+      insert into users (username)
+      values (${destinationHandle})
+      on conflict (username) do update set username = excluded.username
+      returning id
+    `;
+
+    if (!destinationUser?.id) {
+      return { errors: { form: "Unable to resolve destination account." }, message: "Could not create the visit. Try again." };
+    }
+
+    await sql`
+      insert into visits (
+        author_user_id,
+        destination_user_id,
+        destination_instagram_handle,
+        visit_location,
+        visit_start_time,
+        visit_end_time,
+        visit_type,
+        description,
+        bookings_open,
+        appointment_only,
+        age_18_plus,
+        deposit_required,
+        digital_payments,
+        custom_requests
+      )
+      values (
+        ${sessionUser.id},
+        ${destinationUser.id},
+        ${destinationHandle},
+        ${raw.visit_location?.trim()},
+        ${new Date(raw.visit_start_time)},
+        ${visitEndTime},
+        ${raw.visit_type},
+        ${raw.description?.trim() || null},
+        ${toBoolean(raw.bookings_open)},
+        ${toBoolean(raw.appointment_only)},
+        ${toBoolean(raw.age_18_plus)},
+        ${toBoolean(raw.deposit_required)},
+        ${toBoolean(raw.digital_payments)},
+        ${toBoolean(raw.custom_requests)}
+      )
+    `;
 
     return { errors: {}, message: "" };
   }
