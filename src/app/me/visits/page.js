@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getSessionUser, sql } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
-import { CalendarDays, Clock, MapPin, User } from "lucide-react";
+import { Archive, CalendarDays, Clock, Copy, MapPin, MoreHorizontal, Pencil, Tag, Trash2, User } from "lucide-react";
 import AccountHandle from "../account-handle";
 
 export default async function VisitsPage() {
@@ -62,24 +64,34 @@ export default async function VisitsPage() {
             const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
             const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
             const handle = visit.destination_instagram_handle?.startsWith("@") ? visit.destination_instagram_handle : `@${visit.destination_instagram_handle}`;
+            const displayName = visit.destination_name || visit.destination_username || handle.replace(/^@/, "");
 
             return (
               <article key={visit.id} className="p-5 transition bg-white border border-gray-200 shadow-sm rounded-2xl hover:border-gray-300 dark:border-slate-800/80 dark:bg-slate-900/70 dark:hover:border-slate-700">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="space-y-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <AccountHandle
-                        username={handle}
-                        name={visit.destination_name}
-                        profilePictureUrl={visit.destination_profile_picture_url}
-                        followersCount={visit.destination_followers_count}
-                        accountType={visit.destination_account_type}
-                        mediaCount={visit.destination_media_count}
-                        className="text-lg"
-                      />
-                      <Badge className="border border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-500/40 dark:bg-violet-500/10 dark:text-violet-200">
-                        {formatVisitType(visit.visit_type)}
-                      </Badge>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="w-10 h-10 overflow-hidden bg-gray-100 border border-gray-200 rounded-full dark:border-slate-700 dark:bg-slate-800">
+                        {visit.destination_profile_picture_url ? (
+                          <img src={visit.destination_profile_picture_url} alt={handle} className="object-cover w-full h-full" />
+                        ) : (
+                          <div className="grid w-full h-full text-gray-400 place-items-center dark:text-slate-400">
+                            <User className="w-4 h-4" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-700 dark:text-slate-200">{displayName}</p>
+                        <AccountHandle
+                          username={handle}
+                          name={visit.destination_name}
+                          profilePictureUrl={visit.destination_profile_picture_url}
+                          followersCount={visit.destination_followers_count}
+                          accountType={visit.destination_account_type}
+                          mediaCount={visit.destination_media_count}
+                          className="text-lg"
+                        />
+                      </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-slate-400">
                       <span className="inline-flex items-center gap-1">
@@ -99,10 +111,36 @@ export default async function VisitsPage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-slate-400">
-                    <Badge className="border border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                      <User className="w-3 h-3" />
-                      {visit.destination_username ? `Linked to ${visit.destination_username}` : "Unlinked destination"}
+                    <Badge className="border border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-500/40 dark:bg-violet-500/10 dark:text-violet-200">
+                      <Tag className="w-3 h-3" />
+                      {formatVisitType(visit.visit_type)}
                     </Badge>
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon-sm" className="w-7 h-7 border border-transparent rounded-full hover:border-gray-200 dark:hover:border-slate-700">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-44">
+                        <DropdownMenuItem>
+                          <Pencil className="w-4 h-4" />
+                          Edit visit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Copy className="w-4 h-4" />
+                          Duplicate
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Archive className="w-4 h-4" />
+                          Archive
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400">
+                          <Trash2 className="w-4 h-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div>
 

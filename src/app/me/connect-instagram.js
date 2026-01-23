@@ -8,6 +8,7 @@ import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrder
 import Section from "./Section";
 import { Check } from "lucide-react";
 import { Shield } from "lucide-react";
+import AccountHandle from "./account-handle";
 
 /**
  * ConnectInstagramSection component to connect an Instagram account.
@@ -46,7 +47,7 @@ export default async function ConnectInstagramSection() {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold text-fuchsia-500 dark:text-fuchsia-400">@{user.username}</span>
+                <AccountHandle username={user.username} name={user.name} profilePictureUrl={user.profile_picture_url} followersCount={user.followers_count} accountType={user.account_type} mediaCount={user.media_count} />
               </div>
               <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-500 dark:text-slate-400">
                 <span>{formatFollowers(user.followers_count)}</span>
