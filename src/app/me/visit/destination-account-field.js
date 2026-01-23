@@ -6,7 +6,7 @@ import { Label } from "@radix-ui/react-label";
 import { AtSignIcon, CheckIcon, Loader2, SearchIcon, InfoIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export default function DestinationAccountField({ onLocationChange, error }) {
+export default function DestinationAccountField({ onLocationChange, error, onFieldChange }) {
   const [handle, setHandle] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -60,7 +60,10 @@ export default function DestinationAccountField({ onLocationChange, error }) {
           placeholder="Search..."
           value={handle}
           aria-invalid={hasError}
-          onChange={(event) => setHandle(event.target.value)}
+          onChange={(event) => {
+            setHandle(event.target.value);
+            onFieldChange?.("destination_instagram_handle");
+          }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
               event.preventDefault();

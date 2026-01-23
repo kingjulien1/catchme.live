@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { ClockIcon } from "lucide-react";
 
-export default function VisitScheduleField({ errors = {} }) {
+export default function VisitScheduleField({ errors = {}, onFieldChange }) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
@@ -51,6 +51,8 @@ export default function VisitScheduleField({ errors = {} }) {
               if (endTime && next && next > endTime) {
                 setEndTime("");
               }
+              onFieldChange?.("visit_start_time");
+              onFieldChange?.("visit_time_range");
             }}
           />
           {errors.visit_start_time ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_start_time}</p> : null}
@@ -73,6 +75,8 @@ export default function VisitScheduleField({ errors = {} }) {
               if (startTime && next && next < startTime) {
                 setStartTime("");
               }
+              onFieldChange?.("visit_end_time");
+              onFieldChange?.("visit_time_range");
             }}
           />
           {errors.visit_end_time ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_end_time}</p> : null}

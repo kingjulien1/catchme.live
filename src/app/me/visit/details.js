@@ -19,7 +19,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
  *
  * @returns {JSX.Element} The rendered VisitDetailsSection component.
  */
-export default function VisitDetailsSection({ errors = {} }) {
+export default function VisitDetailsSection({ errors = {}, onFieldChange }) {
   const [locationValue, setLocationValue] = useState("");
 
   return (
@@ -27,7 +27,7 @@ export default function VisitDetailsSection({ errors = {} }) {
       {/* Instagram Handle Input Group */}
       <article className="pt-6 my-4 space-y-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-          <DestinationAccountField onLocationChange={setLocationValue} error={errors.destination_instagram_handle} />
+          <DestinationAccountField onLocationChange={setLocationValue} error={errors.destination_instagram_handle} onFieldChange={onFieldChange} />
 
           {/* Location Details Input Group */}
           <div className="grid items-center self-start w-full gap-3">
@@ -44,15 +44,18 @@ export default function VisitDetailsSection({ errors = {} }) {
               value={locationValue}
               aria-invalid={Boolean(errors.visit_location)}
               className={errors.visit_location ? "border-red-400 focus-visible:ring-red-300/40" : ""}
-              onChange={(event) => setLocationValue(event.target.value)}
+              onChange={(event) => {
+                setLocationValue(event.target.value);
+                onFieldChange?.("visit_location");
+              }}
             />
             {errors.visit_location ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_location}</p> : null}
           </div>
         </div>
       </article>
       <div className="w-full space-y-4">
-        <VisitTypeField errors={errors} />
-        <VisitScheduleField errors={errors} />
+        <VisitTypeField errors={errors} onFieldChange={onFieldChange} />
+        <VisitScheduleField errors={errors} onFieldChange={onFieldChange} />
         <div className="w-full pt-4 space-y-3">
           <div className="flex flex-col w-full gap-1 sm:flex-row sm:items-baseline sm:justify-between">
             <Label className="text-sm font-medium" htmlFor="description">
@@ -67,6 +70,7 @@ export default function VisitDetailsSection({ errors = {} }) {
             placeholder="Add any additional details about your visit, special offerings, or what clients can expect…"
             className={`bg-white min-h-32 dark:bg-slate-950 ${errors.description ? "border-red-400 focus-visible:ring-red-300/40" : ""}`}
             aria-invalid={Boolean(errors.description)}
+            onChange={() => onFieldChange?.("description")}
           />
           {errors.description ? <p className="text-xs text-red-600 dark:text-red-400">{errors.description}</p> : null}
 

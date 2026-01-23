@@ -50,7 +50,11 @@ export default async function CreateNewVisitLayout({ children }) {
                   <div className="hidden lg:block">
                     <LiveNotice />
                   </div>
-                ) : null}
+                ) : (
+                  <div className="items-center justify-center hidden h-full lg:flex">
+                    <img src="/connect.WEBP" alt="Connect Instagram preview" className="w-full max-w-[320px] object-contain scale-x-[-1]" />
+                  </div>
+                )}
               </div>
             </div>
             <Separator className="w-full my-6 dark:bg-slate-800/80" />
