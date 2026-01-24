@@ -9,16 +9,10 @@ import VisitDatetime from "@/components/visit-datetime";
 export default async function ArtistProfilePage({ params }) {
   const { slug } = await params;
   const handle = typeof slug === "string" ? slug.replace(/^@/, "") : "";
-
-  if (!handle) {
-    notFound();
-  }
+  if (!handle) notFound();
 
   const profile = await getProfileByUsername(handle);
-
-  if (!profile) {
-    notFound();
-  }
+  if (!profile) notFound();
 
   const visits = await getUserVisits(profile.id, 25);
 
@@ -55,7 +49,7 @@ export default async function ArtistProfilePage({ params }) {
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{destinationName}</p>
-                <AccountHandle username={destinationHandle} name={destinationName} profilePictureUrl={visit.destination_profile_picture_url} followersCount={null} accountType={null} mediaCount={null} className="text-xs" />
+                <AccountHandle username={destinationHandle} className="text-xs" />
               </div>
             </div>
             <Badge className="text-purple-700 border border-purple-200 bg-purple-50 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">
@@ -99,7 +93,7 @@ export default async function ArtistProfilePage({ params }) {
           <div className="space-y-10">
             {liveVisits.length > 0 ? (
               <section className="space-y-4">
-                <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">Live visits</div>
+                <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">Live visits in progress</div>
                 <div className="w-full max-w-4xl mx-auto space-y-6">{liveVisits.map((visit) => renderVisit(visit, true))}</div>
               </section>
             ) : null}
