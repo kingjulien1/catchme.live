@@ -32,7 +32,7 @@ export default function AccountHandleClient({
           {handle}
         </button>
       </HoverCardTrigger>
-      <HoverCardContent className="relative z-50 w-72 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg dark:border-slate-800/80 dark:bg-slate-900/90">
+      <HoverCardContent className="relative z-50 w-72 rounded-2xl border border-gray-200 bg-white/90 p-4 shadow-lg dark:border-slate-800/80 dark:bg-slate-900/90">
         <Link href={profileHref} aria-label={`Open ${handle} profile`} className="absolute inset-0 rounded-2xl" />
         <Link
           href={instagramHref}

@@ -41,12 +41,17 @@ export default async function ArtistProfilePage({ params }) {
           <VisitCountdown start={start} end={end} isLive={isLive} />
         </div>
         <article
-          className={`relative p-5 border rounded-2xl ${
+          className={`group relative overflow-hidden p-5 border rounded-2xl transition duration-300 ease-out hover:translate-x-1 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-100/60 dark:hover:shadow-emerald-500/10 ${
             isLive
               ? "border-emerald-200 bg-linear-to-br from-emerald-50 via-white to-emerald-100/60 backdrop-blur-md dark:border-slate-800 dark:from-emerald-500/10 dark:via-slate-950/60 dark:to-emerald-500/20"
               : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
           }`}
         >
+          <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
+            <div className="absolute inset-0 bg-linear-to-br from-emerald-100/60 via-white/60 to-fuchsia-100/60 dark:from-emerald-500/20 dark:via-slate-950/30 dark:to-fuchsia-500/20" />
+            <div className="absolute -top-24 left-10 h-48 w-48 rounded-full bg-emerald-300/20 blur-3xl dark:bg-emerald-400/10" />
+            <div className="absolute -bottom-24 right-8 h-56 w-56 rounded-full bg-fuchsia-200/20 blur-3xl dark:bg-fuchsia-400/10" />
+          </div>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <AccountHandle username={destinationHandle} className="text-base font-semibold sm:text-lg" />
