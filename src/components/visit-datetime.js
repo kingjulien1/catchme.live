@@ -39,6 +39,15 @@ export default function VisitDatetime({ start, end, isLive = false, className = 
   const startTimeClass = startTimeLabel ? "" : "opacity-0";
   const endTimeClass = endTimeLabel ? "" : "opacity-0";
   const hasAnyTime = Boolean(startTimeLabel || endTimeLabel);
+  const sameDay = Boolean(
+    start &&
+      end &&
+      start.getFullYear() === end.getFullYear() &&
+      start.getMonth() === end.getMonth() &&
+      start.getDate() === end.getDate(),
+  );
+  const showEndDate = !sameDay || !hasAnyTime;
+  const endTimeText = sameDay ? endTimeLabel : endTimeDisplay;
   const timeMarginClass = hasAnyTime ? "ml-2" : "";
   const rangeGapClass = hasAnyTime ? "md:gap-3" : "md:gap-1";
 
@@ -62,8 +71,10 @@ export default function VisitDatetime({ start, end, isLive = false, className = 
             </span>
             <span className="">to</span>
             <span className={isLive ? "text-slate-700 dark:text-slate-200" : "text-slate-500 dark:text-slate-400"}>
-              {endDateLabel}
-              {hasAnyTime && <span className={`${timeMarginClass} inline-block ${endTimeClass}`}>{endTimeDisplay}</span>}
+              {showEndDate ? endDateLabel : null}
+              {hasAnyTime && endTimeText ? (
+                <span className={`${showEndDate ? timeMarginClass : ""} inline-block ${endTimeClass}`}>{endTimeText}</span>
+              ) : null}
             </span>
           </div>
         </div>
