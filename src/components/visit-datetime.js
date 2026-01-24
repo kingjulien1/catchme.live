@@ -38,25 +38,13 @@ export default function VisitDatetime({ start, end, isLive = false, className = 
   const endTimeDisplay = endTimeLabel || "00:00 AM";
   const startTimeClass = startTimeLabel ? "" : "opacity-0";
   const endTimeClass = endTimeLabel ? "" : "opacity-0";
-  const timeGapClass = startTimeLabel || endTimeLabel ? "min-w-[72px]" : "min-w-[36px]";
+  const hasAnyTime = Boolean(startTimeLabel || endTimeLabel);
+  const timeMarginClass = hasAnyTime ? "ml-2" : "";
+  const rangeGapClass = hasAnyTime ? "md:gap-3" : "md:gap-1";
 
   return (
-    <div className={`font-mono text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-300 md:text-sm ${className}`}>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="space-y-1 md:space-y-0 md:flex md:items-center md:gap-3">
-            <span className={isLive ? "text-slate-500 dark:text-slate-400" : ""}>
-              <span className="mr-2 text-slate-400 dark:text-slate-500 md:mr-3">from</span>
-              {startDateLabel}
-              <span className={`ml-2 inline-block ${timeGapClass} ${startTimeClass}`}>{startTimeDisplay}</span>
-            </span>
-            <span className={isLive ? "text-slate-700 dark:text-slate-200" : "text-slate-500 dark:text-slate-400"}>
-              <span className="mr-2 text-slate-400 dark:text-slate-500 md:mr-3">to</span>
-              {endDateLabel}
-              <span className={`ml-2 inline-block ${timeGapClass} ${endTimeClass}`}>{endTimeDisplay}</span>
-            </span>
-          </div>
-        </div>
+    <div className={`font-mono text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-300 md:text-base lg:text-lg ${className}`}>
+      <div className="flex flex-col items-start gap-2">
         {isLive ? (
           <span className="mt-0.5 inline-flex w-fit items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200">
             <span className="relative mr-1 flex h-2 w-2 items-center justify-center">
@@ -66,6 +54,19 @@ export default function VisitDatetime({ start, end, isLive = false, className = 
             live
           </span>
         ) : null}
+        <div>
+          <div className={`space-y-1 md:space-y-0 md:flex md:items-center ${rangeGapClass}`}>
+            <span className={isLive ? "text-slate-500 dark:text-slate-400" : ""}>
+              {startDateLabel}
+              {hasAnyTime && <span className={`${timeMarginClass} inline-block ${startTimeClass}`}>{startTimeDisplay}</span>}
+            </span>
+            <span className="">to</span>
+            <span className={isLive ? "text-slate-700 dark:text-slate-200" : "text-slate-500 dark:text-slate-400"}>
+              {endDateLabel}
+              {hasAnyTime && <span className={`${timeMarginClass} inline-block ${endTimeClass}`}>{endTimeDisplay}</span>}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

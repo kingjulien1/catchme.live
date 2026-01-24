@@ -4,6 +4,7 @@ import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
 import { CalendarDays, Clock, MapPin, Tag, User } from "lucide-react";
 import AccountHandle from "@/components/account-handle";
+import VisitCountdown from "@/components/visit-countdown";
 import VisitDatetime from "@/components/visit-datetime";
 
 export default async function ArtistProfilePage({ params }) {
@@ -34,8 +35,11 @@ export default async function ArtistProfilePage({ params }) {
 
     return (
       <div key={visit.id} className="space-y-2">
-        <VisitDatetime start={start} end={end} isLive={isLive} />
-        <article className={`p-5 border rounded-2xl ${isLive ? "border-slate-200 bg-emerald-50/50 backdrop-blur-md dark:border-slate-800 dark:bg-emerald-500/10" : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"}`}>
+        <div className="flex items-end justify-between gap-4">
+          <VisitDatetime start={start} end={end} isLive={isLive} />
+          <VisitCountdown start={start} end={end} isLive={isLive} />
+        </div>
+        <article className={`p-5 border rounded-2xl ${isLive ? "border-emerald-200 bg-emerald-50/50 backdrop-blur-md dark:border-slate-800 dark:bg-emerald-500/10" : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"}`}>
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 overflow-hidden border rounded-full border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800">
@@ -56,24 +60,6 @@ export default async function ArtistProfilePage({ params }) {
               <Tag className="w-3 h-3" />
               {formatVisitType(visit.visit_type)}
             </Badge>
-          </div>
-          <div className="flex items-start justify-between gap-3 mt-3">
-            <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="w-4 h-4" />
-                {visit.visit_location}
-              </span>
-              <span className="hidden w-1 h-1 rounded-full bg-slate-300 md:inline-block dark:bg-slate-600" />
-              <span className="inline-flex items-center gap-1">
-                <CalendarDays className="w-4 h-4" />
-                {formatVisitDateRange(start, end)}
-              </span>
-              <span className="hidden w-1 h-1 rounded-full bg-slate-300 md:inline-block dark:bg-slate-600" />
-              <span className="inline-flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                {formatVisitTimeRange(start, end)}
-              </span>
-            </div>
           </div>
 
           {visit.description ? <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{visit.description}</p> : null}
