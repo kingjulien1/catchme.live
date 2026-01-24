@@ -1,15 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { formatFollowers } from "@/lib/utils";
-import { User } from "lucide-react";
+import { ExternalLink, User } from "lucide-react";
 
 export default function AccountHandle({ username, name, profilePictureUrl, followersCount, accountType, mediaCount, className = "" }) {
   const normalized = username ? username.replace(/^@/, "") : "";
   const handle = normalized ? `@${normalized}` : "@unknown";
-  const displayName = name || normalized || "Instagram account";
+  const displayName = name || normalized || "Instagram account - not registered on catchme.live yet";
   const accountLabel = accountType ? accountType.replace(/_/g, " ").toLowerCase() : "Instagram account";
   const mediaLabel = typeof mediaCount === "number" ? `${mediaCount} posts` : "Posts hidden";
+
+  const profileHref = normalized ? `/artists/${normalized}` : "/artists";
 
   return (
     <HoverCard openDelay={120}>
@@ -18,7 +21,14 @@ export default function AccountHandle({ username, name, profilePictureUrl, follo
           {handle}
         </button>
       </HoverCardTrigger>
-      <HoverCardContent className="z-50 p-4 bg-white border border-gray-200 shadow-lg w-72 rounded-2xl dark:border-slate-800/80 dark:bg-slate-900/90">
+      <HoverCardContent className="relative z-50 p-4 bg-white border border-gray-200 shadow-lg w-72 rounded-2xl dark:border-slate-800/80 dark:bg-slate-900/90">
+        <Link
+          href={profileHref}
+          aria-label={`Open ${handle} profile`}
+          className="absolute inline-flex items-center justify-center text-gray-500 transition bg-white border border-gray-200 rounded-full right-3 top-3 h-7 w-7 hover:text-gray-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+        </Link>
         <div className="flex items-start gap-3">
           <div className="w-12 h-12 overflow-hidden bg-gray-100 border border-gray-200 rounded-full dark:border-slate-700 dark:bg-slate-800">
             {profilePictureUrl ? (

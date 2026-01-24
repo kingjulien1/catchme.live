@@ -8,7 +8,7 @@ import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrder
 import Section from "./Section";
 import { Check } from "lucide-react";
 import { Shield } from "lucide-react";
-import AccountHandle from "./account-handle";
+import AccountHandle from "@/components/account-handle";
 
 /**
  * ConnectInstagramSection component to connect an Instagram account.

@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { getSessionUser, sql } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
 import { Archive, CalendarDays, Clock, Copy, MapPin, MoreHorizontal, Pencil, Tag, Trash2, User } from "lucide-react";
-import AccountHandle from "../account-handle";
+import AccountHandle from "@/components/account-handle";
 
 export default async function VisitsPage() {
   const user = await getSessionUser();
