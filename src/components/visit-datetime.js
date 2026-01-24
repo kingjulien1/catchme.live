@@ -43,7 +43,7 @@ export default function VisitDatetime({ start, end, isLive = false, className = 
   const rangeGapClass = hasAnyTime ? "md:gap-3" : "md:gap-1";
 
   return (
-    <div className={`font-mono text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-300 md:text-base lg:text-lg ${className}`}>
+    <div className={`font-mono text-base font-semibold tracking-tight text-slate-600 dark:text-slate-300 md:text-lg lg:text-xl ${className}`}>
       <div className="flex flex-col items-start gap-2">
         {isLive ? (
           <span className="mt-0.5 inline-flex w-fit items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200">

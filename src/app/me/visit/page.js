@@ -52,7 +52,7 @@ export default async function NewVisitPage() {
       return { errors, message: "Please fix the highlighted fields." };
     }
 
-    const toBoolean = (value) => value === "true";
+    const toBoolean = (value) => value === true || value === "true" || value === "on";
     const visitEndTime = raw.visit_end_time ? new Date(raw.visit_end_time) : null;
 
     const [destinationUser] = await sql`
