@@ -6,7 +6,7 @@ import * as React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { CreditCardIcon } from "lucide-react";
-import Section from "../Section";
+import Section from "@/components/Section";
 
 function VisitOptionCard({ id, name, title, description, icon, checked, onCheckedChange }) {
   return (

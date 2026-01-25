@@ -33,7 +33,12 @@ export const SESSION_TTL_DAYS = 30;
  *   followers_count: number | null,
  *   account_type: string | null,
  *   media_count: number | null,
- *   instagram_token_updated_at: string | null
+ *   instagram_token_updated_at: string | null,
+ *   display_name: string | null,
+ *   location: string | null,
+ *   email: string | null,
+ *   specialisations: string[] | null,
+ *   bio: string | null
  * }>} User record for the active session, or null when no valid session exists.
  */
 export async function getSessionUser() {
@@ -51,7 +56,12 @@ export async function getSessionUser() {
       users.followers_count,
       users.account_type,
       users.media_count,
-      instagram_tokens.updated_at as instagram_token_updated_at
+      instagram_tokens.updated_at as instagram_token_updated_at,
+      users.display_name,
+      users.location,
+      users.email,
+      users.specialisations,
+      users.bio
     from sessions
     join users on users.id = sessions.user_id
     left join instagram_tokens on instagram_tokens.user_id = users.id

@@ -36,9 +36,7 @@ export default async function ArtistProfileLayout({ children, params }) {
 
   return (
     <div className="w-full pb-16">
-      <section className="relative w-full min-h-[50vh] overflow-hidden bg-gradient-to-br from-fuchsia-100 via-white to-indigo-100 text-slate-900 dark:bg-gradient-to-br dark:from-fuchsia-900/30 dark:via-slate-950 dark:to-indigo-900/30 dark:text-slate-100">
-        <div className="absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.18),_transparent_55%),radial-gradient(circle_at_20%_20%,_rgba(129,140,248,0.16),_transparent_50%)] dark:opacity-70 dark:bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.2),_transparent_55%),radial-gradient(circle_at_20%_20%,_rgba(99,102,241,0.2),_transparent_50%)]" />
-        <div className="absolute inset-0 opacity-30 bg-[linear-gradient(120deg,_rgba(15,23,42,0.04),_transparent_60%)] dark:opacity-50 dark:bg-[linear-gradient(120deg,_rgba(15,23,42,0.6),_transparent_60%)]" />
+      <section className="relative w-full min-h-[50vh] overflow-hidden bg-linear-to-br from-emerald-100/60 via-white/60 to-fuchsia-100/60 text-slate-900 dark:from-emerald-500/20 dark:via-slate-950/30 dark:to-fuchsia-500/20 dark:text-slate-100">
         <div className="absolute z-10 flex items-center gap-2 bottom-6 right-6">
           <button
             type="button"

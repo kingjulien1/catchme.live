@@ -20,10 +20,13 @@ export default function ProfileMenu({ name, username, imageUrl }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem asChild>
-          <Link href="/settings">Settings</Link>
+          <Link href="/me/settings">Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/me/visit">Make an Appearence</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/me/visits">My Visits</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

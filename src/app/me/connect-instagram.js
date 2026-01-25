@@ -5,7 +5,7 @@ import { getSessionUser } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { formatDistanceToNowStrict } from "date-fns";
 import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
-import Section from "./Section";
+import Section from "@/components/Section";
 import { Check } from "lucide-react";
 import { Shield } from "lucide-react";
 import AccountHandle from "@/components/account-handle";
