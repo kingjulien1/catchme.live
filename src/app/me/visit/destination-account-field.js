@@ -35,7 +35,7 @@ export default function DestinationAccountField({ onLocationChange, error, onFie
 
       setIsVerified(true);
       setVerifiedProfile(data?.profile || null);
-      onLocationChange?.(data?.profile?.location?.name || "");
+      onLocationChange?.(data?.profile?.location || "");
     } catch (err) {
       setVerifyError("Unable to verify the account right now.");
     } finally {

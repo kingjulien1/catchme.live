@@ -20,7 +20,8 @@ export async function GET(req) {
       account_type,
       profile_picture_url,
       followers_count,
-      media_count
+      media_count,
+      location
     from users
     where lower(username) = lower(${username})
     limit 1

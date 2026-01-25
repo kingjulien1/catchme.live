@@ -21,13 +21,21 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
  */
 export default function VisitDetailsSection({ errors = {}, onFieldChange }) {
   const [locationValue, setLocationValue] = useState("");
+  const [isAutoFilled, setIsAutoFilled] = useState(false);
 
   return (
     <Section title="Visit Details" icon={<PinIcon className="w-4 h-4" />} subtitle="Provide information about your upcoming visit location and schedule.">
       {/* Instagram Handle Input Group */}
       <article className="pt-6 my-4 space-y-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-          <DestinationAccountField onLocationChange={setLocationValue} error={errors.destination_instagram_handle} onFieldChange={onFieldChange} />
+          <DestinationAccountField
+            onLocationChange={(nextValue) => {
+              setLocationValue(nextValue);
+              setIsAutoFilled(Boolean(nextValue));
+            }}
+            error={errors.destination_instagram_handle}
+            onFieldChange={onFieldChange}
+          />
 
           {/* Location Details Input Group */}
           <div className="grid items-center self-start w-full gap-3">
@@ -46,10 +54,14 @@ export default function VisitDetailsSection({ errors = {}, onFieldChange }) {
               className={errors.visit_location ? "border-red-400 focus-visible:ring-red-300/40" : ""}
               onChange={(event) => {
                 setLocationValue(event.target.value);
+                setIsAutoFilled(false);
                 onFieldChange?.("visit_location");
               }}
             />
             {errors.visit_location ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_location}</p> : null}
+            {isAutoFilled && !errors.visit_location ? (
+              <p className="text-xs text-slate-500 dark:text-slate-400">Autofilled from the destination account location.</p>
+            ) : null}
           </div>
         </div>
       </article>
