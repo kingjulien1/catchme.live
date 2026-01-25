@@ -1,15 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { Label } from "@radix-ui/react-label";
-import { Check, Facebook, ImagePlus, Instagram, Link2, Loader2, Palette, Stars, Twitter, Youtube } from "lucide-react";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { Facebook, ImagePlus, Instagram, Link2, Loader2, Palette, Stars, Twitter, Youtube } from "lucide-react";
 
 import Section from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-
 function SocialInput({ icon, placeholder, defaultValue, name, readOnly = false }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-3 py-2 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/70">
@@ -23,6 +20,10 @@ const initialState = { ok: false, message: "" };
 
 export default function ProfileDisplaySection({ settings, action, user }) {
   const [state, formAction, isPending] = useActionState(action, initialState);
+  const fileInputRef = useRef(null);
+  const [bannerUrl, setBannerUrl] = useState(settings?.banner_image_url ?? "");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
   const [displayState, setDisplayState] = useState(() => ({
     followers: settings?.show_followers ?? true,
     experience: settings?.show_experience ?? true,
@@ -33,6 +34,7 @@ export default function ProfileDisplaySection({ settings, action, user }) {
 
   useEffect(() => {
     if (!settings) return;
+    setBannerUrl(settings.banner_image_url ?? "");
     setDisplayState({
       followers: settings.show_followers ?? true,
       experience: settings.show_experience ?? true,
@@ -41,6 +43,30 @@ export default function ProfileDisplaySection({ settings, action, user }) {
       verified: settings.show_verified ?? false,
     });
   }, [settings]);
+
+  const handleBannerUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setUploadError("");
+    setIsUploading(true);
+
+    try {
+      const response = await fetch(`/api/upload/banner?filename=${encodeURIComponent(file.name)}`, {
+        method: "POST",
+        body: file,
+      });
+      if (!response.ok) throw new Error("Upload failed.");
+      const blob = await response.json();
+      setBannerUrl(blob.url);
+    } catch (error) {
+      console.log("ERROR", error);
+      setUploadError("Upload failed. Please try a different image.");
+    } finally {
+      setIsUploading(false);
+      event.target.value = "";
+    }
+  };
+
   return (
     <Section title="Profile Display & Customization" subtitle="Control how your public profile looks and which details appear." icon={<Palette className="h-5 w-5" />} iconClassName="bg-violet-600 text-white">
       <form action={formAction} className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
@@ -51,15 +77,19 @@ export default function ProfileDisplaySection({ settings, action, user }) {
                 <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Cover / Banner Image</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Showcase your studio or portfolio header.</p>
               </div>
-              <Button size="sm" variant="outline" className="rounded-full">
-                <ImagePlus className="h-4 w-4" />
-                Upload
-              </Button>
+              <div className="flex items-center gap-2">
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleBannerUpload} className="hidden" />
+                <Button size="sm" variant="outline" type="button" className="rounded-full" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+                  {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+                  {isUploading ? "Uploading" : "Upload"}
+                </Button>
+              </div>
             </div>
-            <input type="hidden" name="banner_image_url" value={settings?.banner_image_url ?? ""} />
+            <input type="hidden" name="banner_image_url" value={bannerUrl} />
             <div className="mt-4 h-40 w-full overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-br from-violet-200/80 via-sky-100/70 to-emerald-100/70 dark:border-slate-700 dark:from-violet-500/30 dark:via-slate-900 dark:to-emerald-500/20">
-              <div className="grid h-full place-items-center text-xs font-semibold text-slate-700/80 dark:text-slate-200">Banner preview</div>
+              {bannerUrl ? <img src={bannerUrl} alt="Banner preview" className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-xs font-semibold text-slate-700/80 dark:text-slate-200">Banner preview</div>}
             </div>
+            {uploadError ? <p className="mt-2 text-xs text-red-600 dark:text-red-300">{uploadError}</p> : null}
           </div>
 
           <div className="space-y-3">
