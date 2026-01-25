@@ -1,7 +1,8 @@
 "use client";
 
+import { useActionState } from "react";
 import { Label } from "@radix-ui/react-label";
-import { Check, Info, Settings } from "lucide-react";
+import { Check, Info, Loader2, Settings } from "lucide-react";
 
 import Section from "@/components/Section";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -10,12 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SpecialisationsInput from "./specialisations-input";
 
-export default function AccountPreferencesSection({ user }) {
+const initialState = { ok: false, message: "" };
+
+export default function AccountPreferencesSection({ user, action }) {
   const usernameValue = user?.username ? `@${user.username}` : "";
+  const [state, formAction, isPending] = useActionState(action, initialState);
 
   return (
     <Section title="General Account Details" subtitle="Update profile details that show up on your public page and booking flow." icon={<Settings className="h-5 w-5" />} iconClassName="bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
-      <div className="mt-6 space-y-6">
+      <form action={formAction} className="mt-6 space-y-6">
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="grid gap-2">
             <Label htmlFor="settings-name" className="text-sm font-medium">
@@ -54,7 +58,7 @@ export default function AccountPreferencesSection({ user }) {
           <Label htmlFor="settings-specialisation" className="text-sm font-medium">
             Specialisations
           </Label>
-          <SpecialisationsInput defaultValue={user?.specialisation ?? ""} />
+          <SpecialisationsInput defaultValue={user?.specialisations ?? ""} />
           <p className="text-xs text-slate-500 dark:text-slate-400">Comma-separated tags help clients find you.</p>
         </div>
 
@@ -88,10 +92,21 @@ export default function AccountPreferencesSection({ user }) {
           </AlertDescription>
         </Alert>
 
+        {state.message ? <p className="text-xs text-red-600 dark:text-red-300">{state.message}</p> : null}
+
         <div className="flex justify-end">
-          <Button className="ml-auto rounded-full bg-slate-900 px-6 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white">Save Account Details</Button>
+          <Button className="ml-auto rounded-full bg-slate-900 px-6 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white" type="submit" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Account Details"
+            )}
+          </Button>
         </div>
-      </div>
+      </form>
     </Section>
   );
 }

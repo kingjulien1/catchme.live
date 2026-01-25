@@ -1,8 +1,9 @@
 "use client";
 
+import { useActionState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { Building2, Check, Info, Paintbrush } from "lucide-react";
+import { Building2, Check, Info, Loader2, Paintbrush } from "lucide-react";
 
 import Section from "@/components/Section";
 import { Button } from "@/components/ui/button";
@@ -38,13 +39,16 @@ function AccountTypeCard({ value, id, title, description, points, icon, iconClas
   );
 }
 
-export default function AccountTypeSection({ user }) {
+const initialState = { ok: false, message: "" };
+
+export default function AccountTypeSection({ user, action }) {
   const defaultAccountType = user?.account_type === "studio" ? "studio" : "artist";
+  const [state, formAction, isPending] = useActionState(action, initialState);
 
   return (
     <Section title="Account Type" subtitle="Choose the account type that best matches how you use catchme.live." icon={<Paintbrush className="h-5 w-5" />} iconClassName="bg-violet-600 text-white">
-      <div className="mt-6 space-y-6">
-        <RadioGroup defaultValue={defaultAccountType} className="grid gap-4 lg:grid-cols-2">
+      <form action={formAction} className="mt-6 space-y-6">
+        <RadioGroup name="account_type" defaultValue={defaultAccountType} className="grid gap-4 lg:grid-cols-2">
           <AccountTypeCard
             value="artist"
             id="account-type-artist"
@@ -72,14 +76,24 @@ export default function AccountTypeSection({ user }) {
           <div>
             <p className="font-semibold">Account Type Information</p>
             <p className="mt-1 text-xs text-blue-700/80 dark:text-blue-200/80">Your account type determines the features available to you. You can change this later, but some data may need to be reconfigured.</p>
+            {state.message ? <p className="mt-2 text-xs text-red-600 dark:text-red-300">{state.message}</p> : null}
           </div>
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
           <span>Last updated: 2 days ago</span>
-          <Button className="ml-auto rounded-full bg-violet-600 px-6 text-white hover:bg-violet-500">Save Account Type</Button>
+          <Button className="ml-auto rounded-full bg-violet-600 px-6 text-white hover:bg-violet-500" type="submit" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Account Type"
+            )}
+          </Button>
         </div>
-      </div>
+      </form>
     </Section>
   );
 }

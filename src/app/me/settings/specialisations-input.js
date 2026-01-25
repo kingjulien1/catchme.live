@@ -14,10 +14,8 @@ export default function SpecialisationsInput({ defaultValue = "", name = "specia
   const inputRef = useRef(null);
   const initialTags = useMemo(() => {
     if (!defaultValue) return [];
-    return defaultValue
-      .split(",")
-      .map((tag) => normalizeTag(tag))
-      .filter(Boolean);
+    const values = Array.isArray(defaultValue) ? defaultValue : defaultValue.split(",");
+    return values.map((tag) => normalizeTag(tag)).filter(Boolean);
   }, [defaultValue]);
 
   const [tags, setTags] = useState(initialTags);

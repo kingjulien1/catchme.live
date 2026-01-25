@@ -80,9 +80,33 @@ create table user_booking_settings (
   max_advance text not null default '1 month',
   deposit_required text not null default 'No deposit',
   cancellation_policy text not null default 'Flexible (24h notice)',
-  requirements text[] not null default '{}'::text[],
   updated_at timestamptz not null default now()
 );
+
+create table user_booking_session_types (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references users(id) on delete cascade,
+  title text not null,
+  duration_label text,
+  price_label text,
+  is_available boolean not null default true,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index user_booking_session_types_user_id_idx on user_booking_session_types(user_id);
+
+create table user_booking_requirements (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references users(id) on delete cascade,
+  requirement_key text not null,
+  is_enabled boolean not null default false,
+  updated_at timestamptz not null default now(),
+  unique (user_id, requirement_key)
+);
+
+create index user_booking_requirements_user_id_idx on user_booking_requirements(user_id);
 
 create table user_profile_display_settings (
   user_id uuid primary key references users(id) on delete cascade,
