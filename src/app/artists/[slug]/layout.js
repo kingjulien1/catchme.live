@@ -33,10 +33,13 @@ export default async function ArtistProfileLayout({ children, params }) {
 
   const displayName = profile.name || profile.username || "Artist";
   const accountTypeLabel = profile.account_type ? profile.account_type.replace(/_/g, " ") : "Instagram account";
+  const bannerUrl = profile.banner_image_url;
 
   return (
     <div className="w-full pb-16">
       <section className="relative w-full min-h-[50vh] overflow-hidden bg-linear-to-br from-emerald-100/60 via-white/60 to-fuchsia-100/60 text-slate-900 dark:from-emerald-500/20 dark:via-slate-950/30 dark:to-fuchsia-500/20 dark:text-slate-100">
+        {bannerUrl ? <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${bannerUrl})` }} /> : null}
+        {bannerUrl ? <div className="absolute inset-0 bg-white/60 dark:bg-black/45" /> : null}
         <div className="absolute z-10 flex items-center gap-2 bottom-6 right-6">
           <button
             type="button"

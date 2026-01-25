@@ -109,8 +109,11 @@ export async function getProfileByUsername(username) {
       followers_count,
       media_count,
       account_type,
-      created_at
+      created_at,
+      user_profile_display_settings.banner_image_url
     from users
+    left join user_profile_display_settings
+      on user_profile_display_settings.user_id = users.id
     where lower(username) = lower(${normalized})
     limit 1
   `;
