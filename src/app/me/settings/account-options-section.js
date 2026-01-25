@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { Bell, CalendarClock, Eye, Globe2, Loader2, Mail, ShieldCheck, Sparkles, UserCog } from "lucide-react";
 
 import Section from "@/components/Section";
@@ -48,20 +48,6 @@ export default function AccountOptionsSection({ options, action }) {
     weeklyDigest: options?.weekly_digest ?? false,
     analyticsSharing: options?.analytics_sharing ?? false,
   }));
-
-  useEffect(() => {
-    if (!options) return;
-    setLocalState({
-      publicProfile: options.public_profile ?? true,
-      showAvailability: options.show_availability ?? true,
-      showCounts: options.show_counts ?? true,
-      emailUpdates: options.email_updates ?? false,
-      dmRequests: options.dm_requests ?? true,
-      bookingIntros: options.booking_intros ?? true,
-      weeklyDigest: options.weekly_digest ?? false,
-      analyticsSharing: options.analytics_sharing ?? false,
-    });
-  }, [options]);
 
   const setOption = (key) => (value) => {
     const next = value === true;

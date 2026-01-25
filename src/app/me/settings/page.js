@@ -314,7 +314,7 @@ export default async function SettingsPage() {
     <div className="space-y-8">
       <AccountTypeSection user={user} action={updateAccountType} />
       <AccountPreferencesSection user={user} action={updateAccountPreferences} />
-      <AccountOptionsSection options={accountOptions} action={updateAccountOptions} />
+      <AccountOptionsSection key={accountOptions?.updated_at ?? "default"} options={accountOptions} action={updateAccountOptions} />
       <BookingSettingsSection settings={bookingSettings ? { ...bookingSettings, requirements: bookingRequirements } : null} action={updateBookingSettings} />
       <ProfileDisplaySection settings={profileDisplaySettings} action={updateProfileDisplay} user={user} />
     </div>
