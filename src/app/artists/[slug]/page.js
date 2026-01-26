@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
-import { BadgeCheck, CalendarCheck2, Clock, Clock3, CreditCard, HandCoins, MapPin, Sparkles, Tag, User } from "lucide-react";
+import { BadgeCheck, CalendarCheck2, Clock, Clock3, CreditCard, HandCoins, Hourglass, MapPin, Sparkles, Tag, User } from "lucide-react";
 import AccountHandle from "@/components/account-handle";
 import VisitCountdown from "@/components/visit-countdown";
 import VisitDatetime from "@/components/visit-datetime";
@@ -27,6 +27,11 @@ export default async function ArtistProfilePage({ params }) {
   });
   const liveVisitIds = new Set(liveVisits.map((visit) => visit.id));
   const upcomingVisits = visits.filter((visit) => !liveVisitIds.has(visit.id));
+  const nextUpcomingStart =
+    upcomingVisits
+      .map((visit) => (visit.visit_start_time ? new Date(visit.visit_start_time) : null))
+      .filter((date) => date && date > now)
+      .sort((a, b) => a.getTime() - b.getTime())[0] || null;
 
   const renderVisit = (visit, isLive) => {
     const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
@@ -38,12 +43,7 @@ export default async function ArtistProfilePage({ params }) {
     return (
       <div key={visit.id} className="group space-y-2">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <VisitCountdown
-            start={start}
-            end={end}
-            isLive={isLive}
-            className={`order-1 w-full sm:order-2 sm:w-auto ${isLive ? "hidden sm:block" : ""}`}
-          />
+          <VisitCountdown start={start} end={end} isLive={isLive} className={`order-1 w-full sm:order-2 sm:w-auto ${isLive ? "hidden sm:block" : ""}`} />
           <VisitDatetime
             start={start}
             end={end}
@@ -59,6 +59,20 @@ export default async function ArtistProfilePage({ params }) {
               : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
           }`}
         >
+          {visit.destination_banner_image_url ? (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-80"
+              style={{
+                backgroundImage: `url(${visit.destination_banner_image_url})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                WebkitMaskImage: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.85) 100%)",
+                maskImage: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.85) 100%)",
+              }}
+            />
+          ) : null}
+          {visit.destination_banner_image_url ? <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/70 via-white/20 to-transparent dark:from-slate-950/70 dark:via-slate-950/30" /> : null}
           <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 sm:group-hover:opacity-100">
             <div className="absolute inset-0 bg-linear-to-br from-emerald-100/60 via-white/60 to-fuchsia-100/60 dark:from-emerald-500/20 dark:via-slate-950/30 dark:to-fuchsia-500/20" />
             <div className="absolute -top-24 left-10 h-48 w-48 rounded-full bg-emerald-300/20 blur-3xl dark:bg-emerald-400/10" />
@@ -69,7 +83,7 @@ export default async function ArtistProfilePage({ params }) {
               <div className="min-w-0">
                 <AccountHandle username={destinationHandle} className="text-base font-semibold sm:text-lg" />
               </div>
-              <Badge className="text-purple-700 border border-purple-200 bg-purple-50 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">
+              <Badge className="text-sm text-purple-700 border border-purple-200 bg-purple-50 px-3 py-1 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">
                 <Tag className="w-3 h-3" />
                 {formatVisitType(visit.visit_type)}
               </Badge>
@@ -154,7 +168,17 @@ export default async function ArtistProfilePage({ params }) {
                 <div className="w-full max-w-4xl mx-auto space-y-6">{liveVisits.map((visit) => renderVisit(visit, true))}</div>
               </section>
             ) : null}
-            {liveVisits.length > 0 && upcomingVisits.length > 0 ? <Separator className="my-8" /> : null}
+            {liveVisits.length > 0 && upcomingVisits.length > 0 ? (
+              <div className="relative my-8">
+                <Separator />
+                {nextUpcomingStart ? (
+                  <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-300">
+                    <Hourglass className="h-3 w-3" />
+                    <VisitCountdown start={nextUpcomingStart} end={null} isLive={false} className="text-center sm:text-center" />
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             {upcomingVisits.length > 0 ? (
               <section className="mt-16 space-y-4">
                 <div className="text-sm font-semibold text-center text-slate-700 sm:text-left dark:text-slate-200">Upcoming visits</div>

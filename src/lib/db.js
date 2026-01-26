@@ -149,7 +149,8 @@ export async function getProfileByUsername(username) {
  *   destination_instagram_handle: string | null,
  *   destination_profile_picture_url: string | null,
  *   destination_name: string | null,
- *   destination_username: string | null
+ *   destination_username: string | null,
+ *   destination_banner_image_url: string | null
  * }>>}
  *   List of visit records for the user, newest first.
  */
@@ -173,9 +174,11 @@ export async function getUserVisits(userId, limit = 25) {
       visits.destination_instagram_handle,
       destination.profile_picture_url as destination_profile_picture_url,
       destination.name as destination_name,
-      destination.username as destination_username
+      destination.username as destination_username,
+      destination_settings.banner_image_url as destination_banner_image_url
     from visits
     left join users as destination on destination.id = visits.destination_user_id
+    left join user_profile_display_settings as destination_settings on destination_settings.user_id = destination.id
     where visits.author_user_id = ${userId}
     order by visits.visit_start_time desc nulls last
     limit ${limit}
