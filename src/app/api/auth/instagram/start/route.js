@@ -15,7 +15,8 @@ export async function GET(req) {
   authUrl.searchParams.set("client_id", process.env.IG_CLIENT_ID);
 
   // build callback with state
-  const redirectUri = new URL(process.env.IG_REDIRECT_URI);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin;
+  const redirectUri = process.env.IG_REDIRECT_URI ? new URL(process.env.IG_REDIRECT_URI) : new URL("/api/auth/instagram/callback", baseUrl);
   redirectUri.searchParams.set("state", state);
   authUrl.searchParams.set("redirect_uri", redirectUri.toString());
   console.log("CALLBACK URI", redirectUri.toString());

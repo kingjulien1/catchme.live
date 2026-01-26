@@ -4,6 +4,8 @@ import { Dot, Radio } from "lucide-react";
 import Link from "next/link";
 import ConnectInstagramSection from "./connect-instagram";
 
+export const dynamic = "force-dynamic";
+
 function LiveNotice() {
   return (
     <section className="p-3 mb-6 bg-white border border-gray-200 rounded-2xl sm:p-6 dark:border-slate-800/80 dark:bg-slate-900/70">

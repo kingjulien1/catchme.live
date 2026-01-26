@@ -4,6 +4,8 @@ import TopAppBar from "./nav";
 import Footer from "./footer";
 import { ThemeProvider } from "./theme";
 
+export const dynamic = "force-dynamic";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
