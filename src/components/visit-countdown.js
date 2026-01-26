@@ -38,7 +38,7 @@ export default function VisitCountdown({ start, end, isLive = false, className =
   const label = isLive ? "Ends in" : "Starts in";
 
   return (
-    <div className={`text-right font-mono text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-300 md:text-sm ${className}`}>
+    <div className={`text-left font-mono text-xs font-semibold tracking-tight text-slate-600 dark:text-slate-300 md:text-sm sm:text-right ${className}`}>
       {label} {formatCountdown(remainingMs)}
     </div>
   );

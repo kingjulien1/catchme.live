@@ -84,7 +84,7 @@ export default async function ArtistProfileLayout({ children, params }) {
               <Badge className="text-purple-700 border border-purple-200 bg-purple-50 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">{formatFollowers(profile.followers_count)}</Badge>
             </div>
 
-            <div className="grid w-full max-w-xl grid-cols-2 gap-3 px-4 py-4 mx-auto mt-8 text-sm border sm:grid-cols-3 rounded-2xl border-slate-200/70 bg-white/70 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/60">
+            <div className="grid w-full max-w-xl grid-cols-1 gap-3 px-4 py-4 mx-auto mt-8 text-sm border sm:grid-cols-3 rounded-2xl border-slate-200/70 bg-white/70 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/60">
               <div className="flex flex-col items-center gap-1">
                 <span className="text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400">Visits</span>
                 <span className="text-lg font-semibold text-slate-900 dark:text-slate-100">{total_visits}</span>

@@ -37,18 +37,29 @@ export default async function ArtistProfilePage({ params }) {
 
     return (
       <div key={visit.id} className="group space-y-2">
-        <div className="flex items-end justify-between gap-4">
-          <VisitDatetime start={start} end={end} isLive={isLive} className="origin-left transition-transform duration-300 group-[&:has(article:hover)]:scale-[1.12] group-[&:has(article:hover)]:translate-x-1" />
-          <VisitCountdown start={start} end={end} isLive={isLive} />
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <VisitCountdown
+            start={start}
+            end={end}
+            isLive={isLive}
+            className={`order-1 w-full sm:order-2 sm:w-auto ${isLive ? "hidden sm:block" : ""}`}
+          />
+          <VisitDatetime
+            start={start}
+            end={end}
+            isLive={isLive}
+            liveAccessory={isLive ? <VisitCountdown start={start} end={end} isLive={isLive} className="text-left" /> : null}
+            className="order-2 origin-left transition-transform duration-300 sm:order-1 sm:group-[&:has(article:hover)]:scale-[1.12] sm:group-[&:has(article:hover)]:translate-x-1"
+          />
         </div>
         <article
-          className={`relative overflow-hidden p-5 border rounded-2xl transition duration-300 ease-out hover:translate-x-1 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-100/60 dark:hover:shadow-emerald-500/10 ${
+          className={`relative overflow-hidden rounded-2xl border p-5 transition duration-300 ease-out sm:hover:-translate-y-0.5 sm:hover:translate-x-1 sm:hover:shadow-xl sm:hover:shadow-emerald-100/60 dark:sm:hover:shadow-emerald-500/10 ${
             isLive
               ? "border-slate-200 bg-linear-to-br from-emerald-50 via-white to-emerald-100/60 backdrop-blur-md dark:border-slate-800 dark:from-emerald-500/10 dark:via-slate-950/60 dark:to-emerald-500/20"
               : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
           }`}
         >
-          <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
+          <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 sm:group-hover:opacity-100">
             <div className="absolute inset-0 bg-linear-to-br from-emerald-100/60 via-white/60 to-fuchsia-100/60 dark:from-emerald-500/20 dark:via-slate-950/30 dark:to-fuchsia-500/20" />
             <div className="absolute -top-24 left-10 h-48 w-48 rounded-full bg-emerald-300/20 blur-3xl dark:bg-emerald-400/10" />
             <div className="absolute -bottom-24 right-8 h-56 w-56 rounded-full bg-fuchsia-200/20 blur-3xl dark:bg-fuchsia-400/10" />
@@ -70,7 +81,7 @@ export default async function ArtistProfilePage({ params }) {
               </div>
             ) : null}
 
-            {visit.description ? <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{visit.description}</p> : null}
+            {visit.description ? <p className="mt-3 text-sm text-slate-600 line-clamp-3 sm:line-clamp-none dark:text-slate-300">{visit.description}</p> : null}
 
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400 dark:text-slate-300">
               {visit.bookings_open ? (
@@ -139,14 +150,14 @@ export default async function ArtistProfilePage({ params }) {
           <div className="space-y-10">
             {liveVisits.length > 0 ? (
               <section className="space-y-4">
-                <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">Live visits in progress</div>
+                <div className="text-sm font-semibold text-center text-slate-700 sm:text-left dark:text-slate-200">Live visits in progress</div>
                 <div className="w-full max-w-4xl mx-auto space-y-6">{liveVisits.map((visit) => renderVisit(visit, true))}</div>
               </section>
             ) : null}
             {liveVisits.length > 0 && upcomingVisits.length > 0 ? <Separator className="my-8" /> : null}
             {upcomingVisits.length > 0 ? (
               <section className="mt-16 space-y-4">
-                <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">Upcoming visits</div>
+                <div className="text-sm font-semibold text-center text-slate-700 sm:text-left dark:text-slate-200">Upcoming visits</div>
                 <div className="w-full max-w-4xl mx-auto space-y-6">{upcomingVisits.map((visit) => renderVisit(visit, false))}</div>
               </section>
             ) : null}
