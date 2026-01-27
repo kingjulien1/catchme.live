@@ -49,20 +49,20 @@ export default async function ArtistProfilePage({ params }) {
             end={end}
             isLive={isLive}
             liveAccessory={isLive ? <VisitCountdown start={start} end={end} isLive={isLive} className="text-left" /> : null}
-            className="order-2 origin-left transition-transform duration-300 sm:order-1 sm:group-[&:has(article:hover)]:scale-[1.12] sm:group-[&:has(article:hover)]:translate-x-1"
+            className="order-2 origin-left transition-transform duration-300 sm:order-1 sm:group-hover:scale-[1.12] sm:group-hover:translate-x-1"
           />
         </div>
         <article
-          className={`relative overflow-hidden rounded-2xl border p-5 transition duration-300 ease-out sm:hover:-translate-y-0.5 sm:hover:translate-x-1 sm:hover:shadow-xl sm:hover:shadow-emerald-100/60 dark:sm:hover:shadow-emerald-500/10 ${
+          className={`relative overflow-hidden rounded-2xl border p-5 transition duration-300 ease-out sm:group-hover:-translate-y-0.5 sm:group-hover:translate-x-1 sm:group-hover:shadow-xl sm:group-hover:shadow-fuchsia-100/60 dark:sm:group-hover:shadow-fuchsia-500/10 ${
             isLive
-              ? "border-slate-200 bg-linear-to-br from-emerald-50 via-white to-emerald-100/60 backdrop-blur-md dark:border-slate-800 dark:from-emerald-500/10 dark:via-slate-950/60 dark:to-emerald-500/20"
+              ? "border-slate-200 bg-linear-to-br from-fuchsia-50 via-white to-fuchsia-100/60 backdrop-blur-md dark:border-slate-800 dark:from-fuchsia-500/10 dark:via-slate-950/60 dark:to-fuchsia-500/20"
               : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
           }`}
         >
           {visit.destination_banner_image_url ? (
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-80"
+              className="pointer-events-none absolute inset-0 opacity-75 transition duration-300 sm:group-hover:opacity-95"
               style={{
                 backgroundImage: `url(${visit.destination_banner_image_url})`,
                 backgroundPosition: "center",
@@ -72,12 +72,9 @@ export default async function ArtistProfilePage({ params }) {
               }}
             />
           ) : null}
-          {visit.destination_banner_image_url ? <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/70 via-white/20 to-transparent dark:from-slate-950/70 dark:via-slate-950/30" /> : null}
-          <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 sm:group-hover:opacity-100">
-            <div className="absolute inset-0 bg-linear-to-br from-emerald-100/60 via-white/60 to-fuchsia-100/60 dark:from-emerald-500/20 dark:via-slate-950/30 dark:to-fuchsia-500/20" />
-            <div className="absolute -top-24 left-10 h-48 w-48 rounded-full bg-emerald-300/20 blur-3xl dark:bg-emerald-400/10" />
-            <div className="absolute -bottom-24 right-8 h-56 w-56 rounded-full bg-fuchsia-200/20 blur-3xl dark:bg-fuchsia-400/10" />
-          </div>
+          {visit.destination_banner_image_url ? (
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/70 via-white/20 to-transparent transition duration-300 sm:group-hover:opacity-30 dark:from-slate-950/70 dark:via-slate-950/30" />
+          ) : null}
           <div className="relative z-10">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -174,14 +171,13 @@ export default async function ArtistProfilePage({ params }) {
                 {nextUpcomingStart ? (
                   <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-300">
                     <Hourglass className="h-3 w-3" />
-                    <VisitCountdown start={nextUpcomingStart} end={null} isLive={false} className="text-center sm:text-center" />
+                    Get ready! Next <VisitCountdown start={nextUpcomingStart} end={null} isLive={false} className="text-center sm:text-center" />
                   </div>
                 ) : null}
               </div>
             ) : null}
             {upcomingVisits.length > 0 ? (
               <section className="mt-16 space-y-4">
-                <div className="text-sm font-semibold text-center text-slate-700 sm:text-left dark:text-slate-200">Upcoming visits</div>
                 <div className="w-full max-w-4xl mx-auto space-y-6">{upcomingVisits.map((visit) => renderVisit(visit, false))}</div>
               </section>
             ) : null}

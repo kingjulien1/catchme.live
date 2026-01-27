@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { getProfileByUsername, sql } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { CalendarDays, ImageIcon, Instagram, MoreHorizontal, Share2, User } from "lucide-react";
+import AccountHandle from "@/components/account-handle";
 
 export default async function ArtistProfileLayout({ children, params }) {
   const { slug } = await params;
@@ -77,7 +78,9 @@ export default async function ArtistProfileLayout({ children, params }) {
             </div>
 
             <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100">{displayName}</h1>
-            <p className="mt-2 text-lg font-semibold text-fuchsia-600 dark:text-fuchsia-300">@{profile.username}</p>
+            <div className="mt-2">
+              <AccountHandle username={profile.username} className="text-lg font-semibold text-fuchsia-600 dark:text-fuchsia-300" />
+            </div>
 
             <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs text-slate-600 dark:text-slate-300">
               <Badge className="text-purple-700 border border-purple-200 bg-purple-50 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">{accountTypeLabel}</Badge>
