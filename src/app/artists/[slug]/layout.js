@@ -2,22 +2,19 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { getProfileByUsername, sql } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
-import { CalendarDays, ImageIcon, Instagram, MoreHorizontal, Share2, User } from "lucide-react";
+import { CalendarDays, ImageIcon, Instagram, MapPin, MoreHorizontal, Share2, Star, Tag, User } from "lucide-react";
 import AccountHandle from "@/components/account-handle";
 
 export default async function ArtistProfileLayout({ children, params }) {
   const { slug } = await params;
   const handle = typeof slug === "string" ? slug.replace(/^@/, "") : "";
 
-  if (!handle) {
-    notFound();
-  }
+  if (!handle) notFound();
 
   const profile = await getProfileByUsername(handle);
+  console.log("PROFILE", profile);
 
-  if (!profile) {
-    notFound();
-  }
+  if (!profile) notFound();
 
   const [{ total_visits = 0 } = {}] = await sql`
     select count(*)::int as total_visits
@@ -39,15 +36,14 @@ export default async function ArtistProfileLayout({ children, params }) {
   return (
     <div className="w-full pb-16">
       <section className="relative w-full min-h-[50vh] overflow-hidden bg-linear-to-br from-emerald-100/60 via-white/60 to-fuchsia-100/60 text-slate-900 dark:from-emerald-500/20 dark:via-slate-950/30 dark:to-fuchsia-500/20 dark:text-slate-100">
-        {bannerUrl ? <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${bannerUrl})` }} /> : null}
+        {bannerUrl ? <div className="absolute inset-0 bg-center bg-cover blur-[2px]" style={{ backgroundImage: `url(${bannerUrl})` }} /> : null}
         {bannerUrl ? <div className="absolute inset-0 bg-white/60 dark:bg-black/45" /> : null}
-        <div className="absolute z-10 flex items-center gap-2 bottom-6 right-6">
+        <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 sm:left-auto sm:right-6 sm:translate-x-0">
           <button
             type="button"
             className="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold transition border rounded-full shadow-sm border-slate-200 bg-white/80 text-slate-700 hover:bg-white dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-900"
           >
             <Share2 className="w-4 h-4" />
-            Share
           </button>
           <button
             type="button"
@@ -83,24 +79,31 @@ export default async function ArtistProfileLayout({ children, params }) {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs text-slate-600 dark:text-slate-300">
-              <Badge className="text-purple-700 border border-purple-200 bg-purple-50 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">{accountTypeLabel}</Badge>
-              <Badge className="text-purple-700 border border-purple-200 bg-purple-50 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">{formatFollowers(profile.followers_count)}</Badge>
+              <Badge className="gap-1.5 border border-slate-200 bg-white/80 text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200 capitalize">
+                <User className="h-3 w-3" />
+                {accountTypeLabel}
+              </Badge>
+              <Badge className="gap-1.5 border border-slate-200 bg-white/80 text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">
+                <Star className="h-3 w-3" />
+                {formatFollowers(profile.followers_count)}
+              </Badge>
+              {profile.location ? (
+                <Badge className="gap-1.5 border border-slate-200 bg-white/80 text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">
+                  <MapPin className="h-3 w-3" />
+                  {profile.location}
+                </Badge>
+              ) : null}
             </div>
-
-            <div className="grid w-full max-w-xl grid-cols-1 gap-3 px-4 py-4 mx-auto mt-8 text-sm border sm:grid-cols-3 rounded-2xl border-slate-200/70 bg-white/70 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/60">
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400">Visits</span>
-                <span className="text-lg font-semibold text-slate-900 dark:text-slate-100">{total_visits}</span>
+            {profile.specialisations?.length ? (
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                {profile.specialisations.map((specialisation) => (
+                  <Badge key={specialisation} className="gap-2 border border-fuchsia-200 bg-fuchsia-50 px-3 py-1 text-sm text-fuchsia-700 dark:border-fuchsia-500/30 dark:bg-fuchsia-500/10 dark:text-fuchsia-200">
+                    <Tag className="h-4 w-4" />
+                    {specialisation}
+                  </Badge>
+                ))}
               </div>
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400">Upcoming</span>
-                <span className="text-lg font-semibold text-slate-900 dark:text-slate-100">{upcoming_visits}</span>
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400">Portfolio</span>
-                <span className="text-lg font-semibold text-slate-900 dark:text-slate-100">{typeof profile.media_count === "number" ? profile.media_count : "—"}</span>
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </section>

@@ -105,10 +105,13 @@ export async function getProfileByUsername(username) {
       id,
       username,
       name,
+      bio,
       profile_picture_url,
       followers_count,
       media_count,
       account_type,
+      location,
+      specialisations,
       created_at,
       user_profile_display_settings.banner_image_url
     from users

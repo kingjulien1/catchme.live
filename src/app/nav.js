@@ -10,7 +10,7 @@ export default async function TopAppBar() {
   const user = await getSessionUser();
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80">
+    <nav className="fixed top-0 z-50 w-full border-b border-gray-200 bg-white/70 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/60">
       <div className="flex items-center justify-between w-full h-16 max-w-6xl gap-4 px-4 mx-auto sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center">
