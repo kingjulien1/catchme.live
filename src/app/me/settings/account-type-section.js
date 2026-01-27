@@ -16,7 +16,7 @@ function AccountTypeCard({ value, id, title, description, points, icon, iconClas
         htmlFor={id}
         className="flex cursor-pointer items-start gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-violet-300 hover:bg-violet-50/30 peer-data-[state=checked]:border-violet-400 peer-data-[state=checked]:bg-violet-50/50 dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none dark:hover:bg-slate-900/90 dark:peer-data-[state=checked]:border-violet-400/70 dark:peer-data-[state=checked]:bg-violet-500/10"
       >
-        <div className={`grid h-12 w-12 place-items-center rounded-full ${iconClassName}`}>{icon}</div>
+        <div className={`grid place-items-center rounded-full ${iconClassName}`}>{icon}</div>
         <div className="min-w-0">
           <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 sm:text-base">{title}</p>
           <p className="mt-1 text-xs text-slate-600 dark:text-slate-300 sm:text-sm">{description}</p>

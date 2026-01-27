@@ -33,7 +33,9 @@ export default function VisitForm({ action }) {
   return (
     <form className="w-full mx-auto" action={formAction}>
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-slate-100 sm:text-4xl">Create a Visit</h1>
+        <h1 id="visit-start" className="text-3xl font-semibold tracking-tight text-gray-900 scroll-mt-20 dark:text-slate-100 sm:scroll-mt-24 sm:text-4xl">
+          Create a Visit
+        </h1>
         <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 sm:text-base">Share your upcoming travel plans and connect with clients in new locations.</p>
         {localMessage ? <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">{localMessage}</p> : null}
       </div>

@@ -34,7 +34,7 @@ export default async function TopAppBar() {
             <ProfileMenu name={user.name || user.username} username={user.username} imageUrl={user.profile_picture_url || "/default-avatar.png"} />
           ) : (
             <Link
-              href="/api/auth/instagram/start"
+              href="/me"
               className="inline-flex items-center px-4 py-0 ml-2 text-sm font-semibold text-white transition bg-black rounded-full shadow-sm h-11 hover:bg-gray-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
             >
               <Instagram className="w-4 h-4 mr-2" />

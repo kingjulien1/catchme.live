@@ -1,10 +1,9 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { getSessionUser } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { formatDistanceToNowStrict } from "date-fns";
-import { ArrowLeftRight, ChevronDown, CloudCheck, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
+import { ArrowLeftRight, ChevronDown, CloudCheck, CloudSync, InstagramIcon, Link, ListOrdered, Lock, RotateCw, Settings, Star, Unlink, User, UserCheck } from "lucide-react";
 import Section from "@/components/Section";
 import { Check } from "lucide-react";
 import { Shield } from "lucide-react";
@@ -32,108 +31,106 @@ export default async function ConnectInstagramSection() {
       </Badge>
     );
 
-    console.log("LAST SYNCED ", user);
     const lastSyncedLabel = user.instagram_token_updated_at ? formatDistanceToNowStrict(new Date(user.instagram_token_updated_at), { addSuffix: true }) : "just now";
+    const accountTypeLabel = user.account_type ? user.account_type.replace(/_/g, " ") : "Instagram account";
+    const mediaCountLabel = typeof user.media_count === "number" ? `${user.media_count}` : "—";
 
     return (
-      <Section title="Link your Instagram" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect your Instagram to sync your profile" headerRight={connectedBadge}>
-        <div className="flex flex-col gap-4 p-4 mt-6 bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-800 rounded-2xl sm:flex-row sm:items-center sm:justify-between">
+      <Section title="Link your Instagram" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connected accounts sync automatically" headerRight={connectedBadge}>
+        <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-fuchsia-200/70 bg-fuchsia-50/40 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-fuchsia-500/20 dark:bg-fuchsia-500/10">
           <div className="flex items-center gap-4">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-fuchsia-500 bg-white text-fuchsia-600 shadow-sm dark:bg-slate-950 dark:text-fuchsia-300">
+              <Check className="h-3.5 w-3.5" />
+            </span>
             <div className="relative">
-              <img src={user.profile_picture_url || "/default-avatar.png"} alt={user.username ? `@${user.username}` : "Instagram profile"} className="object-cover rounded-full h-14 w-14 ring-2 ring-white dark:ring-slate-900" />
-              <span className="absolute flex items-center justify-center w-6 h-6 text-xs text-white rounded-full -bottom-1 -right-1 bg-emerald-500 ring-2 ring-white dark:ring-slate-900">
-                <CloudCheck className="w-4 h-4" />
+              <img src={user.profile_picture_url || "/default-avatar.png"} alt={user.username ? `@${user.username}` : "Instagram profile"} className="h-12 w-12 rounded-full object-cover ring-1 ring-gray-200 dark:ring-slate-800" />
+              <span className="absolute -bottom-1 -right-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white ring-2 ring-white dark:ring-slate-900">
+                <CloudCheck className="h-3 w-3" />
               </span>
             </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <AccountHandle username={user.username} />
-              </div>
-              <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-500 dark:text-slate-400">
+            <div className="min-w-0">
+              <AccountHandle username={user.username} />
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-slate-400">
                 <span>{formatFollowers(user.followers_count)}</span>
-                <span className="hidden w-1 h-1 bg-gray-300 rounded-full sm:inline-block" />
-                <span>Last synced: {lastSyncedLabel}</span>
+                <span className="hidden h-1 w-1 rounded-full bg-gray-300 sm:inline-block" />
+                <span>Last synced {lastSyncedLabel}</span>
               </div>
             </div>
           </div>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-600 transition bg-white border border-gray-200 rounded-full shadow-sm hover:text-gray-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
-          >
-            <RotateCw className="w-4 h-4" />
-            Refresh
-          </button>
+          <Badge className="gap-2 rounded-full capitalize border border-fuchsia-200 bg-fuchsia-50 px-4 py-2 text-sm font-semibold text-fuchsia-700 dark:border-fuchsia-500/30 dark:bg-fuchsia-500/10 dark:text-fuchsia-200">
+            <UserCheck className="h-4 w-4" />
+            {accountTypeLabel}
+          </Badge>
         </div>
 
-        <div className="flex flex-col gap-3 mt-4 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between dark:text-slate-400">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2">
-              <Lock className="w-4 h-4" />
-              Secure connection • Read-only
-            </span>
-          </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-medium text-gray-500 dark:text-slate-400">
+          <Badge className="gap-2 border border-gray-200 bg-white text-gray-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
+            <Lock className="h-3.5 w-3.5" />
+            Secure, read-only access
+          </Badge>
+          <Badge className="gap-2 border lowercase border-gray-200 bg-white text-gray-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
+            <User className="h-3.5 w-3.5" />
+            {mediaCountLabel} media item{mediaCountLabel === "1" ? "" : "s"} imported
+          </Badge>
         </div>
 
-        <form action="/api/auth/instagram/logout?redirect=/me" method="post" className="mt-6">
-          <button
-            type="submit"
-            className="flex items-center justify-center w-full gap-2 px-5 py-3 text-base font-semibold text-white transition shadow-sm rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <a
+            href="/api/auth/instagram/start"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-5 py-3 text-base font-semibold text-gray-700 transition hover:border-gray-300 hover:text-gray-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-700"
           >
-            <Unlink className="w-4 h-4" />
-            Disconnect Instagram Account
-          </button>
-        </form>
+            <CloudSync className="h-4 w-4" />
+            Sync Instagram
+          </a>
+          <form action="/api/auth/instagram/logout?redirect=/me" method="post">
+            <button
+              type="submit"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-5 py-3 text-base font-semibold text-rose-600 transition hover:border-rose-300 hover:text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:border-rose-400/40"
+            >
+              <Unlink className="h-4 w-4" />
+              Disconnect Instagram
+            </button>
+          </form>
+        </div>
       </Section>
     );
   }
 
   return (
-    <Section
-      title="Connect Your Instagram Account"
-      icon={<InstagramIcon className="w-4 h-4" />}
-      subtitle="We’ll use your Instagram profile to verify your identity and populate your artist profile. Importing your details makes setup faster—no need to enter everything again."
-    >
-      <Alert className="p-4 mt-5 border border-gray-200 rounded-2xl bg-fuchsia-50 dark:border-slate-800/80 dark:bg-fuchsia-100/10">
-        <Shield className="w-4 h-4 text-blue-700 dark:text-slate-100" />
-        <AlertTitle className="flex items-center justify-between text-sm text-gray-900 dark:text-slate-100">
-          <span>Your account stays safe</span>
-          <a href="#security" className="text-xs font-semibold text-fuchsia-700 hover:underline dark:text-fuchsia-300">
-            Learn more
+    <Section title="Link your Instagram" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect to verify your profile and pull your public stats.">
+      <div className="mt-6 rounded-2xl border border-gray-200 bg-white/80 p-5 dark:border-slate-800/80 dark:bg-slate-950/40">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-lg">
+            <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Fast, verified setup</div>
+            <p className="mt-1 text-sm text-gray-600 dark:text-slate-300">We import your public profile, follower count, and media stats so your page is ready in minutes.</p>
+          </div>
+          <a
+            href="/api/auth/instagram/start"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+          >
+            <InstagramIcon className="h-4 w-4" />
+            Connect Instagram
           </a>
-        </AlertTitle>
-        <AlertDescription className="w-full text-sm text-gray-600 dark:text-slate-300">
-          <p>We only access public profile information and never post without your permission - no edits, no posts, and you’re always in control. You can disconnect at any time.</p>
-        </AlertDescription>
-      </Alert>
-      {/* Creator/Business requirement */}
-      <Alert className="p-4 mt-4 border border-gray-200 rounded-2xl bg-indigo-50/60 sm:p-5 dark:border-slate-800/80 dark:bg-indigo-500/10">
-        <UserCheck className="w-4 h-4 text-indigo-700 dark:text-indigo-200" />
-        <AlertTitle className="flex items-center justify-between text-sm text-gray-900 dark:text-slate-100">
-          <span>Creator or Business Account Required</span>
-          <a href="#pro-account" className="text-xs font-semibold text-indigo-700 hover:underline dark:text-indigo-200">
-            View steps
-          </a>
-        </AlertTitle>
-        <AlertDescription className="text-sm text-gray-600 dark:text-slate-300">
-          <p>
-            Connection only works with <strong>Instagram Creator or Business accounts</strong>. Switching to a Creator or Business account has virtually no downsides — it’s free, keeps your content the same, and unlocks helpful tools that benefit
-            your profile — takes less than 30 seconds.
-          </p>
-        </AlertDescription>
-      </Alert>
-
-      <div className="flex flex-col gap-3 mt-5 sm:flex-col sm:w-full">
-        <a
-          href="/api/auth/instagram/start"
-          className="inline-flex items-center justify-center gap-2 px-4 py-4 text-sm font-semibold text-white transition shadow-sm rounded-xl bg-linear-65 from-fuchsia-500 to-pink-500 hover:opacity-80 dark:from-fuchsia-400 dark:to-pink-400"
-        >
-          <InstagramIcon className="w-5 h-5" />
-          Connect with Instagram
-        </a>
-        <div className="text-xs text-center text-gray-500 dark:text-slate-400">
-          By connecting, you agree to our <span className="text-fuchsia-700 hover:underline dark:text-fuchsia-300">Terms of Service</span> and <span className="text-fuchsia-700 hover:underline dark:text-fuchsia-300">Privacy Policy</span>.
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium text-gray-500 dark:text-slate-400">
+          <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800 dark:bg-slate-900/60">
+            <Shield className="h-3.5 w-3.5" />
+            Read-only access
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800 dark:bg-slate-900/60">
+            <UserCheck className="h-3.5 w-3.5" />
+            Creator or Business account required
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800 dark:bg-slate-900/60">
+            <Link className="h-3.5 w-3.5" />
+            Disconnect anytime
+          </span>
         </div>
       </div>
+      <p className="mt-3 text-xs text-gray-500 dark:text-slate-400">
+        By connecting, you agree to our <span className="font-semibold text-fuchsia-700 hover:underline dark:text-fuchsia-300">Terms of Service</span> and{" "}
+        <span className="font-semibold text-fuchsia-700 hover:underline dark:text-fuchsia-300">Privacy Policy</span>.
+      </p>
     </Section>
   );
 }

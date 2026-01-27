@@ -47,7 +47,9 @@ export default async function VisitsPage() {
   return (
     <div className="w-full mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-slate-100 sm:text-4xl">Your Visits</h1>
+        <h1 id="visits-start" className="text-3xl font-semibold tracking-tight text-gray-900 scroll-mt-20 dark:text-slate-100 sm:scroll-mt-24 sm:text-4xl">
+          Your Visits
+        </h1>
         <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 sm:text-base">Manage upcoming visits, edit details, and keep your availability updated.</p>
       </div>
 

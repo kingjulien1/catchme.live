@@ -18,9 +18,9 @@ export default function AccountPreferencesSection({ user, action }) {
   const [state, formAction, isPending] = useActionState(action, initialState);
 
   return (
-    <Section title="General Account Details" subtitle="Update profile details that show up on your public page and booking flow." icon={<Settings className="h-5 w-5" />} iconClassName="bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
+    <Section title="General Account Details" subtitle="Update profile details that show up on your public page and booking flow." icon={<Settings className="h-5 w-5" />} iconClassName="bg-pink-500 text-white dark:bg-indigo-500 dark:text-white">
       <form action={formAction} className="mt-6 space-y-6">
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2 items-start">
           <div className="grid gap-2">
             <Label htmlFor="settings-name" className="text-sm font-medium">
               Name
