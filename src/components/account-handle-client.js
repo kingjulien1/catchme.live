@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { formatFollowers } from "@/lib/utils";
 import { Instagram, User } from "lucide-react";
@@ -44,15 +45,12 @@ export default function AccountHandleClient({
           <Instagram className="h-3.5 w-3.5" />
         </Link>
         <div className="relative z-10 flex items-start gap-3 pointer-events-none">
-          <div className="h-12 w-12 overflow-hidden rounded-full border border-gray-200 bg-gray-100 dark:border-slate-700 dark:bg-slate-800">
-            {profilePictureUrl ? (
-              <img src={profilePictureUrl} alt={handle} className="h-full w-full object-cover" />
-            ) : (
-              <div className="grid h-full w-full place-items-center text-gray-400 dark:text-slate-400">
-                <User className="h-5 w-5" />
-              </div>
-            )}
-          </div>
+          <Avatar className="h-12 w-12 border border-gray-200 bg-gray-100 text-gray-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
+            <AvatarImage src={profilePictureUrl || undefined} alt={handle} className="object-cover" />
+            <AvatarFallback>
+              <User className="h-5 w-5" />
+            </AvatarFallback>
+          </Avatar>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">{displayName}</p>
             <p className="text-xs text-gray-500 dark:text-slate-400">{handle}</p>

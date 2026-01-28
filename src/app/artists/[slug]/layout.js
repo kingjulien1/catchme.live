@@ -1,9 +1,12 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { getProfileByUsername, sql } from "@/lib/db";
+import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { Instagram, MapPin, MoreHorizontal, Share2, Star, Tag, User } from "lucide-react";
 import AccountHandle from "@/components/account-handle";
+import { Stars } from "lucide-react";
 
 export default async function ArtistProfileLayout({ children, params }) {
   const { slug } = await params;
@@ -14,18 +17,25 @@ export default async function ArtistProfileLayout({ children, params }) {
   const profile = await getProfileByUsername(handle);
   if (!profile) notFound();
 
-  const [{ total_visits = 0 } = {}] = await sql`
-    select count(*)::int as total_visits
-    from visits
-    where author_user_id = ${profile.id}
-  `;
-
-  const [{ upcoming_visits = 0 } = {}] = await sql`
-    select count(*)::int as upcoming_visits
-    from visits
-    where author_user_id = ${profile.id}
-      and visit_start_time >= now()
-  `;
+  const visits = await getUserVisits(profile.id, 50);
+  const now = new Date();
+  const liveVisits = visits.filter((visit) => {
+    const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
+    const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
+    return start && start <= now && (!end || end >= now);
+  });
+  const residentVisits = liveVisits.filter((visit) => visit.visit_type === "residency");
+  const allAvatarSources = Array.from(
+    new Set(
+      [...liveVisits, ...residentVisits].map((visit) => ({
+        url: visit.destination_profile_picture_url || null,
+        key: visit.destination_username || visit.destination_instagram_handle || visit.id,
+        slug: (visit.destination_username || visit.destination_instagram_handle || "").replace(/^@/, ""),
+      })),
+    ),
+  ).filter((source) => source.slug);
+  const avatarSources = allAvatarSources.slice(0, 4);
+  const remainingAvatars = Math.max(0, allAvatarSources.length - avatarSources.length);
 
   const displayName = profile.name || profile.username || "Artist";
   const accountTypeLabel = profile.account_type ? profile.account_type.replace(/_/g, " ") : "Instagram account";
@@ -44,7 +54,10 @@ export default async function ArtistProfileLayout({ children, params }) {
                   <div className="h-full w-full bg-linear-to-br from-slate-200 via-slate-100 to-slate-300 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900" />
                 )}
                 <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-black/10 via-transparent to-black/5 dark:from-black/30 dark:to-black/20" />
-                <Badge className="absolute left-4 top-4 border border-slate-200 bg-white/90 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200">Featured artist</Badge>
+                <Badge className="absolute left-4 top-4 border border-slate-200 bg-white/90 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
+                  <Stars className="h-3.5 w-3.5 mr-1 text-yellow-500" />
+                  Featured Instagram Posts
+                </Badge>
               </div>
 
               <div className="flex flex-col gap-5">
@@ -89,15 +102,12 @@ export default async function ArtistProfileLayout({ children, params }) {
                 <div className="flex flex-col gap-4">
                   <h1 className="text-5xl font-semibold tracking-tight text-slate-900 sm:text-6xl dark:text-slate-100">"{displayName}"</h1>
                   <div className="flex items-center gap-3">
-                    <div className="relative h-12 w-12 overflow-hidden rounded-full border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                      {profile.profile_picture_url ? (
-                        <img src={profile.profile_picture_url} alt={displayName} className="h-full w-full object-cover" />
-                      ) : (
-                        <div className="grid h-full w-full place-items-center text-slate-500 dark:text-slate-400">
-                          <User className="h-5 w-5" />
-                        </div>
-                      )}
-                    </div>
+                    <Avatar className="h-12 w-12 border border-slate-200 bg-white text-slate-500 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+                      <AvatarImage src={profile.profile_picture_url || undefined} alt={displayName} className="object-cover" />
+                      <AvatarFallback>
+                        <User className="h-5 w-5" />
+                      </AvatarFallback>
+                    </Avatar>
                     <AccountHandle username={profile.username} className="text-base font-semibold" />
                   </div>
                 </div>
@@ -115,23 +125,26 @@ export default async function ArtistProfileLayout({ children, params }) {
 
                 {profile.bio ? <p className="line-clamp-4 text-sm text-slate-600 sm:text-base dark:text-slate-300">{profile.bio}</p> : null}
 
-                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                  <Badge className="gap-1.5 border border-slate-200 bg-white/80 text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200 capitalize">
-                    <User className="h-3 w-3" />
-                    {accountTypeLabel}
-                  </Badge>
-                  <Badge className="gap-1.5 border border-slate-200 bg-white/80 text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">
-                    <Star className="h-3 w-3" />
-                    {formatFollowers(profile.followers_count)}
-                  </Badge>
-                  {profile.location ? (
-                    <Badge className="gap-1.5 border border-slate-200 bg-white/80 text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">
-                      <MapPin className="h-3 w-3" />
-                      {profile.location}
-                    </Badge>
-                  ) : null}
-                </div>
+                {avatarSources.length ? (
+                  <div className="flex items-center gap-3">
+                    <AvatarGroup>
+                      {avatarSources.map((source, index) => (
+                        <Link key={`${source.key}-${index}`} href={`/artists/${source.slug}`} aria-label={`Open ${source.slug} profile`} className="transition hover:scale-[1.03]">
+                          <Avatar className="h-8 w-8 border-2 border-white bg-slate-100 text-slate-400 shadow-sm dark:border-slate-950 dark:bg-slate-900 dark:text-slate-500">
+                            <AvatarImage src={source.url || undefined} alt="Resident profile" className="object-cover" />
+                            <AvatarFallback>
+                              <User className="h-4 w-4" />
+                            </AvatarFallback>
+                          </Avatar>
+                        </Link>
+                      ))}
+                      {remainingAvatars > 0 ? <AvatarGroupCount>+{remainingAvatars}</AvatarGroupCount> : null}
+                    </AvatarGroup>
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">live connected</span>
+                  </div>
+                ) : null}
               </div>
+              <Badge className="border border-slate-200 bg-white/80 text-xs font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">{formatFollowers(profile.followers_count)} followers nearby</Badge>
             </div>
           </div>
         </section>

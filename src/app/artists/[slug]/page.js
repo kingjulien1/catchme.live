@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
 import { BadgeCheck, CalendarCheck2, Clock, Clock3, CreditCard, HandCoins, Hourglass, MapPin, Sparkles, Tag, User } from "lucide-react";
 import AccountHandle from "@/components/account-handle";
+import ExpandableText from "@/components/expandable-text";
 import VisitCountdown from "@/components/visit-countdown";
 import VisitDatetime from "@/components/visit-datetime";
 
@@ -56,7 +58,7 @@ export default async function ArtistProfilePage({ params }) {
           />
         </div>
         <article
-          className={`relative overflow-hidden rounded-2xl border p-5 transition duration-300 ease-out sm:group-hover:-translate-y-0.5 sm:group-hover:translate-x-1 sm:group-hover:shadow-xl sm:group-hover:shadow-fuchsia-100/60 dark:sm:group-hover:shadow-fuchsia-500/10 ${
+          className={`relative overflow-hidden rounded-2xl border p-5 pb-2 transition duration-300 ease-out sm:group-hover:-translate-y-0.5 sm:group-hover:translate-x-1 sm:group-hover:shadow-xl sm:group-hover:shadow-fuchsia-100/60 dark:sm:group-hover:shadow-fuchsia-500/10 ${
             isLive
               ? "border-slate-200 bg-linear-to-br from-fuchsia-50 via-white to-fuchsia-100/60 backdrop-blur-md dark:border-slate-800 dark:from-fuchsia-500/10 dark:via-slate-950/60 dark:to-fuchsia-500/20"
               : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
@@ -96,7 +98,7 @@ export default async function ArtistProfilePage({ params }) {
               </div>
             ) : null}
 
-            {visit.description ? <p className="mt-3 text-sm text-slate-600 line-clamp-3 sm:line-clamp-none dark:text-slate-300">{visit.description}</p> : null}
+            {visit.description ? <ExpandableText text={visit.description} clampLines={3} className="mt-3 text-sm text-slate-600 dark:text-slate-300" /> : null}
 
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400 dark:text-slate-300">
               {visit.bookings_open ? (
@@ -137,21 +139,18 @@ export default async function ArtistProfilePage({ params }) {
               ) : null}
             </div>
 
-            <div className="mt-3 flex items-center justify-between gap-3 text-xs text-slate-400 dark:text-slate-500">
-              <span className="opacity-0 transition duration-200 group-hover:opacity-100">
-                Updated {formatShortDate(visit.visit_start_time ? new Date(visit.visit_start_time) : null)}
-              </span>
+            <div className="mt-3 flex items-end justify-between gap-3 text-xs text-slate-400 dark:text-slate-500">
+              <span className="opacity-0 transition duration-200 group-hover:opacity-100">Updated {formatShortDate(visit.visit_start_time ? new Date(visit.visit_start_time) : null)}</span>
               <Link
                 href={`/artists/${destinationHandleRaw.startsWith("@") ? destinationHandleRaw.slice(1) : destinationHandleRaw}`}
-                className="h-9 w-9 overflow-hidden rounded-full border border-slate-200 bg-slate-100 transition hover:scale-[1.02] hover:shadow-sm dark:border-slate-700 dark:bg-slate-800"
+                className="transition hover:scale-[1.02] hover:shadow-sm"
               >
-                {visit.destination_profile_picture_url ? (
-                  <img src={visit.destination_profile_picture_url} alt={destinationHandle} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="grid h-full w-full place-items-center text-slate-400 dark:text-slate-500">
+                <Avatar className="h-9 w-9 border border-slate-200 bg-slate-100 text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500">
+                  <AvatarImage src={visit.destination_profile_picture_url || undefined} alt={destinationHandle} className="object-cover" />
+                  <AvatarFallback>
                     <User className="h-4 w-4" />
-                  </div>
-                )}
+                  </AvatarFallback>
+                </Avatar>
               </Link>
             </div>
           </div>
