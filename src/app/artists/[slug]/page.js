@@ -47,20 +47,12 @@ export default async function ArtistProfilePage({ params }) {
     return (
       <div key={visit.id} className="group space-y-2">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <VisitCountdown start={start} end={end} isLive={isLive} className={`order-1 w-full sm:order-2 sm:w-auto sm:opacity-0 sm:transition sm:duration-200 sm:group-hover:opacity-100 ${isLive ? "hidden sm:block" : ""}`} />
-          <VisitDatetime
-            start={start}
-            end={end}
-            isLive={isLive}
-            liveAccessory={isLive ? <VisitCountdown start={start} end={end} isLive={isLive} className="text-left" /> : null}
-            className="order-2 origin-left transition-transform duration-300 sm:order-1 sm:group-hover:scale-[1.12] sm:group-hover:translate-x-1"
-          />
+          <VisitDatetime start={start} end={end} isLive={isLive} liveAccessory={isLive ? <VisitCountdown start={start} end={end} isLive={isLive} className="text-left" /> : null} className="order-2 sm:order-1" />
+          <VisitCountdown start={start} end={end} isLive={isLive} className={`order-1 w-full sm:order-2 sm:w-auto whitespace-nowrap ${isLive ? "hidden sm:block" : ""}`} />
         </div>
         <article
-          className={`relative overflow-hidden rounded-2xl border p-5 pb-2 transition duration-300 ease-out sm:group-hover:-translate-y-0.5 sm:group-hover:translate-x-1 sm:group-hover:shadow-xl sm:group-hover:shadow-fuchsia-100/60 dark:sm:group-hover:shadow-fuchsia-500/10 ${
-            isLive
-              ? "border-slate-200 bg-linear-to-br from-fuchsia-50 via-white to-fuchsia-100/60 backdrop-blur-md dark:border-slate-800 dark:from-fuchsia-500/10 dark:via-slate-950/60 dark:to-fuchsia-500/20"
-              : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
+          className={`relative overflow-hidden rounded-2xl border p-5 pb-2 transition duration-300 ease-out sm:group-hover:translate-x-3 sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20 ${
+            isLive ? "border-slate-200 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/70" : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
           }`}
         >
           {typeof progressValue === "number" ? (
@@ -140,10 +132,7 @@ export default async function ArtistProfilePage({ params }) {
 
             <div className="mt-3 flex items-end justify-between gap-3 text-xs text-slate-400 dark:text-slate-500">
               <span className="opacity-0 transition duration-200 group-hover:opacity-100">Updated {formatShortDate(visit.visit_start_time ? new Date(visit.visit_start_time) : null)}</span>
-              <Link
-                href={`/artists/${destinationHandleRaw.startsWith("@") ? destinationHandleRaw.slice(1) : destinationHandleRaw}`}
-                className="transition hover:scale-[1.02] hover:shadow-sm"
-              >
+              <Link href={`/artists/${destinationHandleRaw.startsWith("@") ? destinationHandleRaw.slice(1) : destinationHandleRaw}`} className="transition hover:scale-[1.02] hover:shadow-sm">
                 <Avatar className="h-9 w-9 border border-slate-200 bg-slate-100 text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500">
                   <AvatarImage src={visit.destination_profile_picture_url || undefined} alt={destinationHandle} className="object-cover" />
                   <AvatarFallback>

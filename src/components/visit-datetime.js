@@ -4,73 +4,55 @@ import { format } from "date-fns";
 
 /**
  * VisitDatetime renders a formatted start/end datetime block for a visit.
- *
- * Behavior:
- * - Displays a start date and time on the first line.
- * - Displays an end date and time on the second line.
- * - Removes the year from the date (e.g., "Mar 12").
- * - Hides the time if both start and end are exactly at midnight (00:00).
- * - Preserves alignment by reserving a fixed width for the time segment.
- * - Uses a live-aware color swap when `isLive` is true:
- *   start line becomes secondary, end line becomes primary.
- *
- * @param {Object} props
- * @param {Date | null} props.start
- *   Start datetime of the visit. When null, "TBD" is shown.
- * @param {Date | null} props.end
- *   End datetime of the visit. When null, "Open end" is shown.
- * @param {boolean} [props.isLive=false]
- *   Whether the visit is currently live; when true, the start line is muted and the end line is emphasized.
- * @param {string} [props.className=""]
- *   Optional class names applied to the root container.
- * @returns {JSX.Element}
- *   A two-line datetime block suitable for placement above a visit card.
  */
 export default function VisitDatetime({ start, end, isLive = false, className = "", liveAccessory = null }) {
-  const startDateLabel = start ? format(start, "MMM d") : "TBD";
-  const endDateLabel = end ? format(end, "MMM d") : "Open end";
+  const startMonth = start ? format(start, "MMM") : "TBD";
+  const startDay = start ? format(start, "d") : "--";
+  const endMonth = end ? format(end, "MMM") : "";
+  const endDay = end ? format(end, "d") : "";
+
   const startIsMidnight = start ? start.getHours() === 0 && start.getMinutes() === 0 : false;
   const endIsMidnight = end ? end.getHours() === 0 && end.getMinutes() === 0 : false;
   const hideTime = startIsMidnight && endIsMidnight;
   const startTimeLabel = !hideTime && start ? format(start, "h:mm a") : "";
   const endTimeLabel = !hideTime && end ? format(end, "h:mm a") : "";
-  const startTimeDisplay = startTimeLabel || "00:00 AM";
-  const endTimeDisplay = endTimeLabel || "00:00 AM";
-  const startTimeClass = startTimeLabel ? "" : "opacity-0";
-  const endTimeClass = endTimeLabel ? "" : "opacity-0";
-  const hasAnyTime = Boolean(startTimeLabel || endTimeLabel);
-  const sameDay = Boolean(start && end && start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth() && start.getDate() === end.getDate());
-  const showEndDate = !sameDay || !hasAnyTime;
-  const endTimeText = sameDay ? endTimeLabel : endTimeDisplay;
-  const timeMarginClass = hasAnyTime ? "ml-2" : "";
-  const rangeGapClass = hasAnyTime ? "sm:gap-3" : "sm:gap-1";
 
   return (
-    <div className={`w-full font-mono text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100 md:text-lg lg:text-xl sm:w-auto ${className}`}>
-      <div className="flex flex-col items-start gap-2 sm:w-auto">
-        {isLive ? (
-          <div className="flex items-center gap-2">
-            <span className="mt-0.5 inline-flex w-fit items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200">
-              <span className="relative mr-1 flex h-2 w-2 items-center justify-center">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/70 opacity-70" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              live
-            </span>
-            {liveAccessory ? <span className="sm:hidden">{liveAccessory}</span> : null}
+    <div className={`w-full ${className}`}>
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        {isLive && liveAccessory ? <span className="sm:hidden">{liveAccessory}</span> : null}
+
+        <div className="flex items-center gap-3">
+          <div
+            className={`flex h-16 w-16 flex-col items-center justify-center rounded-xl shadow-sm ${
+              isLive
+                ? "bg-slate-100 text-slate-600 dark:bg-slate-900 dark:text-slate-300"
+                : "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
+            }`}
+          >
+            <span className="text-[11px] font-semibold tracking-widest">{startMonth.toUpperCase()}</span>
+            <span className="text-2xl font-semibold leading-none">{startDay}</span>
           </div>
-        ) : null}
-        <div className="w-full">
-          <div className={`flex w-full items-center justify-between sm:w-auto sm:justify-start ${rangeGapClass}`}>
-            <span className={isLive ? "text-slate-500 dark:text-slate-400" : ""}>
-              {startDateLabel}
-              {hasAnyTime && <span className={`${timeMarginClass} inline-block ${startTimeClass}`}>{startTimeDisplay}</span>}
-            </span>
-            <span className="hidden sm:inline">to</span>
-            <span className={`${isLive ? "text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400"} text-right sm:text-left`}>
-              {showEndDate ? endDateLabel : null}
-              {hasAnyTime && endTimeText ? <span className={`${showEndDate ? timeMarginClass : ""} inline-block ${endTimeClass}`}>{endTimeText}</span> : null}
-            </span>
+
+          {end ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">to</span>
+              <div
+                className={`flex h-16 w-16 flex-col items-center justify-center rounded-xl border shadow-sm ${
+                  isLive
+                    ? "border-slate-200 bg-slate-900 text-white dark:border-slate-700 dark:bg-slate-100 dark:text-slate-900"
+                    : "border-slate-200 bg-white text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                }`}
+              >
+                <span className="text-[11px] font-semibold tracking-widest">{endMonth.toUpperCase()}</span>
+                <span className="text-2xl font-semibold leading-none">{endDay}</span>
+              </div>
+            </div>
+          ) : null}
+
+          <div className="text-xs font-semibold text-slate-500 dark:text-slate-300">
+            {startTimeLabel ? <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{startTimeLabel}</div> : null}
+            {endTimeLabel ? <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">Ends {endTimeLabel}</div> : null}
           </div>
         </div>
       </div>
