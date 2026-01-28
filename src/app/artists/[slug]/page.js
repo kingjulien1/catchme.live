@@ -8,7 +8,6 @@ import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
 import { BadgeCheck, CalendarCheck2, Clock, Clock3, CreditCard, HandCoins, Hourglass, MapPin, Sparkles, Tag, User } from "lucide-react";
 import AccountHandle from "@/components/account-handle";
-import ExpandableText from "@/components/expandable-text";
 import VisitCountdown from "@/components/visit-countdown";
 import VisitDatetime from "@/components/visit-datetime";
 
@@ -71,7 +70,7 @@ export default async function ArtistProfilePage({ params }) {
           ) : null}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-75 transition duration-300 sm:group-hover:opacity-95"
+            className="pointer-events-none absolute inset-0 scale-100 opacity-75 transition duration-300 sm:group-hover:scale-110 sm:group-hover:opacity-95"
             style={{
               backgroundImage: visit.destination_banner_image_url ? `url(${visit.destination_banner_image_url})` : "linear-gradient(135deg, rgba(148,163,184,0.25) 0%, rgba(226,232,240,0.35) 40%, rgba(148,163,184,0.15) 100%)",
               backgroundPosition: "center",
@@ -98,7 +97,7 @@ export default async function ArtistProfilePage({ params }) {
               </div>
             ) : null}
 
-            {visit.description ? <ExpandableText text={visit.description} clampLines={3} className="mt-3 text-sm text-slate-600 dark:text-slate-300" /> : null}
+            {visit.description ? <p className="mt-3 text-sm text-slate-600 line-clamp-3 dark:text-slate-300">{visit.description}</p> : null}
 
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400 dark:text-slate-300">
               {visit.bookings_open ? (
