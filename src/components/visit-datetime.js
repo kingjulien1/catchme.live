@@ -51,8 +51,16 @@ export default function VisitDatetime({ start, end, isLive = false, className = 
           ) : null}
 
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-300">
-            {startTimeLabel ? <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{startTimeLabel}</div> : null}
-            {endTimeLabel ? <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">Ends {endTimeLabel}</div> : null}
+            {startTimeLabel ? (
+              <div className={`text-sm font-semibold ${isLive ? "text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-slate-100"}`}>
+                {startTimeLabel}
+              </div>
+            ) : null}
+            {endTimeLabel ? (
+              <div className={`mt-1 text-xs ${isLive ? "text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400"}`}>
+                Ends {endTimeLabel}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

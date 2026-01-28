@@ -48,7 +48,18 @@ export default async function ArtistProfilePage({ params }) {
       <div key={visit.id} className="group space-y-2">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <VisitDatetime start={start} end={end} isLive={isLive} liveAccessory={isLive ? <VisitCountdown start={start} end={end} isLive={isLive} className="text-left" /> : null} className="order-2 sm:order-1" />
-          <VisitCountdown start={start} end={end} isLive={isLive} className={`order-1 w-full sm:order-2 sm:w-auto whitespace-nowrap ${isLive ? "hidden sm:block" : ""}`} />
+          <div className="order-1 flex w-full items-center justify-between gap-2 sm:order-2 sm:w-auto sm:flex-col sm:items-end sm:gap-1">
+            {isLive ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200">
+                <span className="relative flex h-2 w-2 items-center justify-center">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/70 opacity-70" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                live
+              </span>
+            ) : null}
+            <VisitCountdown start={start} end={end} isLive={isLive} className="whitespace-nowrap" />
+          </div>
         </div>
         <article
           className={`relative overflow-hidden rounded-2xl border p-5 pb-2 transition duration-300 ease-out sm:group-hover:translate-x-3 sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20 ${
