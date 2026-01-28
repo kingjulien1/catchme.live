@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
@@ -40,10 +41,12 @@ export default async function ArtistProfilePage({ params }) {
     const destinationHandleRaw = visit.destination_username || visit.destination_instagram_handle || "unknown";
     const destinationHandle = destinationHandleRaw.startsWith("@") ? destinationHandleRaw : `@${destinationHandleRaw}`;
 
+    const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((Date.now() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
+
     return (
       <div key={visit.id} className="group space-y-2">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <VisitCountdown start={start} end={end} isLive={isLive} className={`order-1 w-full sm:order-2 sm:w-auto ${isLive ? "hidden sm:block" : ""}`} />
+          <VisitCountdown start={start} end={end} isLive={isLive} className={`order-1 w-full sm:order-2 sm:w-auto sm:opacity-0 sm:transition sm:duration-200 sm:group-hover:opacity-100 ${isLive ? "hidden sm:block" : ""}`} />
           <VisitDatetime
             start={start}
             end={end}
@@ -59,26 +62,27 @@ export default async function ArtistProfilePage({ params }) {
               : "border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-slate-900/70"
           }`}
         >
-          {visit.destination_banner_image_url ? (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 opacity-75 transition duration-300 sm:group-hover:opacity-95"
-              style={{
-                backgroundImage: `url(${visit.destination_banner_image_url})`,
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-                WebkitMaskImage: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.85) 100%)",
-                maskImage: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.85) 100%)",
-              }}
-            />
+          {typeof progressValue === "number" ? (
+            <div className="absolute left-4 right-4 top-0">
+              <Progress value={progressValue} className="h-1 bg-slate-200/80 dark:bg-slate-800/80" />
+            </div>
           ) : null}
-          {visit.destination_banner_image_url ? (
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/70 via-white/20 to-transparent transition duration-300 sm:group-hover:opacity-30 dark:from-slate-950/70 dark:via-slate-950/30" />
-          ) : null}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-75 transition duration-300 sm:group-hover:opacity-95"
+            style={{
+              backgroundImage: visit.destination_banner_image_url ? `url(${visit.destination_banner_image_url})` : "linear-gradient(135deg, rgba(148,163,184,0.25) 0%, rgba(226,232,240,0.35) 40%, rgba(148,163,184,0.15) 100%)",
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+              WebkitMaskImage: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.85) 100%)",
+              maskImage: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.85) 100%)",
+            }}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/70 via-white/20 to-transparent transition duration-300 sm:group-hover:opacity-30 dark:from-slate-950/70 dark:via-slate-950/30" />
           <div className="relative z-10">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <AccountHandle username={destinationHandle} className="text-base font-semibold sm:text-lg" />
+                <AccountHandle username={destinationHandle} className="font-semibold sm:text-lg" />
               </div>
               <Badge className="text-sm text-purple-700 border border-purple-200 bg-purple-50 px-3 py-1 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-200">
                 <Tag className="w-3 h-3" />
@@ -133,19 +137,23 @@ export default async function ArtistProfilePage({ params }) {
               ) : null}
             </div>
 
-            <div className="mt-3 text-xs text-slate-400 opacity-0 transition duration-200 group-hover:opacity-100 dark:text-slate-500">Updated {formatShortDate(visit.visit_start_time ? new Date(visit.visit_start_time) : null)}</div>
-            <Link
-              href={`/artists/${destinationHandleRaw.startsWith("@") ? destinationHandleRaw.slice(1) : destinationHandleRaw}`}
-              className="absolute bottom-4 right-4 h-9 w-9 overflow-hidden rounded-full border border-slate-200 bg-slate-100 transition hover:scale-[1.02] hover:shadow-sm dark:border-slate-700 dark:bg-slate-800"
-            >
-              {visit.destination_profile_picture_url ? (
-                <img src={visit.destination_profile_picture_url} alt={destinationHandle} className="h-full w-full object-cover" />
-              ) : (
-                <div className="grid h-full w-full place-items-center text-slate-400 dark:text-slate-500">
-                  <User className="h-4 w-4" />
-                </div>
-              )}
-            </Link>
+            <div className="mt-3 flex items-center justify-between gap-3 text-xs text-slate-400 dark:text-slate-500">
+              <span className="opacity-0 transition duration-200 group-hover:opacity-100">
+                Updated {formatShortDate(visit.visit_start_time ? new Date(visit.visit_start_time) : null)}
+              </span>
+              <Link
+                href={`/artists/${destinationHandleRaw.startsWith("@") ? destinationHandleRaw.slice(1) : destinationHandleRaw}`}
+                className="h-9 w-9 overflow-hidden rounded-full border border-slate-200 bg-slate-100 transition hover:scale-[1.02] hover:shadow-sm dark:border-slate-700 dark:bg-slate-800"
+              >
+                {visit.destination_profile_picture_url ? (
+                  <img src={visit.destination_profile_picture_url} alt={destinationHandle} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="grid h-full w-full place-items-center text-slate-400 dark:text-slate-500">
+                    <User className="h-4 w-4" />
+                  </div>
+                )}
+              </Link>
+            </div>
           </div>
         </article>
       </div>
@@ -153,7 +161,7 @@ export default async function ArtistProfilePage({ params }) {
   };
 
   return (
-    <div className="w-full max-w-5xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
+    <div className="w-full max-w-5xl px-4 py-20 mx-auto sm:px-6 lg:px-8">
       <div className="space-y-6">
         {visits.length === 0 ? (
           <div className="p-8 text-sm border border-dashed rounded-2xl border-slate-200 bg-white/80 text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
@@ -161,7 +169,6 @@ export default async function ArtistProfilePage({ params }) {
           <div className="space-y-10">
             {liveVisits.length > 0 ? (
               <section className="space-y-4">
-                <div className="text-sm font-semibold text-center text-slate-700 sm:text-left dark:text-slate-200">Live visits in progress</div>
                 <div className="w-full max-w-4xl mx-auto space-y-6">{liveVisits.map((visit) => renderVisit(visit, true))}</div>
               </section>
             ) : null}
@@ -171,7 +178,8 @@ export default async function ArtistProfilePage({ params }) {
                 {nextUpcomingStart ? (
                   <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-300">
                     <Hourglass className="h-3 w-3" />
-                    Get ready! Next <VisitCountdown start={nextUpcomingStart} end={null} isLive={false} className="text-center sm:text-center" />
+                    Next visit starts in
+                    <VisitCountdown start={nextUpcomingStart} end={null} isLive={false} className="text-center sm:text-center" />
                   </div>
                 ) : null}
               </div>
