@@ -58,7 +58,7 @@ export default async function ArtistProfilePage({ params }) {
                 live
               </span>
             ) : null}
-            <VisitCountdown start={start} end={end} isLive={isLive} className="whitespace-nowrap" />
+            <VisitCountdown start={start} end={end} isLive={isLive} className="hidden whitespace-nowrap sm:block" />
           </div>
         </div>
         <article
@@ -82,7 +82,7 @@ export default async function ArtistProfilePage({ params }) {
               maskImage: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.85) 100%)",
             }}
           />
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/70 via-white/20 to-transparent transition duration-300 sm:group-hover:opacity-30 dark:from-slate-950/70 dark:via-slate-950/30" />
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/70 via-white/20 to-transparent opacity-30 transition duration-300 sm:opacity-0 sm:group-hover:opacity-30 dark:from-slate-950/70 dark:via-slate-950/30" />
           <div className="relative z-10">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -159,7 +159,7 @@ export default async function ArtistProfilePage({ params }) {
   };
 
   return (
-    <div className="w-full max-w-5xl px-4 py-20 mx-auto sm:px-6 lg:px-8">
+    <div className="w-full max-w-5xl px-4 pt-0 pb-20 mx-auto sm:px-6 sm:pt-8 lg:px-8">
       <div className="space-y-6">
         {visits.length === 0 ? (
           <div className="p-8 text-sm border border-dashed rounded-2xl border-slate-200 bg-white/80 text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
