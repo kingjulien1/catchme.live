@@ -42,7 +42,7 @@ export default async function ArtistProfilePage({ params }) {
     const destinationHandleRaw = visit.destination_username || visit.destination_instagram_handle || "unknown";
     const destinationHandle = destinationHandleRaw.startsWith("@") ? destinationHandleRaw : `@${destinationHandleRaw}`;
 
-    const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((Date.now() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
+    const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((now.getTime() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
 
     return (
       <div key={visit.id} className="group space-y-2">

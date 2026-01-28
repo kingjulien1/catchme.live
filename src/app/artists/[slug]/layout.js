@@ -40,12 +40,13 @@ export default async function ArtistProfileLayout({ children, params }) {
   const displayName = profile.name || profile.username || "Artist";
   const accountTypeLabel = profile.account_type ? profile.account_type.replace(/_/g, " ") : "Instagram account";
   const bannerUrl = profile.banner_image_url;
+  const bookingStatus = visits.find((visit) => visit.bookings_open)?.bookings_open ? "Bookings open" : visits.find((visit) => visit.appointment_only)?.appointment_only ? "Appointment only" : visits.length > 0 ? "Bookings closed" : null;
 
   return (
     <div className="w-full pb-16">
       <div className="w-full lg:flex">
         <section className="w-full bg-white py-20 text-slate-900 lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:overflow-hidden dark:bg-slate-950 dark:text-slate-100">
-          <div className="w-full h-full px-4 pt-0 pb-12 sm:px-6 lg:px-8 lg:pt-0 lg:pb-10">
+          <div className="w-full h-full px-4 pt-6 pb-12 sm:px-6 lg:px-8 lg:pt-0 lg:pb-10">
             <div className="flex h-full flex-col gap-6">
               <div className="relative flex-1 overflow-hidden rounded-[28px] border border-slate-200 bg-slate-100 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 {bannerUrl ? (
@@ -73,6 +74,7 @@ export default async function ArtistProfileLayout({ children, params }) {
                         Based in {profile.location}
                       </Badge>
                     ) : null}
+                    {bookingStatus ? <Badge className="border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">{bookingStatus}</Badge> : null}
                   </div>
                   <div className="flex items-center gap-2">
                     <button
