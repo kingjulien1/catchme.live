@@ -41,7 +41,13 @@ export default async function ArtistProfilePage({ params }) {
   const latestLiveEnd = liveVisits[0]?.visit_end_time ? new Date(liveVisits[0].visit_end_time) : null;
 
   return (
-    <div className="w-full max-w-5xl px-4 pt-0 pb-20 mx-auto sm:px-6 sm:pt-8 lg:px-8">
+    <div className="relative w-full max-w-5xl px-4 pt-0 pb-20 mx-auto sm:px-6 sm:pt-8 lg:px-8">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          backgroundImage: "radial-gradient(ellipse at bottom right, rgba(232, 121, 249, 0.35), transparent 60%)",
+        }}
+      />
       <div className="space-y-6">
         {visits.length === 0 ? (
           <div className="p-8 text-sm border border-dashed rounded-2xl border-slate-200 bg-white/80 text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>

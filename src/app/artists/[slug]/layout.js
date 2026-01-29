@@ -63,7 +63,22 @@ export default async function ArtistProfileLayout({ children, params }) {
             </div>
           </div>
         </section>
-        <div className="w-full bg-white lg:w-1/2 lg:pt-12 dark:bg-slate-950">{children}</div>
+        <div className="relative w-full lg:w-1/2 lg:pt-12">
+          <div className="absolute inset-0 -z-20 bg-white dark:bg-slate-950" />
+          <div
+            className="pointer-events-none absolute inset-0 -z-10"
+            style={{
+              backgroundImage: "radial-gradient(ellipse at bottom right, rgba(124, 58, 237, 0.25), rgba(236, 72, 153, 0.18), transparent 60%)",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 -z-10"
+            style={{
+              backgroundImage: "radial-gradient(ellipse at top left, rgba(148, 163, 184, 0.18), rgba(236, 72, 153, 0.1), transparent 60%)",
+            }}
+          />
+          {children}
+        </div>
       </div>
     </div>
   );
