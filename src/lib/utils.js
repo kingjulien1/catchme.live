@@ -73,6 +73,9 @@ export function formatVisitType(value) {
  */
 export function formatVisitDateRange(start, end) {
   if (!start) return "TBD";
+  if (end && start.toDateString() === end.toDateString()) {
+    return formatVisitTimeRange(start, end);
+  }
   const startLabel = format(start, "MMM d");
   if (!end) return `${startLabel} · Open end`;
   return `${startLabel} – ${format(end, "MMM d")}`;
