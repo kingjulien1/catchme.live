@@ -63,7 +63,7 @@ export default async function ArtistProfileLayout({ children, params }) {
             </div>
           </div>
         </section>
-        <div className="w-full bg-white lg:w-1/2 dark:bg-slate-950">{children}</div>
+        <div className="w-full bg-white lg:w-1/2 lg:pt-12 dark:bg-slate-950">{children}</div>
       </div>
     </div>
   );

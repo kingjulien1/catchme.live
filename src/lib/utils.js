@@ -69,13 +69,13 @@ export function formatVisitType(value) {
  * @param {Date | null | undefined} end
  *   Visit end date; optional.
  * @returns {string}
- *   A date range like "Mar 12, 2025 – Mar 18, 2025", or "Open end" when no end is provided.
+ *   A date range like "Mar 12 – Mar 18", or "Open end" when no end is provided.
  */
 export function formatVisitDateRange(start, end) {
   if (!start) return "TBD";
-  const startLabel = format(start, "MMM d, yyyy");
+  const startLabel = format(start, "MMM d");
   if (!end) return `${startLabel} · Open end`;
-  return `${startLabel} – ${format(end, "MMM d, yyyy")}`;
+  return `${startLabel} – ${format(end, "MMM d")}`;
 }
 
 /**

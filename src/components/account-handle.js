@@ -13,6 +13,7 @@ export default async function AccountHandle({ username, className = "" }) {
       followersCount={profile?.followers_count ?? null}
       accountType={profile?.account_type || null}
       mediaCount={profile?.media_count ?? null}
+      bio={profile?.bio || null}
       className={className}
     />
   );
