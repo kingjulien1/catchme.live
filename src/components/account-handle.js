@@ -43,7 +43,7 @@ export default function AccountHandleClient({ username, name, profilePictureUrl,
           {handle}
         </button>
       </HoverCardTrigger>
-      <HoverCardContent className="relative z-50 w-full max-w-[520px] overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-950 dark:shadow-black/40">
+      <HoverCardContent className="relative z-50 w-[calc(100vw-2.5rem)] max-w-[520px] overflow-hidden rounded-[28px] border border-slate-200 bg-white p-4 sm:p-6 shadow-xl shadow-slate-200/60 dark:border-slate-800 dark:bg-slate-950 dark:shadow-black/40">
         <Link href={profileHref} aria-label={`Open ${handle} profile`} className="absolute inset-0 rounded-[28px]" />
         <div className="relative z-10 flex items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold pointer-events-none">
@@ -78,17 +78,23 @@ export default function AccountHandleClient({ username, name, profilePictureUrl,
             </Link>
           </div>
         </div>
-        <div className="relative z-10 mt-6 text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">&quot;{displayName}&quot;</div>
+        <div className="relative z-10 mt-4 text-2xl font-semibold tracking-tight text-slate-900 sm:mt-6 sm:text-4xl dark:text-slate-100">
+          &quot;{displayName}&quot;
+        </div>
         <div className="relative z-10 mt-5 flex items-center gap-4 pointer-events-none">
-          <Avatar className="h-14 w-14 border border-slate-200 bg-white text-slate-400 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+          <Avatar className="h-10 w-10 border border-slate-200 bg-white text-slate-400 shadow-sm sm:h-14 sm:w-14 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
             <AvatarImage src={profilePictureUrl || undefined} alt={handle} className="object-cover" />
             <AvatarFallback>
               <User className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
-          <div className="text-base font-semibold text-fuchsia-500 dark:text-fuchsia-400">{handle}</div>
+          <div className="text-sm font-semibold text-fuchsia-500 sm:text-base dark:text-fuchsia-400">{handle}</div>
         </div>
-        {bio ? <p className="relative z-10 mt-5 text-sm leading-relaxed text-slate-600 line-clamp-4 dark:text-slate-300">{bio}</p> : null}
+        {bio ? (
+          <p className="relative z-10 mt-4 text-xs leading-relaxed text-slate-600 line-clamp-4 sm:mt-5 sm:text-sm dark:text-slate-300">
+            {bio}
+          </p>
+        ) : null}
       </HoverCardContent>
     </HoverCard>
   );
