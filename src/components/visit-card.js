@@ -32,6 +32,12 @@ export default function VisitCard({ visit, isLive = false, isPast = false }) {
           <div className="min-w-0 flex flex-col items-start">
             <AccountHandle
               username={destinationHandleRaw}
+              name={visit.destination_name || null}
+              profilePictureUrl={visit.destination_profile_picture_url || null}
+              followersCount={visit.destination_followers_count ?? null}
+              accountType={visit.destination_account_type || null}
+              mediaCount={visit.destination_media_count ?? null}
+              bio={visit.destination_bio || null}
               className={`text-base font-semibold ${isLive ? "text-white hover:text-white dark:text-slate-900 dark:hover:text-slate-900" : "text-slate-900 hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-100"}`}
             />
             <div className="mt-2 flex flex-wrap items-center gap-2">

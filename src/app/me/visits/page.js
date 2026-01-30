@@ -84,7 +84,12 @@ export default async function VisitsPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-gray-700 dark:text-slate-200">{displayName}</p>
-                        <AccountHandle username={handle} className="text-lg" />
+                        <AccountHandle
+                          username={handle}
+                          name={displayName}
+                          profilePictureUrl={visit.destination_profile_picture_url || null}
+                          className="text-lg"
+                        />
                       </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-slate-400">

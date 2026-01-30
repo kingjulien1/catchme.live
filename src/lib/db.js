@@ -153,7 +153,11 @@ export async function getProfileByUsername(username) {
  *   destination_profile_picture_url: string | null,
  *   destination_name: string | null,
  *   destination_username: string | null,
- *   destination_banner_image_url: string | null
+ *   destination_banner_image_url: string | null,
+ *   destination_followers_count: number | null,
+ *   destination_account_type: string | null,
+ *   destination_media_count: number | null,
+ *   destination_bio: string | null
  * }>>}
  *   List of visit records for the user, newest first.
  */
@@ -178,6 +182,10 @@ export async function getUserVisits(userId, limit = 25) {
       destination.profile_picture_url as destination_profile_picture_url,
       destination.name as destination_name,
       destination.username as destination_username,
+      destination.followers_count as destination_followers_count,
+      destination.account_type as destination_account_type,
+      destination.media_count as destination_media_count,
+      destination.bio as destination_bio,
       destination_settings.banner_image_url as destination_banner_image_url
     from visits
     left join users as destination on destination.id = visits.destination_user_id

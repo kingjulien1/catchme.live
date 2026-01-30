@@ -49,7 +49,15 @@ export default async function ConnectInstagramSection() {
               </span>
             </div>
             <div className="min-w-0">
-              <AccountHandle username={user.username} />
+              <AccountHandle
+                username={user.username}
+                name={user.name || null}
+                profilePictureUrl={user.profile_picture_url || null}
+                followersCount={user.followers_count ?? null}
+                accountType={user.account_type || null}
+                mediaCount={user.media_count ?? null}
+                bio={user.bio || null}
+              />
               <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-slate-400">
                 <span>{formatFollowers(user.followers_count)}</span>
                 <span className="hidden h-1 w-1 rounded-full bg-gray-300 sm:inline-block" />

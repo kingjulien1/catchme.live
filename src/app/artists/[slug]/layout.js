@@ -54,7 +54,16 @@ export default async function ArtistProfileLayout({ children, params }) {
                       <User className="h-5 w-5" />
                     </AvatarFallback>
                   </Avatar>
-                  <AccountHandle username={profile.username} className="text-base font-semibold" />
+                  <AccountHandle
+                    username={profile.username}
+                    name={profile.name || null}
+                    profilePictureUrl={profile.profile_picture_url || null}
+                    followersCount={profile.followers_count ?? null}
+                    accountType={profile.account_type || null}
+                    mediaCount={profile.media_count ?? null}
+                    bio={profile.bio || null}
+                    className="text-base font-semibold"
+                  />
                 </div>
               </div>
               <SpecialisationsBadges specialisations={profile.specialisations} />
@@ -65,18 +74,6 @@ export default async function ArtistProfileLayout({ children, params }) {
         </section>
         <div className="relative w-full lg:w-1/2 lg:pt-12">
           <div className="absolute inset-0 -z-20 bg-white dark:bg-slate-950" />
-          <div
-            className="pointer-events-none absolute inset-0 -z-10"
-            style={{
-              backgroundImage: "radial-gradient(ellipse at bottom right, rgba(124, 58, 237, 0.25), rgba(236, 72, 153, 0.18), transparent 60%)",
-            }}
-          />
-          <div
-            className="pointer-events-none absolute inset-0 -z-10"
-            style={{
-              backgroundImage: "radial-gradient(ellipse at top left, rgba(148, 163, 184, 0.18), rgba(236, 72, 153, 0.1), transparent 60%)",
-            }}
-          />
           {children}
         </div>
       </div>
