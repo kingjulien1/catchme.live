@@ -36,7 +36,7 @@ export default async function ArtistProfileLayout({ children, params }) {
   return (
     <div className="w-full pb-16">
       <div className="w-full lg:flex">
-        <section className="w-full min-h-screen bg-white pt-20 text-slate-900 lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:overflow-hidden dark:bg-slate-950 dark:text-slate-100">
+        <section className="w-full min-h-screen bg-white pt-20 text-slate-900 lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:overflow-hidden dark:bg-slate-900 dark:text-slate-100">
           <div className="w-full h-screen px-6 sm:px-6 lg:px-8 lg:pt-0 lg:pb-10 flex flex-col gap-6">
             <BannerImage bannerUrl={bannerUrl} />
 

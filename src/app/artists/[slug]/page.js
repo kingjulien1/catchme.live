@@ -52,8 +52,8 @@ export default async function ArtistProfilePage({ params }) {
                 <div className="flex items-center">
                   <span className="inline-flex items-center gap-2 rounded-full border border-slate-900 bg-black px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white transition-transform duration-300 ease-out group-hover:translate-x-3 dark:border-white dark:bg-white dark:text-slate-900">
                     <span className="relative flex h-2 w-2 items-center justify-center">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/70 opacity-70 dark:bg-slate-900/70" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-white dark:bg-slate-900" />
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/70 opacity-0 group-hover:animate-ping group-hover:opacity-70 group-focus-within:animate-ping group-focus-within:opacity-70 dark:bg-emerald-500/70" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                     </span>
                     live
                   </span>
@@ -71,7 +71,7 @@ export default async function ArtistProfilePage({ params }) {
                 {nextUpcomingStart ? (
                   <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-300">
                     <ChevronUp className="h-3 w-3" />
-                    <VisitCountdown start={nextUpcomingStart} className="text-center text-gray-600 sm:text-center" />
+                    <VisitCountdown start={nextUpcomingStart} className="text-center text-gray-700 dark:text-gray-300 sm:text-center" />
                     <ChevronUp className="h-3 w-3" />
                   </div>
                 ) : null}
