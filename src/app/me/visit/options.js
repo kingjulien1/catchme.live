@@ -36,20 +36,38 @@ function VisitOptionCard({ id, name, title, description, icon, checked, onChecke
   );
 }
 
-export default function VisitOptionsSection() {
+export default function VisitOptionsSection({ initialValues, onOptionChange }) {
   const [options, setOptions] = React.useState({
-    bookingsOpen: true,
-    appointmentOnly: false,
-    age18Id: false,
-    depositRequired: false,
-    digitalPayments: false,
-    customRequests: false,
+    bookingsOpen: initialValues?.bookings_open ?? true,
+    appointmentOnly: initialValues?.appointment_only ?? false,
+    age18Id: initialValues?.age_18_plus ?? false,
+    depositRequired: initialValues?.deposit_required ?? false,
+    digitalPayments: initialValues?.digital_payments ?? false,
+    customRequests: initialValues?.custom_requests ?? false,
   });
+
+  React.useEffect(() => {
+    if (!initialValues) return;
+    setOptions({
+      bookingsOpen: initialValues.bookings_open ?? true,
+      appointmentOnly: initialValues.appointment_only ?? false,
+      age18Id: initialValues.age_18_plus ?? false,
+      depositRequired: initialValues.deposit_required ?? false,
+      digitalPayments: initialValues.digital_payments ?? false,
+      customRequests: initialValues.custom_requests ?? false,
+    });
+  }, [initialValues]);
 
   const setOption = (key) => (value) => {
     // shadcn Checkbox can emit true/false or "indeterminate"; treat indeterminate as false
     const next = value === true;
-    setOptions((prev) => ({ ...prev, [key]: next }));
+    setOptions((prev) => {
+      const updated = { ...prev, [key]: next };
+      if (onOptionChange) {
+        requestAnimationFrame(() => onOptionChange());
+      }
+      return updated;
+    });
   };
 
   return (

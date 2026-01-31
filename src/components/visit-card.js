@@ -9,8 +9,8 @@ import { format } from "date-fns";
 import { Banknote, ChevronDown, CircleDashed, CreditCard, HandCoins, Pin, Tag, User } from "lucide-react";
 import { useState } from "react";
 
-export default function VisitCard({ visit, isLive = false, isPast = false }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function VisitCard({ visit, isLive = false, isPast = false, defaultOpen = false }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
   const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
   const destinationHandleRaw = visit.destination_username || visit.destination_instagram_handle || "unknown";
@@ -30,7 +30,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false }) {
         className={`relative overflow-hidden rounded-3xl border p-5 transition duration-300 ease-out sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20 ${
           isLive
             ? "border-transparent bg-black text-white shadow-[0_0_22px_rgba(16,185,129,0.12)] dark:bg-white dark:text-slate-900 dark:shadow-[0_0_18px_rgba(16,185,129,0.18)]"
-            : "border-slate-200 bg-white/90 text-slate-900 dark:border-slate-800 dark:bg-black dark:text-slate-100"
+            : "border-slate-200 bg-gray-400/20 text-slate-900 dark:border-slate-800 dark:bg-gray-700/40  dark:text-slate-100"
         } ${isPast ? "opacity-70 grayscale" : ""}`}
         role="button"
         tabIndex={0}
@@ -184,7 +184,7 @@ function VisitProgress({ isLive, isOpen, progressValue, start, end }) {
   if (typeof progressValue !== "number") return null;
 
   return (
-    <div className="mt-4">
+    <div className={`${isOpen ? "mt-4" : "mt-1"} transition-all duration-300 group-hover:mt-4`}>
       {isLive ? <div className={`mb-4 h-px bg-white/10 transition-opacity duration-300 dark:bg-slate-200/70 ${isOpen ? "opacity-100" : "opacity-0"} group-hover:opacity-100`} /> : null}
       <div className={`mb-2 flex items-center justify-between ${isOpen ? "text-xs" : "text-[9px]"} ${isLive ? "text-white dark:text-slate-900" : "text-slate-100 dark:text-slate-900"} group-hover:text-xs`}>
         <CircleDashed className={`h-4 w-4 ${isOpen ? "animate-[spin_4s_linear_infinite]" : "animate-none"} group-hover:animate-[spin_4s_linear_infinite]`} />

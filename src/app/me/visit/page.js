@@ -48,11 +48,19 @@ export default async function NewVisitPage() {
       errors.description = "Visit description must be 500 characters or less.";
     }
 
-    if (Object.keys(errors).length > 0) {
-      return { errors, message: "Please fix the highlighted fields." };
-    }
-
     const toBoolean = (value) => value === true || value === "true" || value === "on";
+    const optionValues = {
+      bookings_open: toBoolean(raw.bookings_open),
+      appointment_only: toBoolean(raw.appointment_only),
+      age_18_plus: toBoolean(raw.age_18_plus),
+      deposit_required: toBoolean(raw.deposit_required),
+      digital_payments: toBoolean(raw.digital_payments),
+      custom_requests: toBoolean(raw.custom_requests),
+    };
+
+    if (Object.keys(errors).length > 0) {
+      return { errors, message: "Please fix the highlighted fields.", values: optionValues };
+    }
     const visitEndTime = raw.visit_end_time ? new Date(raw.visit_end_time) : null;
 
     const [destinationUser] = await sql`
@@ -92,12 +100,12 @@ export default async function NewVisitPage() {
         ${visitEndTime},
         ${raw.visit_type},
         ${raw.description?.trim() || null},
-        ${toBoolean(raw.bookings_open)},
-        ${toBoolean(raw.appointment_only)},
-        ${toBoolean(raw.age_18_plus)},
-        ${toBoolean(raw.deposit_required)},
-        ${toBoolean(raw.digital_payments)},
-        ${toBoolean(raw.custom_requests)}
+        ${optionValues.bookings_open},
+        ${optionValues.appointment_only},
+        ${optionValues.age_18_plus},
+        ${optionValues.deposit_required},
+        ${optionValues.digital_payments},
+        ${optionValues.custom_requests}
       )
     `;
 

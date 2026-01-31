@@ -2,7 +2,7 @@ import { Activity, BadgeCheck, BarChart3, BookOpen, Check, CheckCircle2, HelpCir
 
 export default function Me() {
   return (
-    <div className="w-full pb-6">
+    <div className="w-full pt-12 pb-20">
       <div className="w-full max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 sm:text-3xl">What Gets Imported</h2>

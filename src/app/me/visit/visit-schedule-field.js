@@ -32,7 +32,7 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
 
   return (
     <>
-      <div className="flex flex-col w-full gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col w-full gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="grid items-start w-full gap-3">
           <Label className="text-sm font-medium" htmlFor="start-time">
             Start Date & Time

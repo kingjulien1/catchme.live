@@ -27,7 +27,7 @@ export default function VisitDetailsSection({ errors = {}, onFieldChange }) {
     <Section title="Visit Details" icon={<PinIcon className="w-4 h-4" />} subtitle="Provide information about your upcoming visit location and schedule.">
       {/* Instagram Handle Input Group */}
       <article className="pt-6 my-4 space-y-6">
-        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        <div className="grid gap-6">
           <DestinationAccountField
             onLocationChange={(nextValue) => {
               setLocationValue(nextValue);
