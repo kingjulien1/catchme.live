@@ -9,12 +9,11 @@ import { format } from "date-fns";
 import { Banknote, ChevronDown, CircleDashed, CircleFadingArrowUp, CreditCard, HandCoins, Pin, Radio, Tag, User } from "lucide-react";
 import { useState } from "react";
 
-export default function VisitCard({ visit, author = null, isLive = false, isPast = false, defaultOpen = false }) {
+export default function VisitCard({ visit, isLive = false, isPast = false, defaultOpen = false }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
   const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
   const destinationHandleRaw = visit.destination_username || visit.destination_instagram_handle || "unknown";
-  const authorHandleRaw = author?.username || visit.author_username || "unknown";
   const visitLocation = visit.visit_location || visit.destination_name || visit.destination_username || "Visit location";
   const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((new Date().getTime() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
   const isSameDay = start && end ? start.toDateString() === end.toDateString() : false;
@@ -33,7 +32,7 @@ export default function VisitCard({ visit, author = null, isLive = false, isPast
         }`}
       >
         <article
-          className={`relative overflow-hidden rounded-3xl border p-5 transition duration-300 ease-out ${isOpen ? "" : "sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20"} ${
+          className={`relative overflow-hidden rounded-3xl border transition duration-300 ease-out ${isOpen ? "p-5" : "px-5 pt-5 pb-1 sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20"} ${
             isLive
               ? "border-transparent bg-black text-white shadow-[0_0_22px_rgba(16,185,129,0.12)] dark:bg-white dark:text-slate-900 dark:shadow-[0_0_18px_rgba(16,185,129,0.18)]"
               : "border-slate-200 bg-gray-400/20 text-slate-900 dark:border-slate-800 dark:bg-gray-700/40  dark:text-slate-100"
@@ -48,7 +47,7 @@ export default function VisitCard({ visit, author = null, isLive = false, isPast
             }
           }}
         >
-          <VisitTopContent isOpen={isOpen} isLive={isLive} visit={visit} author={author} authorHandleRaw={authorHandleRaw} destinationHandleRaw={destinationHandleRaw} />
+          <VisitTopContent isOpen={isOpen} isLive={isLive} visit={visit} destinationHandleRaw={destinationHandleRaw} />
           <VisitDuration isLive={isLive} isOpen={isOpen} start={start} end={end} isSameDay={isSameDay} visitLocation={visitLocation} />
 
           <div className={`h-px transition-all duration-300 ${isOpen ? "my-4 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-4 sm:group-hover:opacity-100`} />
@@ -106,52 +105,25 @@ function ExpandButton({ isLive, isOpen, onToggle }) {
   );
 }
 
-function VisitTopContent({ isOpen, visit, destinationHandleRaw, author, authorHandleRaw, isLive }) {
+function VisitTopContent({ isOpen, visit, destinationHandleRaw, isLive }) {
   return (
-    <div className="grid items-start gap-6 lg:gap-8 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
-      {author ? (
-        <div className={`flex min-w-0 items-start gap-3 justify-self-start transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-10"} sm:group-hover:opacity-100`}>
-          <Avatar className={`order-1 h-8 w-8 rounded-xl border ${isLive ? "border-white/15 bg-white/10 dark:border-slate-200/80 dark:bg-slate-100" : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"} text-slate-400`}>
-            <AvatarImage src={author.profile_picture_url || undefined} alt={authorHandleRaw} className="object-cover" />
-            <AvatarFallback>
-              <User className="h-4 w-4" />
-            </AvatarFallback>
-          </Avatar>
-          <AccountHandle
-            username={authorHandleRaw}
-            name={author.name || null}
-            profilePictureUrl={author.profile_picture_url || null}
-            followersCount={author.followers_count ?? null}
-            accountType={author.account_type || null}
-            mediaCount={author.media_count ?? null}
-            bio={author.bio || null}
-            className={`order-2 text-base font-semibold ${isLive ? "text-white hover:text-white dark:text-slate-900 dark:hover:text-slate-900" : "text-slate-900 hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-100"}`}
-          />
-        </div>
-      ) : (
-        <div className="min-w-0 justify-self-start" />
-      )}
-
-      <div className="min-w-0 justify-self-center" />
-
-      <div className="flex min-w-0 items-start justify-end gap-3 text-right justify-self-end">
-        <AccountHandle
-          username={destinationHandleRaw}
-          name={visit.destination_name || null}
-          profilePictureUrl={visit.destination_profile_picture_url || null}
-          followersCount={visit.destination_followers_count ?? null}
-          accountType={visit.destination_account_type || null}
-          mediaCount={visit.destination_media_count ?? null}
-          bio={visit.destination_bio || null}
-          className={`text-base font-semibold ${isLive ? "text-white hover:text-white dark:text-slate-900 dark:hover:text-slate-900" : "text-slate-900 hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-100"}`}
-        />
-        <Avatar className={`h-8 w-8 rounded-xl border ${isLive ? "border-white/15 bg-white/10 dark:border-slate-200/80 dark:bg-slate-100" : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"} text-slate-400`}>
-          <AvatarImage src={visit.destination_profile_picture_url || undefined} alt={destinationHandleRaw} className="object-cover" />
-          <AvatarFallback>
-            <User className="h-4 w-4" />
-          </AvatarFallback>
-        </Avatar>
-      </div>
+    <div className="flex flex-col items-center pb-2 text-center">
+      <Avatar className={`h-8 w-8 rounded-xl border ${isLive ? "border-white/15 bg-white/10 dark:border-slate-200/80 dark:bg-slate-100" : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"} text-slate-400`}>
+        <AvatarImage src={visit.destination_profile_picture_url || undefined} alt={destinationHandleRaw} className="object-cover" />
+        <AvatarFallback>
+          <User className="h-4 w-4" />
+        </AvatarFallback>
+      </Avatar>
+      <AccountHandle
+        username={destinationHandleRaw}
+        name={visit.destination_name || null}
+        profilePictureUrl={visit.destination_profile_picture_url || null}
+        followersCount={visit.destination_followers_count ?? null}
+        accountType={visit.destination_account_type || null}
+        mediaCount={visit.destination_media_count ?? null}
+        bio={visit.destination_bio || null}
+        className={`text-base font-semibold ${isLive ? "text-white hover:text-white dark:text-slate-900 dark:hover:text-slate-900" : "text-slate-900 hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-100"}`}
+      />
     </div>
   );
 }
@@ -159,10 +131,10 @@ function VisitTopContent({ isOpen, visit, destinationHandleRaw, author, authorHa
 function VisitDuration({ visitLocation, isLive, isOpen, start, end, isSameDay }) {
   return (
     <div className="text-center">
-      {visitLocation ? <div className={`uppercase text-[10px] tracking-[0.22em] ${isLive ? "text-gray-400 dark:text-gray-600" : "text-gray-600 dark:text-gray-400"}`}>Based in {visitLocation}</div> : null}
+      {visitLocation ? <div className={`uppercase font-bold text-[10px] tracking-[0.22em] ${isLive ? "text-gray-400 dark:text-gray-600" : "text-gray-600 dark:text-gray-400"}`}>Based in {visitLocation}</div> : null}
       <div
         className={`font-medium tracking-tight transition-all duration-300 ${
-          isOpen ? "mt-3 text-[1.6rem] sm:text-3xl" : "mt-2 text-[1.3rem] sm:text-2xl"
+          isOpen ? "mt-1 text-[1.6rem] sm:text-3xl" : "text-[1.3rem] sm:text-2xl"
         } ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"} group-hover:mt-3 group-hover:text-[1.6rem] group-hover:sm:text-3xl`}
       >
         {formatVisitDateRange(start, end)}
