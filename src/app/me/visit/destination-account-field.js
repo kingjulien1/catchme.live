@@ -23,11 +23,12 @@ export default function DestinationAccountField({ onLocationChange, error, onFie
     setVerifiedProfile(null);
 
     try {
-      const res = await fetch(`/api/user-search?username=${encodeURIComponent(trimmed)}`);
+      const res = await fetch(`/api/ig/business-discovery?username=${encodeURIComponent(trimmed)}`);
       const data = await res.json();
+      console.log("CLIENT DATA", data);
 
       if (!res.ok || !data?.exists) {
-        setVerifyError("We couldn’t find an account with that username on catchme.live yet. We’ll save the handle for now so it’s ready as soon as the account owner connects their Instagram. Once they join, we’ll automatically link the details.");
+        setVerifyError("We couldn’t find an Instagram business account with that username. Double-check the spelling or try again later.");
         setIsVerified(false);
         onLocationChange?.("");
         return;
@@ -51,7 +52,7 @@ export default function DestinationAccountField({ onLocationChange, error, onFie
         <Label className="text-sm font-medium" htmlFor="instagram-handle">
           Destination Account Instagram Handle
         </Label>
-        <p className="text-xs text-gray-500 dark:text-slate-400">Instagram Username</p>
+        <p className="text-xs text-gray-500 dark:text-slate-400">Instagram business username</p>
       </div>
       <InputGroup className={hasError ? "border-red-400 focus-within:border-red-400 focus-within:ring-red-300/40 focus-within:ring-[3px]" : ""}>
         <InputGroupInput

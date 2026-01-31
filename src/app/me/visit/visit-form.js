@@ -6,6 +6,7 @@ import VisitDetailsSection from "./details";
 import VisitOptionsSection from "./options";
 import VisitPreviewSection from "./preview";
 import { Loader2, MapPinPlus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const initialState = { errors: {}, message: "", values: null };
 
@@ -47,7 +48,7 @@ export default function VisitForm({ action }) {
   };
 
   return (
-    <form ref={formRef} className="w-full max-w-5xl mx-auto py-16" action={formAction} onInput={handlePreviewUpdate}>
+    <form ref={formRef} className="w-full mx-auto pb-20" action={formAction} onInput={handlePreviewUpdate}>
       <div className="mb-8">
         <h1 id="visit-start" className="text-3xl font-semibold tracking-tight text-gray-900 scroll-mt-20 dark:text-slate-100 sm:scroll-mt-24 sm:text-4xl">
           Create a Visit
@@ -71,8 +72,8 @@ export default function VisitForm({ action }) {
               </>
             ) : (
               <>
-                <MapPinPlus className="w-5 h-5" />
                 Save & Continue
+                <ArrowRight className="w-5 h-5" />
               </>
             )}
           </Button>

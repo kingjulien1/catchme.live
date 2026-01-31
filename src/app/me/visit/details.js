@@ -27,7 +27,7 @@ export default function VisitDetailsSection({ errors = {}, onFieldChange }) {
     <Section title="Visit Details" icon={<PinIcon className="w-4 h-4" />} subtitle="Provide information about your upcoming visit location and schedule.">
       {/* Instagram Handle Input Group */}
       <article className="pt-6 my-4 space-y-6">
-        <div className="grid gap-6">
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
           <DestinationAccountField
             onLocationChange={(nextValue) => {
               setLocationValue(nextValue);
@@ -59,9 +59,7 @@ export default function VisitDetailsSection({ errors = {}, onFieldChange }) {
               }}
             />
             {errors.visit_location ? <p className="text-xs text-red-600 dark:text-red-400">{errors.visit_location}</p> : null}
-            {isAutoFilled && !errors.visit_location ? (
-              <p className="text-xs text-slate-500 dark:text-slate-400">Autofilled from the destination account location.</p>
-            ) : null}
+            {isAutoFilled && !errors.visit_location ? <p className="text-xs text-slate-500 dark:text-slate-400">Autofilled from the destination account location.</p> : null}
           </div>
         </div>
       </article>
@@ -94,8 +92,8 @@ export default function VisitDetailsSection({ errors = {}, onFieldChange }) {
           <Alert className="py-3 bg-sky-50 dark:bg-sky-500/10" variant="default">
             <InfoIcon className="text-sky-700 dark:text-sky-200" />
             <AlertTitle className="text-sm text-gray-800 dark:text-slate-100">Best Practices for Visit Descriptions</AlertTitle>
-            <AlertDescription className="mt-3">
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <AlertDescription className="mt-3 w-full">
+              <div className="grid gap-2 sm:grid-cols-2 w-full">
                 <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
                   <CheckIcon className="mt-0.5 h-4 w-4 text-emerald-500 dark:text-emerald-300" />
                   <span>How to book (Instagram DMs, etc.)</span>

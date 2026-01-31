@@ -26,19 +26,19 @@ export default function ProfileMenu({ name, username, imageUrl }) {
         </div>
         <DropdownMenuSeparator className="my-1 bg-slate-200/80 dark:bg-slate-800/80" />
         <DropdownMenuItem asChild>
-          <Link href="/me/settings#me-start" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-900">
+          <Link href="/me/settings" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-900">
             <Settings className="h-4 w-4 text-slate-500 dark:text-slate-400" />
             Settings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/me/visit#visit-start" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-900">
+          <Link href="/me/visit" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-900">
             <MapPinPlus className="h-4 w-4 text-slate-500 dark:text-slate-400" />
             Make a Visit
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/me/visits#visits-start" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-900">
+          <Link href="/me/visits" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-200 dark:focus:bg-slate-900">
             <CalendarDays className="h-4 w-4 text-slate-500 dark:text-slate-400" />
             My Visits
           </Link>

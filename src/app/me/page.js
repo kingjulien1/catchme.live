@@ -1,9 +1,112 @@
-import { Activity, BadgeCheck, BarChart3, BookOpen, Check, CheckCircle2, HelpCircle, Image, Instagram, LineChart, Lock, Mail, MessageCircle, ShieldCheck, TrendingUp, User, Users } from "lucide-react";
+import Section from "@/components/Section";
+import AccountHandle from "@/components/account-handle";
+import { Separator } from "@/components/ui/separator";
+import { getSessionUser } from "@/lib/db";
+import {
+  Activity,
+  BadgeCheck,
+  BarChart3,
+  BookOpen,
+  Check,
+  CheckCircle2,
+  ExternalLink,
+  HelpCircle,
+  Image,
+  Instagram,
+  InstagramIcon,
+  LineChart,
+  Link,
+  Lock,
+  Mail,
+  MessageCircle,
+  Settings,
+  Shield,
+  ShieldCheck,
+  TrendingUp,
+  User,
+  UserCheck,
+  Users,
+} from "lucide-react";
 
-export default function Me() {
+export default async function Me() {
+  const user = await getSessionUser();
+  const hasInstagramConnection = Boolean(user?.instagram_token_updated_at || user?.ig_user_id);
+
   return (
-    <div className="w-full pt-12 pb-20">
-      <div className="w-full max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
+    <div className="w-full pb-20">
+      <div className="w-full mx-auto">
+        <div className="w-full max-w-6xl mx-auto">
+          <div className="grid gap-6">
+            {hasInstagramConnection ? (
+              <div className="flex flex-col gap-3 rounded-2xl border border-emerald-200/70 bg-emerald-50/60 p-4 text-sm text-emerald-800 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm">
+                    <Settings className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold">Your Instagram is already connected.</p>
+                    <p className="text-xs text-emerald-700/80 dark:text-emerald-100/80">
+                      Keep your sync settings, notifications, and profile visibility up to date in the settings dashboard.
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-emerald-700/80 dark:text-emerald-100/80">
+                      <span>Signed in as</span>
+                      <AccountHandle
+                        username={user?.username}
+                        name={user?.name || null}
+                        profilePictureUrl={user?.profile_picture_url || null}
+                        followersCount={user?.followers_count ?? null}
+                        accountType={user?.account_type || null}
+                        mediaCount={user?.media_count ?? null}
+                        bio={user?.bio || null}
+                        className="text-xs font-semibold text-emerald-900 dark:text-emerald-100"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <a href="/me/settings" className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                  <ExternalLink className="h-4 w-4" />
+                  Open Settings
+                </a>
+              </div>
+            ) : null}
+            <Section title="Link your Instagram" icon={<InstagramIcon className="w-4 h-4" />} subtitle="Connect to verify your profile and pull your public stats.">
+              <div className="mt-6 rounded-2xl border border-gray-200 bg-white/80 p-5 dark:border-slate-800/80 dark:bg-slate-950/40">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="max-w-lg">
+                    <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">Fast, verified setup</div>
+                    <p className="mt-1 text-sm text-gray-600 dark:text-slate-300">We import your public profile, follower count, and media stats so your page is ready in minutes.</p>
+                  </div>
+                  <a
+                    href="/api/auth/instagram/start"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                  >
+                    <InstagramIcon className="h-4 w-4" />
+                    Connect Instagram
+                  </a>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium text-gray-500 dark:text-slate-400">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800 dark:bg-slate-900/60">
+                    <Shield className="h-3.5 w-3.5" />
+                    Read-only access
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800 dark:bg-slate-900/60">
+                    <UserCheck className="h-3.5 w-3.5" />
+                    Creator or Business account required
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 dark:border-slate-800 dark:bg-slate-900/60">
+                    <Link className="h-3.5 w-3.5" />
+                    Disconnect anytime
+                  </span>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-gray-500 dark:text-slate-400">
+                By connecting, you agree to our <span className="font-semibold text-fuchsia-700 hover:underline dark:text-fuchsia-300">Terms of Service</span> and{" "}
+                <span className="font-semibold text-fuchsia-700 hover:underline dark:text-fuchsia-300">Privacy Policy</span>.
+              </p>
+            </Section>
+          </div>
+        </div>
+        <Separator className="bg-slate-200/80 dark:bg-slate-800/80 my-6 md:my-10" />
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 sm:text-3xl">What Gets Imported</h2>
           <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 sm:text-base">Here&apos;s everything we&apos;ll automatically sync from your Instagram account</p>

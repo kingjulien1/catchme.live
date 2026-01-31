@@ -33,6 +33,21 @@ create table instagram_tokens (
   updated_at timestamptz not null default now()
 );
 
+create table instagram_sync_settings (
+  user_id uuid primary key references users(id) on delete cascade,
+  auto_sync_posts boolean not null default true,
+  import_captions boolean not null default true,
+  include_videos boolean not null default true,
+  sync_profile_photo boolean not null default false,
+  show_followers boolean not null default true,
+  show_instagram_link boolean not null default true,
+  notify_sync_success boolean not null default true,
+  notify_sync_error boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
+create index instagram_sync_settings_user_id_idx on instagram_sync_settings(user_id);
+
 create table visits (
   id uuid primary key default gen_random_uuid(),
   author_user_id uuid not null references users(id) on delete cascade,
