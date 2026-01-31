@@ -49,18 +49,14 @@ export default async function ArtistProfilePage({ params }) {
           <div className="space-y-10">
             {liveVisits.length > 0 ? (
               <section className="group space-y-4">
-                <div className="flex items-center">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-slate-900 bg-black px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white transition-transform duration-300 ease-out group-hover:translate-x-3 dark:border-white dark:bg-white dark:text-slate-900">
-                    <span className="relative flex h-2 w-2 items-center justify-center">
-                      <span className="absolute inline-flex h-full w-full rounded-full bg-fuchsia-400/70 opacity-0 group-hover:animate-ping group-hover:opacity-70 group-focus-within:animate-ping group-focus-within:opacity-70 dark:bg-fuchsia-500/70" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-fuchsia-500 dark:bg-fuchsia-400" />
-                    </span>
-                    live
-                  </span>
-                </div>
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {liveVisits.map((visit) => (
-                    <VisitCard key={visit.id} visit={visit} isLive />
+                    <VisitCard
+                      key={visit.id}
+                      visit={visit}
+                      isLive
+                      author={profile}
+                    />
                   ))}
                 </div>
               </section>
@@ -81,7 +77,12 @@ export default async function ArtistProfilePage({ params }) {
               <section className="mt-10 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {upcomingVisits.map((visit) => (
-                    <VisitCard key={visit.id} visit={visit} isLive={false} />
+                    <VisitCard
+                      key={visit.id}
+                      visit={visit}
+                      isLive={false}
+                      author={profile}
+                    />
                   ))}
                 </div>
               </section>
@@ -95,7 +96,12 @@ export default async function ArtistProfilePage({ params }) {
               <section className="mt-8 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {pastVisits.map((visit) => (
-                    <VisitCard key={visit.id} visit={visit} isPast />
+                    <VisitCard
+                      key={visit.id}
+                      visit={visit}
+                      isPast
+                      author={profile}
+                    />
                   ))}
                 </div>
               </section>

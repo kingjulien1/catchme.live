@@ -47,6 +47,11 @@ export default function VisitForm({ action }) {
     });
   };
 
+  const handleFieldChange = (field) => {
+    clearError(field);
+    handlePreviewUpdate();
+  };
+
   return (
     <form ref={formRef} className="w-full mx-auto pb-20" action={formAction} onInput={handlePreviewUpdate}>
       <div className="mb-8">
@@ -56,7 +61,7 @@ export default function VisitForm({ action }) {
         <p className="mt-2 text-sm text-gray-500 dark:text-slate-400 sm:text-base">Share your upcoming travel plans and connect with clients in new locations.</p>
         {localMessage ? <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">{localMessage}</p> : null}
       </div>
-      <VisitDetailsSection errors={localErrors} onFieldChange={clearError} />
+      <VisitDetailsSection errors={localErrors} onFieldChange={handleFieldChange} />
       <VisitOptionsSection initialValues={optionValues} onOptionChange={handlePreviewUpdate} />
       <VisitPreviewSection values={previewValues} />
       <div className="flex mt-10">

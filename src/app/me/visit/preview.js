@@ -1,25 +1,56 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { EyeIcon } from "lucide-react";
 import Section from "@/components/Section";
 import VisitCard from "@/components/visit-card";
 
 export default function VisitPreviewSection({ values = {} }) {
   const normalizedHandle = values.destination_instagram_handle ? values.destination_instagram_handle.replace(/^@/, "").trim() : "";
+  const [destinationProfile, setDestinationProfile] = useState(null);
   const visitType = values.visit_type || "guest";
   const visitLocation = values.visit_location || "";
   const hasPreview = Boolean(normalizedHandle || visitLocation || values.visit_start_time || values.visit_end_time || values.description);
 
   const parseBoolean = (value) => value === true || value === "true" || value === "on";
+  useEffect(() => {
+    let isActive = true;
+    if (!normalizedHandle) {
+      setDestinationProfile(null);
+      return () => {
+        isActive = false;
+      };
+    }
+
+    const run = async () => {
+      try {
+        const res = await fetch(`/api/user-search?username=${encodeURIComponent(normalizedHandle)}`);
+        const data = await res.json();
+        if (!isActive) return;
+        setDestinationProfile(data?.exists ? data.profile : null);
+      } catch (error) {
+        if (!isActive) return;
+        setDestinationProfile(null);
+      }
+    };
+
+    run();
+    return () => {
+      isActive = false;
+    };
+  }, [normalizedHandle]);
+
   const visit = {
     id: "preview",
     destination_instagram_handle: normalizedHandle || null,
-    destination_username: normalizedHandle || null,
-    destination_name: normalizedHandle ? `@${normalizedHandle}` : null,
-    destination_profile_picture_url: null,
-    destination_account_type: "instagram account",
-    destination_followers_count: null,
-    destination_media_count: null,
-    destination_bio: values.description || null,
-    destination_banner_image_url: null,
+    destination_username: destinationProfile?.username || normalizedHandle || null,
+    destination_name: destinationProfile?.name || (normalizedHandle ? `@${normalizedHandle}` : null),
+    destination_profile_picture_url: destinationProfile?.profile_picture_url || null,
+    destination_account_type: destinationProfile?.account_type || "instagram account",
+    destination_followers_count: destinationProfile?.followers_count ?? null,
+    destination_media_count: destinationProfile?.media_count ?? null,
+    destination_bio: destinationProfile?.bio || values.description || null,
+    destination_banner_image_url: destinationProfile?.banner_image_url || null,
     visit_location: visitLocation || null,
     visit_start_time: values.visit_start_time || null,
     visit_end_time: values.visit_end_time || null,

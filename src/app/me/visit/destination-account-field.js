@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Label } from "@radix-ui/react-label";
-import { AtSignIcon, CheckIcon, Loader2, SearchIcon, InfoIcon } from "lucide-react";
+import { AtSignIcon, CheckIcon, InfoIcon, Loader2, SearchIcon, User } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import AccountHandle from "@/components/account-handle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function DestinationAccountField({ onLocationChange, error, onFieldChange }) {
   const [handle, setHandle] = useState("");
@@ -23,12 +25,12 @@ export default function DestinationAccountField({ onLocationChange, error, onFie
     setVerifiedProfile(null);
 
     try {
-      const res = await fetch(`/api/ig/business-discovery?username=${encodeURIComponent(trimmed)}`);
+      const res = await fetch(`/api/user-search?username=${encodeURIComponent(trimmed)}`);
       const data = await res.json();
       console.log("CLIENT DATA", data);
 
       if (!res.ok || !data?.exists) {
-        setVerifyError("We couldn’t find an Instagram business account with that username. Double-check the spelling or try again later.");
+        setVerifyError("We couldn’t find an account with that username on catchme.live yet. We’ll save the handle for now so it’s ready as soon as the account owner connects their Instagram. Once they join, we’ll automatically link the details.");
         setIsVerified(false);
         onLocationChange?.("");
         return;
@@ -94,16 +96,15 @@ export default function DestinationAccountField({ onLocationChange, error, onFie
         </InputGroupAddon>
       </InputGroup>
       {error ? <p className="text-xs text-red-600 dark:text-red-400">{error}</p> : null}
-      {verifiedProfile ? (
-        <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 border rounded-xl border-emerald-200 bg-emerald-50/40 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-slate-200">
-          <img src={verifiedProfile.profile_picture_url || "/default-avatar.png"} alt={verifiedProfile.username ? `@${verifiedProfile.username}` : "Profile"} className="object-cover rounded-full h-9 w-9" />
-          <div className="flex-1">
-            <div className="font-semibold text-gray-900 dark:text-slate-100">{verifiedProfile.name || verifiedProfile.username || "Verified account"}</div>
-            <div className="text-xs text-gray-500 dark:text-slate-300">{verifiedProfile.username ? `@${verifiedProfile.username}` : "Instagram account"}</div>
-          </div>
-          <div className="flex items-center justify-center text-white rounded-full size-5 bg-emerald-500">
-            <CheckIcon className="size-3" />
-          </div>
+      {verifiedProfile || handle.trim() ? (
+        <div className="flex items-center gap-3">
+          <Avatar className="h-9 w-9 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <AvatarImage src={verifiedProfile?.profile_picture_url || undefined} alt={verifiedProfile?.username || handle} className="object-cover" />
+            <AvatarFallback>
+              <User className="h-4 w-4 text-slate-400" />
+            </AvatarFallback>
+          </Avatar>
+          <AccountHandle username={verifiedProfile?.username || handle.trim()} className="text-sm font-semibold text-slate-700 dark:text-slate-200" />
         </div>
       ) : null}
       {verifyError ? (
