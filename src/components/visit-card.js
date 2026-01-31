@@ -1,33 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import AccountHandle from "@/components/account-handle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import AccountHandle from "@/components/account-handle";
 import VisitCountdown from "@/components/visit-countdown";
 import { formatVisitDateRange, formatVisitType } from "@/lib/utils";
-import { Banknote, ChevronDown, CircleDashed, CreditCard, HandCoins, ShieldCheck, Tag, User } from "lucide-react";
 import { format } from "date-fns";
-import { Pin } from "lucide-react";
+import { Banknote, ChevronDown, CircleDashed, CreditCard, HandCoins, Pin, Tag, User } from "lucide-react";
+import { useState } from "react";
 
 export default function VisitCard({ visit, isLive = false, isPast = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
   const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
-  const now = new Date();
   const destinationHandleRaw = visit.destination_username || visit.destination_instagram_handle || "unknown";
   const visitLocation = visit.visit_location || visit.destination_name || visit.destination_username || "Visit location";
-  const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((now.getTime() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
+  const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((new Date().getTime() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
   const isSameDay = start && end ? start.toDateString() === end.toDateString() : false;
 
   return (
-    <div className="group space-y-2">
+    <div
+      className={`group space-y-2 rounded-3xl transition-shadow group-hover:ring-2 group-hover:ring-fuchsia-400/80 group-hover:ring-offset-2 group-hover:ring-offset-white group-hover:shadow-[0_0_0_1px_rgba(217,70,239,0.28),0_12px_28px_rgba(217,70,239,0.25),0_0_22px_rgba(217,70,239,0.2)] dark:group-hover:ring-fuchsia-400/70 dark:group-hover:ring-offset-slate-950 dark:group-hover:shadow-[0_0_0_1px_rgba(217,70,239,0.35),0_12px_28px_rgba(217,70,239,0.32),0_0_26px_rgba(217,70,239,0.25)] ${
+        isOpen
+          ? "ring-2 ring-fuchsia-400/90 ring-offset-2 ring-offset-white shadow-[0_0_0_1px_rgba(217,70,239,0.35),0_12px_36px_rgba(217,70,239,0.35),0_0_28px_rgba(217,70,239,0.25)] dark:ring-fuchsia-400/80 dark:ring-offset-slate-950 dark:shadow-[0_0_0_1px_rgba(217,70,239,0.45),0_12px_36px_rgba(217,70,239,0.45),0_0_32px_rgba(217,70,239,0.3)]"
+          : "ring-0 shadow-none"
+      }`}
+    >
       <article
         className={`relative overflow-hidden rounded-3xl border p-5 transition duration-300 ease-out sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20 ${
           isLive
             ? "border-transparent bg-black text-white shadow-[0_0_22px_rgba(16,185,129,0.12)] dark:bg-white dark:text-slate-900 dark:shadow-[0_0_18px_rgba(16,185,129,0.18)]"
             : "border-slate-200 bg-white/90 text-slate-900 dark:border-slate-800 dark:bg-black dark:text-slate-100"
-        } ${isOpen ? "ring-2 ring-fuchsia-400/90 ring-offset-2 ring-offset-white shadow-[0_0_0_1px_rgba(217,70,239,0.3),0_8px_30px_rgba(217,70,239,0.25)] dark:ring-fuchsia-400/80 dark:ring-offset-slate-950 dark:shadow-[0_0_0_1px_rgba(217,70,239,0.35),0_8px_30px_rgba(217,70,239,0.35)]" : ""} ${isPast ? "opacity-70 grayscale" : ""}`}
+        } ${isPast ? "opacity-70 grayscale" : ""}`}
         role="button"
         tabIndex={0}
         onClick={() => setIsOpen((value) => !value)}
@@ -38,13 +42,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false }) {
           }
         }}
       >
-        <VisitTopContent
-          isLive={isLive}
-          visit={visit}
-          destinationHandleRaw={destinationHandleRaw}
-          isOpen={isOpen}
-          onToggle={() => setIsOpen((value) => !value)}
-        />
+        <VisitTopContent isLive={isLive} visit={visit} destinationHandleRaw={destinationHandleRaw} isOpen={isOpen} onToggle={() => setIsOpen((value) => !value)} />
         <VisitDuration isLive={isLive} isOpen={isOpen} start={start} end={end} isSameDay={isSameDay} visitLocation={visitLocation} />
 
         <div className={`h-px transition-all duration-300 ${isOpen ? "my-4 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-4 sm:group-hover:opacity-100`} />
@@ -96,9 +94,7 @@ function VisitTopContent({ visit, destinationHandleRaw, isLive, isOpen, onToggle
                 onToggle();
               }}
               className={`inline-flex h-8 w-8 items-center justify-center rounded-full border text-xs transition ${
-                isLive
-                  ? "border-white/20 text-white/70 hover:text-white dark:border-slate-300 dark:text-slate-700 dark:hover:text-slate-900"
-                  : "border-slate-200 text-gray-500 hover:text-slate-700 dark:border-slate-700 dark:hover:text-slate-200"
+                isLive ? "border-white/20 text-white/70 hover:text-white dark:border-slate-300 dark:text-slate-700 dark:hover:text-slate-900" : "border-slate-200 text-gray-500 hover:text-slate-700 dark:border-slate-700 dark:hover:text-slate-200"
               }`}
             >
               <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : "rotate-0"} sm:group-hover:rotate-180`} />
@@ -116,7 +112,7 @@ function VisitDuration({ visitLocation, isLive, isOpen, start, end, isSameDay })
       {visitLocation ? <div className={`font-semibold uppercase text-[10px] tracking-[0.22em] ${isLive ? "text-gray-500" : "text-gray-500"}`}>Based in {visitLocation}</div> : null}
       <div
         className={`font-medium tracking-tight transition-all duration-300 ${
-          isOpen ? "mt-2 text-[1.6rem] sm:text-3xl" : "mt-1 text-[1.3rem] sm:text-2xl"
+          isOpen ? "mt-2 text-[1.6rem] sm:text-3xl" : "mt-1 text-[1.3rem] sm:text-2xl font-semibold"
         } ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"} group-hover:mt-2 group-hover:text-[1.6rem] group-hover:sm:text-3xl`}
       >
         {formatVisitDateRange(start, end)}
@@ -154,7 +150,10 @@ function VisitDateDetails({ isLive, isOpen, start, end }) {
 function VisitOption({ name, value, icon }) {
   return (
     <div className="flex items-center justify-between gap-4 text-sm">
-      <span className="inline-flex items-center gap-2" children={[icon, name]} />
+      <span className="inline-flex items-center gap-2">
+        {icon}
+        {name}
+      </span>
       {value}
     </div>
   );
