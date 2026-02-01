@@ -75,13 +75,13 @@ function VisitStatusBadge({ isLive, isPast, visitType, location }) {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className={`mt-1.5 inline-flex items-center gap-2 rounded-full border-0 px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.25em] ${statusClass}`}>
-        {StatusIcon ? <StatusIcon className={cn("h-3.5 w-3.5 shrink-0", isLive && "text-rose-500")} /> : null}
+      <span className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full border-0 bg-transparent px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] ${statusClass}`}>
+        {StatusIcon ? <StatusIcon className={cn("h-3 w-3 shrink-0", isLive && "text-rose-500")} /> : null}
         {status}
       </span>
       {visitType ? (
-        <span className="mt-1.5 inline-flex items-center gap-2 rounded-full border-0 bg-slate-100/80 px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.25em] text-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
-          <Tag className="h-3.5 w-3.5 shrink-0" />
+        <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border-0 bg-slate-100/80 px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] text-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
+          <Tag className="h-3 w-3 shrink-0" />
           {formatVisitType(visitType)}
         </span>
       ) : null}
