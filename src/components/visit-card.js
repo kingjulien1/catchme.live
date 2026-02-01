@@ -2,9 +2,10 @@
 
 import AccountHandle from "@/components/account-handle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import VisitCountdown from "@/components/visit-countdown";
-import { formatVisitDateRange, formatVisitType } from "@/lib/utils";
+import { cn, formatVisitDateRange, formatVisitType } from "@/lib/utils";
 import { format } from "date-fns";
 import { Banknote, ChevronDown, CircleDashed, CircleFadingArrowUp, CreditCard, HandCoins, Pin, Radio, Tag, User } from "lucide-react";
 import { useState } from "react";
@@ -32,7 +33,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
         }`}
       >
         <article
-          className={`relative overflow-hidden rounded-3xl border transition duration-300 ease-out ${isOpen ? "p-5" : "px-5 pt-5 pb-1 sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20"} ${
+          className={`relative overflow-hidden rounded-3xl border transition duration-300 ease-out ${isOpen ? "p-5" : "px-5 pt-5 pb-5 sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20"} ${
             isLive
               ? "border-transparent bg-black text-white shadow-[0_0_22px_rgba(16,185,129,0.12)] dark:bg-white dark:text-slate-900 dark:shadow-[0_0_18px_rgba(16,185,129,0.18)]"
               : "border-slate-200 bg-gray-400/20 text-slate-900 dark:border-slate-800 dark:bg-gray-700/40  dark:text-slate-100"
@@ -54,7 +55,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
 
           <VisitDateDetails isLive={isLive} isOpen={isOpen} start={start} end={end} />
           <div className={`h-px transition-all duration-300 ${isOpen ? "my-4 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-4 sm:group-hover:opacity-100`} />
-          <VisitOptions isOpen={isOpen} visit={visit} />
+          <VisitOptions isOpen={isOpen} visit={visit} isLive={isLive} />
 
           <VisitProgress isLive={isLive} isOpen={isOpen} progressValue={progressValue} start={start} end={end} />
         </article>
@@ -75,7 +76,7 @@ function VisitStatusBadge({ isLive, isPast, visitType }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <span className={`mt-1.5 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.25em] ${statusClass}`}>
-        {StatusIcon ? <StatusIcon className="h-3.5 w-3.5 shrink-0" /> : null}
+        {StatusIcon ? <StatusIcon className={cn("h-3.5 w-3.5 shrink-0", isLive && "text-rose-500")} /> : null}
         {status}
       </span>
       {visitType ? (
@@ -131,16 +132,27 @@ function VisitTopContent({ isOpen, visit, destinationHandleRaw, isLive }) {
 function VisitDuration({ visitLocation, isLive, isOpen, start, end, isSameDay }) {
   return (
     <div className="text-center">
-      {visitLocation ? <div className={`uppercase font-bold text-[10px] tracking-[0.22em] ${isLive ? "text-gray-400 dark:text-gray-600" : "text-gray-600 dark:text-gray-400"}`}>Based in {visitLocation}</div> : null}
+      {visitLocation ? (
+        <Badge className="inline-flex items-center gap-1.5 border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[9px] font-semibold tracking-[0.18em] text-slate-600 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-300">
+          <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-500" aria-hidden="true" />
+          {visitLocation}
+        </Badge>
+      ) : null}
       <div
         className={`font-medium tracking-tight transition-all duration-300 ${
-          isOpen ? "mt-1 text-[1.6rem] sm:text-3xl" : "text-[1.3rem] sm:text-2xl"
-        } ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"} group-hover:mt-3 group-hover:text-[1.6rem] group-hover:sm:text-3xl`}
+          isOpen ? "text-[1.6rem] sm:text-3xl" : "text-[1.3rem] sm:text-2xl"
+        } ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"} mt-0.5 group-hover:text-[1.6rem] group-hover:sm:text-3xl`}
       >
         {formatVisitDateRange(start, end)}
       </div>
       {start ? (
-        <div className={`transition-all duration-300 ${isOpen ? "mt-2 text-sm" : "mt-1 text-xs"} ${isLive ? "text-gray-500" : "text-gray-500"} group-hover:mt-2 group-hover:text-sm`}>{isSameDay ? format(start, "MMM d") : start.getFullYear()}</div>
+        <div
+          className={`transition-all duration-300 ${
+            isOpen ? "mt-2 max-h-6 opacity-100 text-sm" : "mt-0 max-h-0 opacity-0 text-xs"
+          } ${isLive ? "text-gray-500" : "text-gray-500"} group-hover:mt-2 group-hover:max-h-6 group-hover:opacity-100 group-hover:text-sm`}
+        >
+          {isSameDay ? format(start, "MMM d") : start.getFullYear()}
+        </div>
       ) : null}
     </div>
   );
@@ -148,16 +160,20 @@ function VisitDuration({ visitLocation, isLive, isOpen, start, end, isSameDay })
 
 function VisitDateDetails({ isLive, isOpen, start, end }) {
   return (
-    <div className={`grid gap-6 overflow-hidden transition-all duration-300 ${end ? "sm:grid-cols-2" : ""} ${isOpen ? "max-h-40 opacity-100" : "max-h-4 opacity-0"} sm:group-hover:max-h-40 sm:group-hover:opacity-100`}>
+    <div
+      className={`grid items-center gap-4 overflow-hidden transition-all duration-300 ${end ? "grid-cols-[1fr_auto]" : ""} ${isOpen ? "max-h-40 opacity-100" : "max-h-4 opacity-0"} sm:group-hover:max-h-40 sm:group-hover:opacity-100`}
+    >
       <div>
-        <div className="text-xs uppercase font-semibold tracking-[0.2em] text-gray-500">started</div>
-        <div className={`mt-2 text-lg font-semibold ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"}`}>{start ? format(start, "MMM d, h:mm a") : "TBD"}</div>
+        <div className="text-[9px] font-semibold uppercase tracking-[0.2em] text-gray-500 sm:text-[10px]">start</div>
+        <div className={`mt-2 text-sm font-semibold sm:text-lg ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"}`}>{start ? format(start, "MMM d, h:mm a") : "TBD"}</div>
       </div>
       {end ? (
-        <div className="sm:text-right">
-          <div className="text-xs uppercase font-semibold tracking-[0.2em] text-gray-500">ends</div>
-          <div className={`mt-2 text-lg font-semibold ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"}`}>{format(end, "MMM d, h:mm a")}</div>
-        </div>
+        <>
+          <div className="justify-self-end text-right">
+            <div className="text-[9px] font-semibold uppercase tracking-[0.2em] text-gray-500 sm:text-[10px]">end</div>
+            <div className={`mt-2 text-sm font-semibold sm:text-lg ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"}`}>{format(end, "MMM d, h:mm a")}</div>
+          </div>
+        </>
       ) : null}
     </div>
   );
@@ -169,35 +185,49 @@ function VisitDateDetails({ isLive, isOpen, start, end }) {
  * @param {React.ReactNode} props.icon
  * @param {string} props.value
  */
-function VisitOption({ name, value, icon }) {
+function OptionCard({ label, value, icon, tone = "slate", isLive }) {
+  const toneMap = {
+    emerald: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/25 dark:text-emerald-100",
+    blue: "bg-blue-100 text-blue-700 dark:bg-blue-500/25 dark:text-blue-100",
+    violet: "bg-violet-100 text-violet-700 dark:bg-violet-500/25 dark:text-violet-100",
+    teal: "bg-teal-100 text-teal-700 dark:bg-teal-500/25 dark:text-teal-100",
+    slate: "bg-slate-200 text-slate-600 dark:bg-slate-500/25 dark:text-slate-100",
+  };
+  const liveToneMap = {
+    emerald: "bg-emerald-500/15 text-emerald-500 dark:bg-emerald-500/20 dark:text-emerald-600",
+    blue: "bg-blue-500/15 text-blue-500 dark:bg-blue-500/20 dark:text-blue-600",
+    violet: "bg-violet-500/15 text-violet-500 dark:bg-violet-500/20 dark:text-violet-600",
+    teal: "bg-teal-500/15 text-teal-500 dark:bg-teal-500/20 dark:text-teal-600",
+    slate: "bg-slate-500/15 text-slate-500 dark:bg-slate-500/20 dark:text-slate-600",
+  };
   return (
-    <div className="flex items-center justify-between gap-4 text-sm">
-      <span className="inline-flex items-center gap-2">
-        {icon}
-        {name}
-      </span>
-      {value}
+    <div
+      className={`rounded-xl border p-3 ${
+        isLive
+          ? "border-white/20 bg-white/10 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.06)] dark:border-slate-200 dark:bg-slate-100 dark:text-slate-900"
+          : "border-slate-200/70 bg-slate-100/70 text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] dark:border-transparent dark:bg-slate-900/70 dark:text-slate-100 dark:shadow-[0_0_0_1px_rgba(148,163,184,0.12)]"
+      }`}
+    >
+      <div className={`flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] ${isLive ? "text-white/75 dark:text-slate-500" : "text-slate-500"}`}>
+        <span className={`inline-flex h-7 w-7 items-center justify-center rounded-lg ${(isLive ? liveToneMap : toneMap)[tone] || (isLive ? liveToneMap.slate : toneMap.slate)}`}>{icon}</span>
+        {label}
+      </div>
+      <div className={`mt-2 text-sm font-semibold ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"}`}>{value}</div>
     </div>
   );
 }
 
-function YesOption({ condition }) {
-  return <span className={`text-sm font-semibold ${condition ? "text-emerald-500" : " text-gray-700 dark:text-gray-300"}`} children={condition ? "Yes" : "No"} />;
-}
-
-function AcceptedOption({ condition }) {
-  return <span className="text-sm font-semibold text-gray-700 dark:text-gray-300" children={condition ? "Accepted" : "Unavailable"} />;
-}
-
-function VisitOptions({ visit, isOpen }) {
+function VisitOptions({ visit, isOpen, isLive }) {
   return (
-    <div className={`grid grid-cols-1 text-gray-500 gap-3 sm:gap-x-8 overflow-hidden transition-all duration-300 sm:grid-cols-2 ${isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"} sm:group-hover:max-h-48 sm:group-hover:opacity-100`}>
-      <VisitOption name="Deposit Required" icon={<Banknote className="h-4 w-4" />} value={<YesOption condition={visit.deposit_required} />} />
-      <VisitOption name="Age Policy" icon={<Banknote className="h-4 w-4" />} value={<span className="text-sm font-semibold text-gray-700 dark:text-gray-300" children={visit.age_18_plus ? "18+" : "All ages"} />} />
-      <VisitOption name="Custom Requests" icon={<Tag className="h-4 w-4" />} value={<AcceptedOption condition={visit.custom_requests} />} />
-      <VisitOption name="Bookings Open" icon={<HandCoins className="h-4 w-4" />} value={<YesOption condition={visit.bookings_open} />} />
-      <VisitOption name="Appointment Only" icon={<Pin className="h-4 w-4" />} value={<YesOption condition={visit.appointment_only} />} />
-      <VisitOption name="Digital Payments" icon={<CreditCard className="h-4 w-4" />} value={<AcceptedOption condition={visit.digital_payments} />} />
+    <div className={`space-y-4 overflow-hidden transition-all duration-300 ${isOpen ? "max-h-[520px] opacity-100" : "max-h-0 opacity-0"} sm:group-hover:max-h-[520px] sm:group-hover:opacity-100`}>
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
+        <OptionCard label="Deposit" value={visit.deposit_required ? "Required" : "Not required"} icon={<Banknote className="h-3.5 w-3.5" />} tone="emerald" isLive={isLive} />
+        <OptionCard label="Age Policy" value={visit.age_18_plus ? "18+" : "All ages"} icon={<CreditCard className="h-3.5 w-3.5" />} tone="blue" isLive={isLive} />
+        <OptionCard label="Requests" value={visit.custom_requests ? "Accepted" : "Unavailable"} icon={<Tag className="h-3.5 w-3.5" />} tone="violet" isLive={isLive} />
+        <OptionCard label="Bookings" value={visit.bookings_open ? "Open" : "Closed"} icon={<HandCoins className="h-3.5 w-3.5" />} tone="teal" isLive={isLive} />
+        <OptionCard label="Walk-ins" value={visit.appointment_only ? "No" : "Yes"} icon={<Pin className="h-3.5 w-3.5" />} tone="slate" isLive={isLive} />
+        <OptionCard label="Payments" value={visit.digital_payments ? "Available" : "Unavailable"} icon={<CreditCard className="h-3.5 w-3.5" />} tone="slate" isLive={isLive} />
+      </div>
     </div>
   );
 }
