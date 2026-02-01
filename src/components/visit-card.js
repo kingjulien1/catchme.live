@@ -2,12 +2,11 @@
 
 import AccountHandle from "@/components/account-handle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import VisitCountdown from "@/components/visit-countdown";
 import { cn, formatVisitDateRange, formatVisitType } from "@/lib/utils";
 import { format } from "date-fns";
-import { Banknote, ChevronDown, CircleDashed, CircleFadingArrowUp, CreditCard, HandCoins, Pin, Radio, Tag, User } from "lucide-react";
+import { Banknote, ChevronDown, CircleDashed, CircleFadingArrowUp, CreditCard, HandCoins, Link2, Pin, Radio, Tag, User } from "lucide-react";
 import { useState } from "react";
 
 export default function VisitCard({ visit, isLive = false, isPast = false, defaultOpen = false }) {
@@ -15,6 +14,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
   const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
   const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
   const destinationHandleRaw = visit.destination_username || visit.destination_instagram_handle || "unknown";
+  const authorHandleRaw = visit.author_username || visit.author_instagram_handle || "";
   const visitLocation = visit.visit_location || visit.destination_name || visit.destination_username || "Visit location";
   const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((new Date().getTime() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
   const isSameDay = start && end ? start.toDateString() === end.toDateString() : false;
@@ -22,7 +22,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-3">
-        <VisitStatusBadge isLive={isLive} isPast={isPast} visitType={visit.visit_type} />
+        <VisitStatusBadge isLive={isLive} isPast={isPast} visitType={visit.visit_type} location={visitLocation} />
         <ExpandButton isLive={isLive} isOpen={isOpen} onToggle={() => setIsOpen((value) => !value)} />
       </div>
       <div
@@ -48,10 +48,10 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
             }
           }}
         >
-          <VisitTopContent isOpen={isOpen} isLive={isLive} visit={visit} destinationHandleRaw={destinationHandleRaw} />
+          <VisitTopContent isOpen={isOpen} isLive={isLive} visit={visit} destinationHandleRaw={destinationHandleRaw} authorHandleRaw={authorHandleRaw} />
           <VisitDuration isLive={isLive} isOpen={isOpen} start={start} end={end} isSameDay={isSameDay} visitLocation={visitLocation} />
 
-          <div className={`h-px transition-all duration-300 ${isOpen ? "my-4 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-4 sm:group-hover:opacity-100`} />
+          <div className={`h-px transition-all duration-300 ${isOpen ? "my-3 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-3 sm:group-hover:opacity-100`} />
 
           <VisitDateDetails isLive={isLive} isOpen={isOpen} start={start} end={end} />
           <div className={`h-px transition-all duration-300 ${isOpen ? "my-4 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-4 sm:group-hover:opacity-100`} />
@@ -64,25 +64,31 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
   );
 }
 
-function VisitStatusBadge({ isLive, isPast, visitType }) {
+function VisitStatusBadge({ isLive, isPast, visitType, location }) {
   const status = isLive ? "live" : isPast ? "expired" : "upcoming";
   const StatusIcon = isLive ? Radio : isPast ? CircleDashed : CircleFadingArrowUp;
   const statusClass = isLive
-    ? "border-slate-900 bg-black text-white dark:border-white dark:bg-white dark:text-slate-900"
+    ? "border-transparent bg-black text-white dark:bg-white dark:text-slate-900"
     : isPast
-      ? "border-slate-400 bg-slate-100/80 text-slate-600 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-300"
-      : "border-slate-400 bg-slate-100/80 text-slate-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-300";
+      ? "border-transparent bg-slate-100/80 text-slate-600 dark:bg-slate-900/80 dark:text-slate-300"
+      : "border-transparent bg-slate-100/80 text-slate-700 dark:bg-slate-900/80 dark:text-slate-300";
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className={`mt-1.5 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.25em] ${statusClass}`}>
+      <span className={`mt-1.5 inline-flex items-center gap-2 rounded-full border-0 px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.25em] ${statusClass}`}>
         {StatusIcon ? <StatusIcon className={cn("h-3.5 w-3.5 shrink-0", isLive && "text-rose-500")} /> : null}
         {status}
       </span>
       {visitType ? (
-        <span className="mt-1.5 inline-flex items-center gap-2 rounded-full border border-slate-400 bg-slate-100/80 px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.25em] text-slate-700 dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-200">
+        <span className="mt-1.5 inline-flex items-center gap-2 rounded-full border-0 bg-slate-100/80 px-3 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.25em] text-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
           <Tag className="h-3.5 w-3.5 shrink-0" />
           {formatVisitType(visitType)}
+        </span>
+      ) : null}
+      {location ? (
+        <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border-0 bg-slate-100 px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] text-slate-600 dark:bg-slate-900/70 dark:text-slate-300">
+          <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-500" aria-hidden="true" />
+          {location}
         </span>
       ) : null}
     </div>
@@ -106,15 +112,28 @@ function ExpandButton({ isLive, isOpen, onToggle }) {
   );
 }
 
-function VisitTopContent({ isOpen, visit, destinationHandleRaw, isLive }) {
+function VisitTopContent({ isOpen, visit, destinationHandleRaw, authorHandleRaw, isLive }) {
+  const hasAuthor = Boolean(authorHandleRaw);
+
   return (
     <div className="flex flex-col items-center pb-2 text-center">
-      <Avatar className={`h-8 w-8 rounded-xl border ${isLive ? "border-white/15 bg-white/10 dark:border-slate-200/80 dark:bg-slate-100" : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"} text-slate-400`}>
-        <AvatarImage src={visit.destination_profile_picture_url || undefined} alt={destinationHandleRaw} className="object-cover" />
-        <AvatarFallback>
-          <User className="h-4 w-4" />
-        </AvatarFallback>
-      </Avatar>
+      <div className="flex items-center justify-center gap-3">
+        <Avatar className={`h-8 w-8 rounded-xl border ${isLive ? "border-white/15 bg-white/10 dark:border-slate-200/80 dark:bg-slate-100" : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"} text-slate-400`}>
+          <AvatarImage src={visit.destination_profile_picture_url || undefined} alt={destinationHandleRaw} className="object-cover" />
+          <AvatarFallback>
+            <User className="h-4 w-4" />
+          </AvatarFallback>
+        </Avatar>
+        {hasAuthor ? <Link2 className="h-3 w-3 text-fuchsia-500" aria-hidden="true" /> : null}
+        {hasAuthor ? (
+          <Avatar className={`h-8 w-8 rounded-xl border ${isLive ? "border-white/15 bg-white/10 dark:border-slate-200/80 dark:bg-slate-100" : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"} text-slate-400`}>
+            <AvatarImage src={visit.author_profile_picture_url || undefined} alt={authorHandleRaw} className="object-cover" />
+            <AvatarFallback>
+              <User className="h-4 w-4" />
+            </AvatarFallback>
+          </Avatar>
+        ) : null}
+      </div>
       <AccountHandle
         username={destinationHandleRaw}
         name={visit.destination_name || null}
@@ -125,6 +144,20 @@ function VisitTopContent({ isOpen, visit, destinationHandleRaw, isLive }) {
         bio={visit.destination_bio || null}
         className={`text-base font-semibold ${isLive ? "text-white hover:text-white dark:text-slate-900 dark:hover:text-slate-900" : "text-slate-900 hover:text-slate-900 dark:text-slate-100 dark:hover:text-slate-100"}`}
       />
+      {hasAuthor ? (
+        <div className="-mt-1">
+          <AccountHandle
+            username={authorHandleRaw}
+            name={visit.author_name || null}
+            profilePictureUrl={visit.author_profile_picture_url || null}
+            followersCount={visit.author_followers_count ?? null}
+            accountType={visit.author_account_type || null}
+            mediaCount={visit.author_media_count ?? null}
+            bio={visit.author_bio || null}
+            className={`text-sm font-medium ${isLive ? "text-gray-300 dark:text-slate-700" : "text-slate-700 dark:text-slate-300"}`}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -132,12 +165,6 @@ function VisitTopContent({ isOpen, visit, destinationHandleRaw, isLive }) {
 function VisitDuration({ visitLocation, isLive, isOpen, start, end, isSameDay }) {
   return (
     <div className="text-center">
-      {visitLocation ? (
-        <Badge className="inline-flex items-center gap-1.5 border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[9px] font-semibold tracking-[0.18em] text-slate-600 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-300">
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-500" aria-hidden="true" />
-          {visitLocation}
-        </Badge>
-      ) : null}
       <div
         className={`font-medium tracking-tight transition-all duration-300 ${
           isOpen ? "text-[1.6rem] sm:text-3xl" : "text-[1.3rem] sm:text-2xl"
@@ -146,11 +173,7 @@ function VisitDuration({ visitLocation, isLive, isOpen, start, end, isSameDay })
         {formatVisitDateRange(start, end)}
       </div>
       {start ? (
-        <div
-          className={`transition-all duration-300 ${
-            isOpen ? "mt-2 max-h-6 opacity-100 text-sm" : "mt-0 max-h-0 opacity-0 text-xs"
-          } ${isLive ? "text-gray-500" : "text-gray-500"} group-hover:mt-2 group-hover:max-h-6 group-hover:opacity-100 group-hover:text-sm`}
-        >
+        <div className={`h-0 font-medium transition-all duration-300 ${isOpen ? "h-3 opacity-100 text-sm" : "h-0 opacity-0 text-xs"} ${isLive ? "text-gray-500" : "text-gray-500"} group-hover:opacity-100 group-hover:text-sm`}>
           {isSameDay ? format(start, "MMM d") : start.getFullYear()}
         </div>
       ) : null}
@@ -160,9 +183,7 @@ function VisitDuration({ visitLocation, isLive, isOpen, start, end, isSameDay })
 
 function VisitDateDetails({ isLive, isOpen, start, end }) {
   return (
-    <div
-      className={`grid items-center gap-4 overflow-hidden transition-all duration-300 ${end ? "grid-cols-[1fr_auto]" : ""} ${isOpen ? "max-h-40 opacity-100" : "max-h-4 opacity-0"} sm:group-hover:max-h-40 sm:group-hover:opacity-100`}
-    >
+    <div className={`grid items-center gap-4 overflow-hidden transition-all duration-300 ${end ? "grid-cols-[1fr_auto]" : ""} ${isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"} sm:group-hover:max-h-40 sm:group-hover:opacity-100`}>
       <div>
         <div className="text-[9px] font-semibold uppercase tracking-[0.2em] text-gray-500 sm:text-[10px]">start</div>
         <div className={`mt-2 text-sm font-semibold sm:text-lg ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-slate-100"}`}>{start ? format(start, "MMM d, h:mm a") : "TBD"}</div>
@@ -242,7 +263,10 @@ function VisitProgress({ isLive, isOpen, progressValue, start, end }) {
         <CircleDashed className={`h-4 w-4 ${isOpen ? "animate-[spin_4s_linear_infinite]" : "animate-none"} group-hover:animate-[spin_4s_linear_infinite]`} />
         <VisitCountdown start={start} end={end} isLive className={`${isOpen ? "text-white dark:text-gray-900" : "text-white/80 dark:text-gray-800"} group-hover:text-white dark:group-hover:text-gray-900`} />
       </div>
-      <Progress value={progressValue} className={`h-2 ${isLive ? "bg-white/15 [&_[data-slot=progress-indicator]]:bg-white dark:bg-slate-200/70 dark:[&_[data-slot=progress-indicator]]:bg-slate-900" : "bg-slate-200/80 dark:bg-slate-800/80"}`} />
+      <Progress
+        value={progressValue}
+        className={`h-1 ${isLive ? "bg-white/15 [&_[data-slot=progress-indicator]]:bg-fuchsia-400 dark:bg-slate-200/70 dark:[&_[data-slot=progress-indicator]]:bg-fuchsia-500" : "bg-slate-200/80 [&_[data-slot=progress-indicator]]:bg-fuchsia-400 dark:bg-slate-800/80 dark:[&_[data-slot=progress-indicator]]:bg-fuchsia-500"}`}
+      />
     </div>
   );
 }

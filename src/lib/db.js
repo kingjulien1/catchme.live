@@ -179,6 +179,13 @@ export async function getUserVisits(userId, limit = 25) {
       visits.digital_payments,
       visits.custom_requests,
       visits.destination_instagram_handle,
+      author.profile_picture_url as author_profile_picture_url,
+      author.name as author_name,
+      author.username as author_username,
+      author.followers_count as author_followers_count,
+      author.account_type as author_account_type,
+      author.media_count as author_media_count,
+      author.bio as author_bio,
       destination.profile_picture_url as destination_profile_picture_url,
       destination.name as destination_name,
       destination.username as destination_username,
@@ -188,6 +195,7 @@ export async function getUserVisits(userId, limit = 25) {
       destination.bio as destination_bio,
       destination_settings.banner_image_url as destination_banner_image_url
     from visits
+    left join users as author on author.id = visits.author_user_id
     left join users as destination on destination.id = visits.destination_user_id
     left join user_profile_display_settings as destination_settings on destination_settings.user_id = destination.id
     where visits.author_user_id = ${userId}
