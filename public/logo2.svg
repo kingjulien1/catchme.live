@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 260" width="980" height="260" role="img" aria-label="CML logo">
+  <!-- Ultra-heavy, barely-readable "CML" mark (clean/minimal).
+       - Uses currentColor so you can style via CSS (e.g. color: #fff;).
+       - Transparent background. -->
+  <g fill="currentColor">
+    <!-- C (very thick, narrow counter) -->
+    <path fill-rule="evenodd" d="
+      M 80 40
+      Q 80 20 100 20
+      L 280 20
+      Q 300 20 300 40
+      L 300 220
+      Q 300 240 280 240
+      L 100 240
+      Q 80 240 80 220
+      Z
+
+      M 130 80
+      Q 130 62 148 62
+      L 252 62
+      Q 270 62 270 80
+      L 270 180
+      Q 270 198 252 198
+      L 148 198
+      Q 130 198 130 180
+      Z
+
+      M 232 58
+      L 330 58
+      L 330 202
+      L 232 202
+      Z
+    "/>
+
+    <!-- M (ridiculously thick, tiny inner cuts) -->
+    <path fill-rule="evenodd" d="
+      M 360 20
+      L 560 20
+      Q 580 20 580 40
+      L 580 240
+      L 530 240
+      L 530 92
+      L 470 152
+      L 410 92
+      L 410 240
+      L 360 240
+      L 360 40
+      Q 360 20 380 20
+      Z
+
+      M 414 64
+      L 470 120
+      L 526 64
+      L 526 86
+      L 470 142
+      L 414 86
+      Z
+    "/>
+
+    <!-- L (heavy + minimal, almost monolithic) -->
+    <path d="
+      M 640 20
+      L 820 20
+      Q 840 20 840 40
+      L 840 76
+      L 740 76
+      L 740 240
+      L 640 240
+      Z
+    "/>
+
+    <!-- Optional tiny dot hinting ".live" (subtle, removable) -->
+    <circle cx="884" cy="214" r="18"/>
+  </g>
+</svg>

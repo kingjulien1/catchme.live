@@ -51,12 +51,7 @@ export default async function ArtistProfilePage({ params }) {
               <section className="group space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {liveVisits.map((visit) => (
-                    <VisitCard
-                      key={visit.id}
-                      visit={visit}
-                      isLive
-                      author={profile}
-                    />
+                    <VisitCard key={visit.id} visit={visit} isLive author={profile} />
                   ))}
                 </div>
               </section>
@@ -77,12 +72,7 @@ export default async function ArtistProfilePage({ params }) {
               <section className="mt-10 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {upcomingVisits.map((visit) => (
-                    <VisitCard
-                      key={visit.id}
-                      visit={visit}
-                      isLive={false}
-                      author={profile}
-                    />
+                    <VisitCard key={visit.id} visit={visit} isLive={false} author={profile} />
                   ))}
                 </div>
               </section>
@@ -96,12 +86,7 @@ export default async function ArtistProfilePage({ params }) {
               <section className="mt-8 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {pastVisits.map((visit) => (
-                    <VisitCard
-                      key={visit.id}
-                      visit={visit}
-                      isPast
-                      author={profile}
-                    />
+                    <VisitCard key={visit.id} visit={visit} isPast author={profile} />
                   ))}
                 </div>
               </section>

@@ -30,7 +30,8 @@ import {
 
 export default async function Me() {
   const user = await getSessionUser();
-  const hasInstagramConnection = Boolean(user?.instagram_token_updated_at || user?.ig_user_id);
+  const hasInstagramConnection = Boolean(!!user);
+  console.log("HAS INSTAGRAM ", hasInstagramConnection);
 
   return (
     <div className="w-full pb-20">
@@ -45,9 +46,7 @@ export default async function Me() {
                   </span>
                   <div>
                     <p className="text-sm font-semibold">Your Instagram is already connected.</p>
-                    <p className="text-xs text-emerald-700/80 dark:text-emerald-100/80">
-                      Keep your sync settings, notifications, and profile visibility up to date in the settings dashboard.
-                    </p>
+                    <p className="text-xs text-emerald-700/80 dark:text-emerald-100/80">Keep your sync settings, notifications, and profile visibility up to date in the settings dashboard.</p>
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-emerald-700/80 dark:text-emerald-100/80">
                       <span>Signed in as</span>
                       <AccountHandle

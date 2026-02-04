@@ -14,11 +14,7 @@ export default async function TopAppBar() {
       <div className="flex items-center justify-between w-full h-16 max-w-6xl gap-4 px-4 mx-auto sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center">
-            <span className="relative mr-2 inline-flex h-2.5 w-2.5 items-center justify-center">
-              <span className="absolute inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-emerald-400 opacity-60" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.45)]" />
-            </span>
-            <span className="font-mono text-sm font-medium uppercase tracking-[0.32em] text-gray-900 dark:text-slate-100">catchme.live</span>
+            <span className='text-3xl leading-none text-gray-900 dark:text-slate-100 font-["Danfo"]'>CM.LIVE</span>
           </Link>
         </div>
 
@@ -33,10 +29,7 @@ export default async function TopAppBar() {
           {user ? (
             <ProfileMenu name={user.name || user.username} username={user.username} imageUrl={user.profile_picture_url || "/default-avatar.png"} />
           ) : (
-            <Link
-              href="/me"
-              className="inline-flex items-center px-4 py-0 ml-2 text-sm font-semibold text-white transition bg-black rounded-full shadow-sm h-11 hover:bg-gray-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
-            >
+            <Link href="/me" className="inline-flex items-center px-4 py-0 ml-2 text-sm font-semibold text-white transition bg-black rounded-full shadow-sm h-11 hover:bg-gray-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100">
               <Instagram className="w-4 h-4 mr-2" />
               <span className="sm:hidden">Connect</span>
               <span className="hidden sm:inline">Connect Instagram</span>
