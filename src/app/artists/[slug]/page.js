@@ -78,7 +78,7 @@ export default async function ArtistProfilePage({ params }) {
               </section>
             ) : null}
             {upcomingVisits.length > 0 && pastVisits.length > 0 ? (
-              <div className="w-full max-w-4xl mx-auto">
+              <div className="w-full max-w-4xl mx-auto py-10 md:py-20">
                 <Separator className="" />
               </div>
             ) : null}
