@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import VisitCountdown from "@/components/visit-countdown";
 import { cn, formatVisitDateRange, formatVisitType } from "@/lib/utils";
 import { format } from "date-fns";
-import { ArrowRight, Banknote, ChevronDown, CircleDashed, CircleFadingArrowUp, CreditCard, Eye, HandCoins, Info, Link2, LinkIcon, Pin, Radio, Share2, Tag, User } from "lucide-react";
+import { ArrowRight, Banknote, ChevronDown, CircleDashed, CircleFadingArrowUp, CreditCard, Eye, HandCoins, Info, Link2, LinkIcon, MapPin, Pin, Radio, Share2, Tag, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -20,6 +20,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
   const authorSlug = authorHandleRaw ? authorHandleRaw.replace(/^@/, "") : "";
   const progressValue = isLive && start && end ? Math.min(100, Math.max(0, ((new Date().getTime() - start.getTime()) / (end.getTime() - start.getTime())) * 100)) : null;
   const isSameDay = start && end ? start.toDateString() === end.toDateString() : false;
+  const durationLabel = start ? formatVisitDateRange(start, end) : "TBD";
 
   return (
     <div className="space-y-2">
@@ -50,7 +51,6 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
         >
           <VisitTopContent isOpen={isOpen} isLive={isLive} visit={visit} destinationHandleRaw={destinationHandleRaw} authorHandleRaw={authorHandleRaw} destinationSlug={destinationSlug} authorSlug={authorSlug} />
           <div className={`h-px transition-all duration-300 ${isOpen ? "my-3 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-3 sm:group-hover:opacity-100`} />
-          <VisitDuration isLive={isLive} isOpen={isOpen} start={start} end={end} isSameDay={isSameDay} />
 
           <VisitDateDetails isLive={isLive} isOpen={isOpen} start={start} end={end} />
           <div className={`h-px transition-all duration-300 ${isOpen ? "my-4 opacity-100" : "my-0 opacity-0"} ${isLive ? "bg-white/10 dark:bg-slate-200/70" : "bg-slate-200/70 dark:bg-slate-800/70"} sm:group-hover:my-4 sm:group-hover:opacity-100`} />
@@ -116,33 +116,11 @@ function VisitTopContent({ isOpen, visit, destinationHandleRaw, authorHandleRaw,
   const destinationHref = destinationSlug ? `/artists/${destinationSlug}` : "/artists";
   const authorHref = authorSlug ? `/artists/${authorSlug}` : "/artists";
   const formatHandle = (handle) => (handle ? `@${handle.replace(/^@/, "")}` : "@unknown");
+  const visitLocation = visit.visit_location || visit.destination_name || visit.destination_username;
 
   return (
     <div className="flex flex-col items-center pb-2 text-center">
-      <div className="relative mb-2 flex w-full items-center justify-between text-left">
-        <span aria-hidden="true" />
-        {visit.visit_type ? (
-          <span
-            className={`pointer-events-none absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] shadow-sm ${
-              isLive ? "bg-slate-900/85 text-white dark:bg-white/85 dark:text-slate-900" : "border border-slate-200/70 bg-white/90 text-slate-900 dark:border-slate-700/70 dark:bg-slate-900/90 dark:text-slate-100"
-            }`}
-          >
-            <Tag className={`h-3.5 w-3.5 ${isLive ? "text-fuchsia-300" : "text-slate-700 dark:text-slate-300"}`} />
-            {formatVisitType(visit.visit_type)}
-          </span>
-        ) : null}
-        <button
-          type="button"
-          aria-label="Share visit"
-          className={`inline-flex h-9 w-9 items-center justify-center rounded-full border ${
-            isLive
-              ? "border-fuchsia-300/15 bg-fuchsia-500/10 text-fuchsia-300 dark:border-fuchsia-500/15 dark:bg-fuchsia-500/15 dark:text-fuchsia-600"
-              : "border-slate-200/40 bg-white/70 text-slate-600 dark:border-slate-700/40 dark:bg-slate-900/60 dark:text-slate-300"
-          }`}
-        >
-          <Share2 className="h-4 w-4" />
-        </button>
-      </div>
+      <VisitLocation isLive={isLive} isOpen={isOpen} location={visitLocation} />
       <div className="mt-2 flex items-center justify-center gap-3">
         <Avatar className={`h-10 w-10 rounded-full border-0 ring-2 ring-fuchsia-500/70 ${isLive ? "bg-white/10 dark:bg-slate-100" : "bg-white dark:bg-slate-900"} text-slate-400`}>
           <AvatarImage src={visit.destination_profile_picture_url || undefined} alt={destinationHandleRaw} className="object-cover" />
@@ -178,64 +156,88 @@ function VisitTopContent({ isOpen, visit, destinationHandleRaw, authorHandleRaw,
   );
 }
 
-function VisitDuration({ isLive, isOpen, start, end, isSameDay }) {
+function VisitLocation({ isLive, isOpen, location }) {
+  const displayLocation = location || "Visit location";
   return (
-    <div className="text-center">
-      <div
-        className={`mt-2 font-semibold tracking-tight transition-all duration-300 ${
-          isOpen ? "text-[1.6rem] sm:text-3xl" : "text-[1.4rem] sm:text-2xl"
-        } ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-white"} group-hover:text-[1.6rem] group-hover:sm:text-3xl`}
+    <div className="flex w-full items-center justify-between pb-2 text-center">
+      <span
+        className={`inline-flex h-8 w-8 items-center justify-center rounded-full border ${
+          isLive
+            ? "border-black/10 bg-white text-slate-900 dark:border-white/10 dark:bg-black dark:text-slate-100"
+            : "border-slate-200/60 bg-white/70 text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-300"
+        }`}
       >
-        {formatVisitDateRange(start, end)}
+        <Radio className="h-4 w-4" />
+      </span>
+      <div
+        className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${
+          isLive
+            ? "border-fuchsia-200/70 bg-fuchsia-100 text-fuchsia-700 dark:border-fuchsia-500/30 dark:bg-fuchsia-500/20 dark:text-fuchsia-100"
+            : isOpen
+              ? "border-fuchsia-300/40 bg-fuchsia-500/10 text-fuchsia-700 dark:border-fuchsia-500/30 dark:bg-fuchsia-500/15 dark:text-fuchsia-100"
+              : "border-fuchsia-300/30 bg-fuchsia-500/10 text-fuchsia-600 dark:border-fuchsia-500/30 dark:bg-fuchsia-500/10 dark:text-fuchsia-100"
+        }`}
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+        {displayLocation}
       </div>
-      {start ? (
-        <div
-          className={`h-0 text-xs font-medium transition-all duration-300 ${isLive ? "text-white/60 dark:text-slate-500" : "text-slate-500 dark:text-slate-400"} ${isOpen ? "h-4 opacity-100" : "h-0 opacity-0"} group-hover:h-4 group-hover:opacity-100`}
-        >
-          {isSameDay ? format(start, "MMM d") : start.getFullYear()}
-        </div>
-      ) : null}
+      <button
+        type="button"
+        aria-label="Share visit"
+        className={`inline-flex h-8 w-8 items-center justify-center rounded-full border ${
+          isLive
+            ? "border-black/10 bg-white text-slate-900 dark:border-white/10 dark:bg-black dark:text-slate-100"
+            : "border-slate-200/60 bg-white/70 text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-300"
+        }`}
+      >
+        <Share2 className="h-4 w-4" />
+      </button>
     </div>
   );
 }
 
 function VisitDateDetails({ isLive, isOpen, start, end }) {
+  const durationLabel = start ? formatVisitDateRange(start, end) : "TBD";
+  const durationYear = start ? (end && start.getFullYear() === end.getFullYear() ? start.getFullYear() : start.getFullYear()) : null;
+
   return (
-    <div
-      className={`grid items-center gap-4 px-3 overflow-hidden transition-all duration-300 ${end ? "grid-cols-[1fr_auto]" : ""} ${
-        isOpen ? "mt-2 max-h-40 opacity-100" : "mt-0 max-h-0 opacity-0"
-      } sm:group-hover:mt-2 sm:group-hover:max-h-40 sm:group-hover:opacity-100`}
-    >
-      <div>
-        <div className={`flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] sm:text-[10px] ${isLive ? "text-slate-400" : "text-slate-500 dark:text-slate-400"}`}>
-          <span
-            className={`inline-flex h-7 w-7 items-center justify-center rounded-xl ${
-              isLive ? "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600" : "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100"
-            }`}
-          >
-            <ArrowRight className="h-3.5 w-3.5" />
-          </span>
-          Check-in
-        </div>
-        <div className={`mt-2 text-base font-semibold sm:text-xl ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-white"}`}>{start ? format(start, "MMM d, h:mm a") : "TBD"}</div>
+    <div className="mt-2">
+      <div className="text-center">
+        <div className={`text-[1.35rem] font-semibold tracking-tight ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-white"}`}>{durationLabel}</div>
+        {durationYear ? <div className={`mt-1 text-xs font-semibold ${isLive ? "text-white/60 dark:text-slate-500" : "text-slate-500 dark:text-slate-400"}`}>{durationYear}</div> : null}
       </div>
-      {end ? (
-        <>
-          <div className="justify-self-end text-right">
-            <div className={`flex items-center justify-end gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] sm:text-[10px] ${isLive ? "text-slate-400" : "text-slate-500 dark:text-slate-400"}`}>
-              Check-out
-              <span
-                className={`inline-flex h-7 w-7 items-center justify-center rounded-xl ${
-                  isLive ? "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600" : "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100"
-                }`}
-              >
-                <ArrowRight className="h-3.5 w-3.5" />
-              </span>
-            </div>
-            <div className={`mt-2 text-base font-semibold sm:text-xl ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-white"}`}>{format(end, "MMM d, h:mm a")}</div>
+      <div className={`mt-4 grid items-center gap-4 px-3 transition-all duration-300 ${end ? "grid-cols-[1fr_auto]" : ""} ${isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"} sm:group-hover:max-h-40 sm:group-hover:opacity-100`}>
+        <div>
+          <div className={`flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] sm:text-[10px] ${isLive ? "text-slate-400" : "text-slate-500 dark:text-slate-400"}`}>
+            <span
+              className={`inline-flex h-7 w-7 items-center justify-center rounded-xl ${
+                isLive ? "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600" : "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100"
+              }`}
+            >
+              <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+            Check-in
           </div>
-        </>
-      ) : null}
+          <div className={`mt-2 text-base font-semibold sm:text-xl ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-white"}`}>{start ? format(start, "MMM d, h:mm a") : "TBD"}</div>
+        </div>
+        {end ? (
+          <>
+            <div className="justify-self-end text-right">
+              <div className={`flex items-center justify-end gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] sm:text-[10px] ${isLive ? "text-slate-400" : "text-slate-500 dark:text-slate-400"}`}>
+                Check-out
+                <span
+                  className={`inline-flex h-7 w-7 items-center justify-center rounded-xl ${
+                    isLive ? "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600" : "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100"
+                  }`}
+                >
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </div>
+              <div className={`mt-2 text-base font-semibold sm:text-xl ${isLive ? "text-white dark:text-slate-900" : "text-slate-900 dark:text-white"}`}>{format(end, "MMM d, h:mm a")}</div>
+            </div>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -246,30 +248,34 @@ function VisitDateDetails({ isLive, isOpen, start, end }) {
  * @param {React.ReactNode} props.icon
  * @param {string} props.value
  */
-function OptionCard({ label, value, icon, tone = "slate", isLive }) {
+function OptionCard({ label, value, icon, tone = "slate", isLive, align = "start" }) {
   const toneMap = {
-    emerald: "bg-emerald-500/12 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-200",
-    blue: "bg-blue-500/12 text-blue-600 dark:bg-blue-400/15 dark:text-blue-200",
-    violet: "bg-violet-500/12 text-violet-600 dark:bg-violet-400/15 dark:text-violet-200",
-    teal: "bg-teal-500/12 text-teal-600 dark:bg-teal-400/15 dark:text-teal-200",
-    slate: "bg-slate-500/10 text-slate-600 dark:bg-slate-400/15 dark:text-slate-200",
+    emerald: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100",
+    blue: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100",
+    violet: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100",
+    teal: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100",
+    slate: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-100",
   };
   const liveToneMap = {
-    emerald: "bg-emerald-500/12 text-emerald-600 dark:bg-emerald-500/12 dark:text-emerald-600",
-    blue: "bg-blue-500/12 text-blue-600 dark:bg-blue-500/12 dark:text-blue-600",
-    violet: "bg-violet-500/12 text-violet-600 dark:bg-violet-500/12 dark:text-violet-600",
-    teal: "bg-teal-500/12 text-teal-600 dark:bg-teal-500/12 dark:text-teal-600",
-    slate: "bg-slate-500/10 text-slate-600 dark:bg-slate-500/10 dark:text-slate-600",
+    emerald: "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600",
+    blue: "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600",
+    violet: "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600",
+    teal: "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600",
+    slate: "bg-fuchsia-500/20 text-fuchsia-600 dark:bg-fuchsia-500/20 dark:text-fuchsia-600",
   };
   return (
     <div
-      className={`rounded-2xl border px-3 py-2.5 ${
+      className={`rounded-2xl border px-3 py-2.5 ${align === "end" ? "text-right sm:text-left" : ""} ${
         isLive
           ? "border-white/10 bg-white/5 text-white dark:border-slate-200/70 dark:bg-white/70 dark:text-slate-900 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
           : "border-slate-200/70 bg-black/[0.03] text-slate-900 dark:border-slate-800/70 dark:bg-white/[0.04] dark:text-slate-100"
       }`}
     >
-      <div className={`flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] ${isLive ? "text-white/70 dark:text-slate-500" : "text-slate-500 dark:text-slate-400"}`}>
+      <div
+        className={`flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] ${
+          align === "end" ? "flex-row-reverse justify-end sm:flex-row sm:justify-start" : ""
+        } ${isLive ? "text-white/70 dark:text-slate-500" : "text-slate-500 dark:text-slate-400"}`}
+      >
         <span className={`inline-flex h-7 w-7 items-center justify-center rounded-xl ${(isLive ? liveToneMap : toneMap)[tone] || (isLive ? liveToneMap.slate : toneMap.slate)}`}>{icon}</span>
         {label}
       </div>
@@ -283,9 +289,15 @@ function VisitOptions({ visit, isOpen, isLive }) {
     <div className={`space-y-4 overflow-hidden transition-all duration-300 ${isOpen ? "max-h-[520px] opacity-100" : "max-h-0 opacity-0"} sm:group-hover:max-h-[520px] sm:group-hover:opacity-100`}>
       <div className="grid gap-2.5 grid-cols-2">
         <OptionCard label="Deposit" value={visit.deposit_required ? "Required" : "Not required"} icon={<Banknote className="h-3.5 w-3.5" />} tone="emerald" isLive={isLive} />
-        <OptionCard label="Age Policy" value={visit.age_18_plus ? "18+" : "All ages"} icon={<CreditCard className="h-3.5 w-3.5" />} tone="blue" isLive={isLive} />
-        <OptionCard label="Bookings" value={visit.bookings_open ? "Open" : "Closed"} icon={<HandCoins className="h-3.5 w-3.5" />} tone="teal" isLive={isLive} />
-        <OptionCard label="Payments" value={visit.digital_payments ? "Available" : "Unavailable"} icon={<CreditCard className="h-3.5 w-3.5" />} tone="slate" isLive={isLive} />
+        <OptionCard label="Age Policy" value={visit.age_18_plus ? "18+" : "All ages"} icon={<CreditCard className="h-3.5 w-3.5" />} tone="teal" isLive={isLive} align="end" />
+        <OptionCard label="Bookings" value={visit.bookings_open ? "Open" : "Closed"} icon={<HandCoins className="h-3.5 w-3.5" />} tone="emerald" isLive={isLive} />
+        <OptionCard label="Payments" value={visit.digital_payments ? "Available" : "Unavailable"} icon={<CreditCard className="h-3.5 w-3.5" />} tone="slate" isLive={isLive} align="end" />
+        <div className="hidden lg:block">
+          <OptionCard label="Walk-ins" value={visit.appointment_only ? "No" : "Yes"} icon={<Pin className="h-3.5 w-3.5" />} tone="blue" isLive={isLive} />
+        </div>
+        <div className="hidden lg:block">
+          <OptionCard label="Custom Requests" value={visit.custom_requests ? "Accepted" : "Unavailable"} icon={<Tag className="h-3.5 w-3.5" />} tone="violet" isLive={isLive} />
+        </div>
       </div>
     </div>
   );
@@ -294,11 +306,23 @@ function VisitOptions({ visit, isOpen, isLive }) {
 function VisitProgress({ isLive, isOpen, progressValue, start, end }) {
   if (typeof progressValue !== "number") return null;
 
+  const totalDuration = (() => {
+    if (!start || !end) return null;
+    const diffMs = Math.max(0, end.getTime() - start.getTime());
+    const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const days = Math.floor(totalHours / 24);
+    const hours = totalHours % 24;
+    if (days > 0 && hours > 0) return `${days}d ${hours}h`;
+    if (days > 0) return `${days}d`;
+    return `${hours}h`;
+  })();
+
   return (
-    <div className={`${isOpen ? "mt-4" : "mt-0"} transition-all duration-300 group-hover:mt-4`}>
+    <div className={`${isOpen ? "mt-4" : "mt-0"} px-2 transition-all duration-300 group-hover:mt-4`}>
       {isLive ? <div className={`h-px bg-white/10 transition-all duration-300 dark:bg-slate-200/70 ${isOpen ? "mb-4 opacity-100" : "mb-0 opacity-0"} group-hover:mb-4 group-hover:opacity-100`} /> : null}
-      <div className={`mb-2.5 flex items-center justify-center ${isOpen ? "text-xs" : "text-[9px]"} text-fuchsia-400 transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0"} group-hover:opacity-100`}>
-        <VisitCountdown start={start} end={end} isLive className="text-fuchsia-400" />
+      <div className={`mb-3 flex items-center justify-between ${isOpen ? "text-xs" : "text-[9px]"} text-white dark:text-black transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0"} group-hover:opacity-100`}>
+        <span className="font-semibold">{totalDuration ? `Total ${totalDuration}` : "Total"}</span>
+        <VisitCountdown start={start} end={end} isLive className="text-white dark:text-black" />
       </div>
       <Progress
         value={progressValue}
