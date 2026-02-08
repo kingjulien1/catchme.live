@@ -382,21 +382,8 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
           </div>
         </div>
 
-        <div className="mt-10 border-t border-slate-200 pt-6 dark:border-slate-800">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <Button variant="ghost" asChild className="px-0 text-slate-600 hover:bg-transparent hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-              <Link href="/me/visit" className="inline-flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Link>
-            </Button>
-            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-              <Button type="button" variant="ghost" className="justify-center text-slate-500 hover:bg-transparent hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                Save as Draft
-              </Button>
-              <SettingsSubmitButton isPending={isPending} label="Save & Continue to Preview" />
-            </div>
-          </div>
+        <div className="mt-10 border-t border-slate-200 pt-6 dark:border-slate-800 flex justify-end">
+          <SettingsSubmitButton isPending={isPending} label="Save & Continue to Preview" />
         </div>
       </Section>
     </form>

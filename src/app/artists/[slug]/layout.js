@@ -5,10 +5,10 @@ import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } fr
 import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import { formatFollowers } from "@/lib/utils";
 import { Instagram, MapPin, MoreHorizontal, Share2, Star, Tag, User } from "lucide-react";
-import AccountHandle from "@/components/account-handle";
 import { Stars } from "lucide-react";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Link2 } from "lucide-react";
+import ArtistTabs from "./artist-tabs";
 
 export default async function ArtistProfileLayout({ children, params }) {
   const { slug } = await params;
@@ -54,16 +54,11 @@ export default async function ArtistProfileLayout({ children, params }) {
                       <User className="h-5 w-5" />
                     </AvatarFallback>
                   </Avatar>
-                  <AccountHandle
-                    username={profile.username}
-                    name={profile.name || null}
-                    profilePictureUrl={profile.profile_picture_url || null}
-                    followersCount={profile.followers_count ?? null}
-                    accountType={profile.account_type || null}
-                    mediaCount={profile.media_count ?? null}
-                    bio={profile.bio || null}
-                    className="text-base font-semibold"
-                  />
+                  {profile.username ? (
+                    <Link href={`/artists/${profile.username}`} className="text-base font-semibold text-fuchsia-600 transition hover:text-fuchsia-700 dark:text-fuchsia-300 dark:hover:text-fuchsia-200">
+                      @{profile.username}
+                    </Link>
+                  ) : null}
                 </div>
               </div>
               <SpecialisationsBadges specialisations={profile.specialisations} />
@@ -74,6 +69,9 @@ export default async function ArtistProfileLayout({ children, params }) {
         </section>
         <div className="relative w-full lg:w-1/2 lg:pt-12">
           <div className="absolute inset-0 -z-20 bg-white dark:bg-slate-950" />
+          <div className="px-6 pt-6 sm:px-8 lg:px-10 lg:sticky lg:top-16 lg:z-20 lg:bg-white/90 lg:backdrop-blur dark:lg:bg-slate-950/90">
+            <ArtistTabs basePath={`/artists/${handle}`} />
+          </div>
           {children}
         </div>
       </div>

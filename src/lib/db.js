@@ -171,14 +171,9 @@ export async function getUserVisits(userId, limit = 25) {
       visits.visit_start_time,
       visits.visit_end_time,
       visits.visit_type,
-      visits.description,
-      visits.bookings_open,
-      visits.appointment_only,
-      visits.age_18_plus,
-      visits.deposit_required,
-      visits.digital_payments,
-      visits.custom_requests,
-      visits.destination_instagram_handle,
+      visit_options.special_notes as description,
+      visits.status,
+      destination_link.account_handle as destination_instagram_handle,
       author.profile_picture_url as author_profile_picture_url,
       author.name as author_name,
       author.username as author_username,
@@ -196,8 +191,17 @@ export async function getUserVisits(userId, limit = 25) {
       destination_settings.banner_image_url as destination_banner_image_url
     from visits
     left join users as author on author.id = visits.author_user_id
-    left join users as destination on destination.id = visits.destination_user_id
+    left join lateral (
+      select account_handle, account_user_id
+      from visit_linked_accounts
+      where visit_id = visits.id
+        and account_type = 'destination'
+      order by created_at asc
+      limit 1
+    ) as destination_link on true
+    left join users as destination on destination.id = destination_link.account_user_id
     left join user_profile_display_settings as destination_settings on destination_settings.user_id = destination.id
+    left join visit_options on visit_options.visit_id = visits.id
     where visits.author_user_id = ${userId}
     order by visits.visit_start_time desc nulls last
     limit ${limit}
