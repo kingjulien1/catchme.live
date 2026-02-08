@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { Facebook, ImagePlus, Instagram, Link2, Loader2, Palette, Stars, Twitter, Youtube } from "lucide-react";
 
 import Section from "@/components/Section";
+import SettingsSubmitButton from "@/components/settings-submit-button";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -150,16 +151,7 @@ export default function ProfileDisplaySection({ settings, action, user }) {
         <div className="lg:col-span-2">
           {state.message ? <p className="text-xs text-red-600 dark:text-red-300">{state.message}</p> : null}
           <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
-            <Button className="rounded-full px-6" type="submit" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                "Save Display Settings"
-              )}
-            </Button>
+            <SettingsSubmitButton isPending={isPending} label="Save Display Settings" />
           </div>
         </div>
       </form>

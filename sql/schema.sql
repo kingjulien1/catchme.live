@@ -17,7 +17,6 @@ create table users (
   updated_at timestamptz not null default now()
 );
 
-
 create table sessions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references users(id) on delete cascade,
@@ -48,32 +47,74 @@ create table instagram_sync_settings (
 
 create index instagram_sync_settings_user_id_idx on instagram_sync_settings(user_id);
 
+create table venues (
+  id uuid primary key default gen_random_uuid(),
+  owner_user_id uuid references users(id) on delete set null,
+  venue_name text not null,
+  event_name text,
+  description text,
+  event_start_time timestamptz,
+  event_end_time timestamptz,
+  location_label text,
+  address_line text,
+  city text,
+  country text,
+  contact_email text,
+  website_url text,
+  ticket_url text,
+  instagram_handle text,
+  banner_image_url text,
+  capacity integer,
+  is_public boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table visits (
   id uuid primary key default gen_random_uuid(),
   author_user_id uuid not null references users(id) on delete cascade,
-  destination_user_id uuid references users(id) on delete set null,
-  destination_instagram_handle text not null,
-  visit_location text not null,
-  visit_start_time timestamptz not null,
-  visit_end_time timestamptz,
-  visit_type text not null check (visit_type in ('guest', 'residency', 'convention', 'workshop', 'popup', 'other')),
-  description text,
-  bookings_open boolean not null default false,
-  appointment_only boolean not null default false,
-  age_18_plus boolean not null default false,
-  deposit_required boolean not null default false,
-  digital_payments boolean not null default false,
-  custom_requests boolean not null default false,
-  status text not null default 'draft' check (status in ('draft', 'published', 'archived')),
+  venue_id uuid references venues(id) on delete set null,
   slug text unique,
+  visit_type text not null check (visit_type in ('guest', 'residency', 'convention', 'workshop', 'popup', 'other')),
+  visit_location text,
+  visit_start_time timestamptz,
+  visit_end_time timestamptz,
+  status text not null default 'draft' check (status in ('draft', 'published', 'archived')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 create index visits_author_user_id_idx on visits(author_user_id);
-create index visits_destination_user_id_idx on visits(destination_user_id);
 create index visits_start_time_idx on visits(visit_start_time);
 create index visits_status_idx on visits(status);
+
+create table visit_options (
+  id uuid primary key default gen_random_uuid(),
+  visit_id uuid not null references visits(id) on delete cascade,
+  booking_status text check (booking_status in ('open', 'limited', 'closed')),
+  booking_method text,
+  cancellation_policy text,
+  appointment_only boolean,
+  deposit_required boolean,
+  deposit_amount numeric(10, 2),
+  price_min numeric(10, 2),
+  price_max numeric(10, 2),
+  age_policy text,
+  digital_payments boolean,
+  languages_spoken text,
+  custom_requests boolean,
+  walk_ins_welcome boolean,
+  portfolio_photos boolean,
+  flash_designs boolean,
+  touch_ups_included boolean,
+  cover_ups_accepted boolean,
+  special_notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (visit_id)
+);
+
+create index visit_options_visit_id_idx on visit_options(visit_id);
 
 create table user_account_options (
   user_id uuid primary key references users(id) on delete cascade,
@@ -98,31 +139,6 @@ create table user_booking_settings (
   updated_at timestamptz not null default now()
 );
 
-create table user_booking_session_types (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references users(id) on delete cascade,
-  title text not null,
-  duration_label text,
-  price_label text,
-  is_available boolean not null default true,
-  sort_order integer not null default 0,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-create index user_booking_session_types_user_id_idx on user_booking_session_types(user_id);
-
-create table user_booking_requirements (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references users(id) on delete cascade,
-  requirement_key text not null,
-  is_enabled boolean not null default false,
-  updated_at timestamptz not null default now(),
-  unique (user_id, requirement_key)
-);
-
-create index user_booking_requirements_user_id_idx on user_booking_requirements(user_id);
-
 create table user_profile_display_settings (
   user_id uuid primary key references users(id) on delete cascade,
   banner_image_url text,
@@ -139,3 +155,16 @@ create table user_profile_display_settings (
   social_website text,
   updated_at timestamptz not null default now()
 );
+
+create table visit_linked_accounts (
+  id uuid primary key default gen_random_uuid(),
+  visit_id uuid not null references visits(id) on delete cascade,
+  account_user_id uuid references users(id) on delete set null,
+  account_handle text not null,
+  account_type text not null default 'destination' check (account_type in ('destination','partner')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index visit_linked_accounts_visit_id_idx on visit_linked_accounts(visit_id);
+create index visit_linked_accounts_account_user_id_idx on visit_linked_accounts(account_user_id);

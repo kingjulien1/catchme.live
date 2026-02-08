@@ -11,7 +11,7 @@ export default function VisitTypeRadioCard({ value, id, title, subtitle, icon, i
 
       <Label
         htmlFor={id}
-        className="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 pr-12 shadow-sm transition hover:bg-gray-50 peer-data-[state=checked]:border-violet-300 peer-data-[state=checked]:bg-violet-50/40 dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none dark:hover:bg-slate-900/90 dark:peer-data-[state=checked]:border-violet-400/60 dark:peer-data-[state=checked]:bg-violet-500/10"
+        className="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 pr-12 shadow-sm transition hover:bg-gray-50 peer-data-[state=checked]:border-violet-400 peer-data-[state=checked]:bg-violet-100/70 peer-data-[state=checked]:hover:border-violet-500 peer-data-[state=checked]:hover:bg-violet-200/60 dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none dark:hover:bg-slate-900/90 dark:peer-data-[state=checked]:border-violet-400/70 dark:peer-data-[state=checked]:bg-violet-500/20 dark:peer-data-[state=checked]:hover:bg-violet-500/30"
       >
         <div className={`grid h-10 w-10 place-items-center rounded-lg ${iconWrapClassName}`}>{icon}</div>
         <div className="min-w-0">

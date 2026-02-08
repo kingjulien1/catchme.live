@@ -2,11 +2,11 @@
 
 import { useActionState } from "react";
 import { Label } from "@radix-ui/react-label";
-import { Check, Info, Loader2, Settings } from "lucide-react";
+import { Check, Info, Settings } from "lucide-react";
 
 import Section from "@/components/Section";
+import SettingsSubmitButton from "@/components/settings-submit-button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SpecialisationsInput from "./specialisations-input";
@@ -95,16 +95,11 @@ export default function AccountPreferencesSection({ user, action }) {
         {state.message ? <p className="text-xs text-red-600 dark:text-red-300">{state.message}</p> : null}
 
         <div className="flex justify-end">
-          <Button className="ml-auto rounded-full bg-slate-900 px-6 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white" type="submit" disabled={isPending}>
-            {isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save Account Details"
-            )}
-          </Button>
+          <SettingsSubmitButton
+            isPending={isPending}
+            label="Save Account Details"
+            className="ml-auto bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+          />
         </div>
       </form>
     </Section>

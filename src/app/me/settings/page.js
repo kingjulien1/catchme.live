@@ -14,9 +14,16 @@ export default async function SettingsPage() {
   let accountOptions = null;
   let bookingSettings = null;
   let profileDisplaySettings = null;
-  let bookingRequirements = [];
   let instagramToken = null;
   let instagramSyncSettings = null;
+  const bookingRequirementOptions = [
+    { id: "req-reference", label: "Require reference images", defaultChecked: true },
+    { id: "req-placement", label: "Request placement location", defaultChecked: true },
+    { id: "req-size", label: "Ask for size estimate", defaultChecked: true },
+    { id: "req-history", label: "Require previous tattoo info", defaultChecked: false },
+    { id: "req-budget", label: "Request budget range", defaultChecked: true },
+    { id: "req-colors", label: "Ask for preferred color palette", defaultChecked: false },
+  ];
 
   if (userId) {
     [accountOptions] = await sql`
@@ -31,12 +38,6 @@ export default async function SettingsPage() {
       where user_id = ${userId}
       limit 1
     `;
-    const requirementRows = await sql`
-      select requirement_key
-      from user_booking_requirements
-      where user_id = ${userId}
-    `;
-    bookingRequirements = requirementRows.map((row) => row.requirement_key);
     [profileDisplaySettings] = await sql`
       select *
       from user_profile_display_settings
@@ -58,12 +59,12 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <InstagramConnectionSection user={user} instagramToken={instagramToken} settings={instagramSyncSettings} action={updateInstagramSyncSettings} />
       <AccountTypeSection user={user} action={updateAccountType} />
       <AccountPreferencesSection user={user} action={updateAccountPreferences} />
       <ProfileDisplaySection settings={profileDisplaySettings} action={updateProfileDisplay} user={user} />
-      <BookingSettingsSection settings={bookingSettings ? { ...bookingSettings, requirements: bookingRequirements } : null} action={updateBookingSettings} />
+      <BookingSettingsSection settings={bookingSettings} requirements={bookingRequirementOptions} action={updateBookingSettings} />
       <AccountOptionsSection key={accountOptions?.updated_at ?? "default"} options={accountOptions} action={updateAccountOptions} />
     </div>
   );

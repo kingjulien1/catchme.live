@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser, sql } from "@/lib/db";
 import VisitForm from "./visit-form";
 
-const allowedVisitTypes = ["guest", "residency", "convention", "workshop", "popup", "custom"];
+const allowedVisitTypes = ["guest", "residency", "convention", "workshop", "popup", "custom", "other"];
 
 export default async function NewVisitPage() {
   const user = await getSessionUser();
@@ -16,25 +16,39 @@ export default async function NewVisitPage() {
     }
 
     const raw = Object.fromEntries(formData.entries());
+    const mergeDateTime = (dateValue, timeValue, fallbackTime = "") => {
+      if (!dateValue) return "";
+      const resolvedTime = timeValue || fallbackTime;
+      if (!resolvedTime) return "";
+      return `${dateValue}T${resolvedTime}`;
+    };
+    const visitStartValue = raw.visit_start_time || mergeDateTime(raw.visit_start_date, raw.visit_start_clock, "00:00");
+    const visitEndValue = raw.visit_end_time || mergeDateTime(raw.visit_end_date, raw.visit_end_clock);
     const errors = {};
 
-    const destinationHandle = raw.destination_instagram_handle?.trim().replace(/^@/, "").toLowerCase();
+    const parseHandles = (value) =>
+      String(value || "")
+        .split(",")
+        .map((item) => item.trim().replace(/^@/, "").toLowerCase())
+        .filter(Boolean);
+    const destinationHandles = parseHandles(raw.destination_accounts);
+    const partnerHandles = parseHandles(raw.linked_accounts);
 
-    if (!destinationHandle) {
-      errors.destination_instagram_handle = "Please add a destination Instagram handle.";
+    if (!destinationHandles.length) {
+      errors.destination_accounts = "Please add at least one destination Instagram handle.";
     }
 
     if (!raw.visit_location?.trim()) {
       errors.visit_location = "Please add a visit location.";
     }
 
-    if (!raw.visit_start_time) {
-      errors.visit_start_time = "Please select a start date and time.";
+    if (!visitStartValue) {
+      errors.visit_start_time = "Please select a start date.";
     }
 
-    if (raw.visit_start_time && raw.visit_end_time) {
-      const start = new Date(raw.visit_start_time);
-      const end = new Date(raw.visit_end_time);
+    if (visitStartValue && visitEndValue) {
+      const start = new Date(visitStartValue);
+      const end = new Date(visitEndValue);
       if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
         errors.visit_time_range = "End time must be after the start time.";
       }
@@ -44,73 +58,89 @@ export default async function NewVisitPage() {
       errors.visit_type = "Please select a valid visit type.";
     }
 
-    if (raw.description && raw.description.length > 500) {
-      errors.description = "Visit description must be 500 characters or less.";
-    }
-
-    const toBoolean = (value) => value === true || value === "true" || value === "on";
-    const optionValues = {
-      bookings_open: toBoolean(raw.bookings_open),
-      appointment_only: toBoolean(raw.appointment_only),
-      age_18_plus: toBoolean(raw.age_18_plus),
-      deposit_required: toBoolean(raw.deposit_required),
-      digital_payments: toBoolean(raw.digital_payments),
-      custom_requests: toBoolean(raw.custom_requests),
-    };
-
     if (Object.keys(errors).length > 0) {
-      return { errors, message: "Please fix the highlighted fields.", values: optionValues };
+      return { errors, message: "Please fix the highlighted fields." };
     }
-    const visitEndTime = raw.visit_end_time ? new Date(raw.visit_end_time) : null;
+    const visitEndTime = visitEndValue ? new Date(visitEndValue) : null;
+    const visitTypeValue = raw.visit_type === "custom" ? "other" : raw.visit_type;
 
-    const [destinationUser] = await sql`
-      insert into users (username)
-      values (${destinationHandle})
-      on conflict (username) do update set username = excluded.username
-      returning id
-    `;
+    const allHandles = Array.from(new Set([...destinationHandles, ...partnerHandles]));
+    const userRows = allHandles.length
+      ? await sql`
+          insert into users (username)
+          select unnest(${allHandles}::text[])
+          on conflict (username) do update set username = excluded.username
+          returning id, username
+        `
+      : [];
+    const usersByHandle = new Map(userRows.map((row) => [row.username, row.id]));
+    const primaryDestinationHandle = destinationHandles[0];
+    const primaryDestinationUserId = primaryDestinationHandle ? usersByHandle.get(primaryDestinationHandle) : null;
 
-    if (!destinationUser?.id) {
+    if (!primaryDestinationUserId) {
       return { errors: { form: "Unable to resolve destination account." }, message: "Could not create the visit. Try again." };
     }
 
-    await sql`
+    const venueName = raw.venue_event?.trim();
+    const [venue] = venueName
+      ? await sql`
+          select id
+          from venues
+          where venue_name = ${venueName}
+          limit 1
+        `
+      : [];
+    if (venueName && !venue?.id) {
+      return { errors: { venue_event: "Venue not found. Please select an existing venue." }, message: "Please fix the highlighted fields." };
+    }
+    const venueId = venue?.id ?? null;
+
+    const [createdVisit] = await sql`
       insert into visits (
         author_user_id,
-        destination_user_id,
-        destination_instagram_handle,
+        venue_id,
         visit_location,
         visit_start_time,
         visit_end_time,
         visit_type,
-        description,
-        bookings_open,
-        appointment_only,
-        age_18_plus,
-        deposit_required,
-        digital_payments,
-        custom_requests
+        status
       )
       values (
         ${sessionUser.id},
-        ${destinationUser.id},
-        ${destinationHandle},
+        ${venueId},
         ${raw.visit_location?.trim()},
-        ${new Date(raw.visit_start_time)},
+        ${new Date(visitStartValue)},
         ${visitEndTime},
-        ${raw.visit_type},
-        ${raw.description?.trim() || null},
-        ${optionValues.bookings_open},
-        ${optionValues.appointment_only},
-        ${optionValues.age_18_plus},
-        ${optionValues.deposit_required},
-        ${optionValues.digital_payments},
-        ${optionValues.custom_requests}
+        ${visitTypeValue},
+        ${"draft"}
       )
+      returning id
     `;
 
-    return { errors: {}, message: "" };
+    console.log("VISIT CREATED", createdVisit);
+
+    if (!createdVisit?.id) {
+      return { errors: { form: "Unable to save the visit details." }, message: "Could not create the visit. Try again." };
+    }
+
+    for (const handle of destinationHandles) {
+      const accountUserId = usersByHandle.get(handle) || null;
+      await sql`
+        insert into visit_linked_accounts (visit_id, account_user_id, account_handle, account_type)
+        values (${createdVisit.id}, ${accountUserId}, ${handle}, ${"destination"})
+      `;
+    }
+
+    for (const handle of partnerHandles) {
+      const accountUserId = usersByHandle.get(handle) || null;
+      await sql`
+        insert into visit_linked_accounts (visit_id, account_user_id, account_handle, account_type)
+        values (${createdVisit.id}, ${accountUserId}, ${handle}, ${"partner"})
+      `;
+    }
+
+    redirect(`/me/visit/${createdVisit.id}/options`);
   }
 
-  return <VisitForm action={createVisit} />;
+  return <VisitForm action={createVisit} user={user} />;
 }

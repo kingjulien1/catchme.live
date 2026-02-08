@@ -3,10 +3,10 @@
 import { useActionState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { CalendarClock, CheckCircle2, Clock3, Loader2, Plus, XCircle } from "lucide-react";
+import { CalendarClock, CheckCircle2, Clock3, Plus, XCircle } from "lucide-react";
 
 import Section from "@/components/Section";
-import { Button } from "@/components/ui/button";
+import SettingsSubmitButton from "@/components/settings-submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 
@@ -50,8 +50,7 @@ function LabeledSelect({ id, name, label, options, helper, defaultValue }) {
 
 const initialState = { ok: false, message: "" };
 
-export default function BookingSettingsSection({ settings, action }) {
-  const requirements = settings?.requirements || [];
+export default function BookingSettingsSection({ settings, requirements = [], action }) {
   const settingsKey = settings?.updated_at ?? "default";
   const [state, formAction, isPending] = useActionState(action, initialState);
   return (
@@ -86,16 +85,9 @@ export default function BookingSettingsSection({ settings, action }) {
           <div className="space-y-3">
             <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">Booking Form Requirements</div>
             <div className="grid gap-3 lg:grid-cols-2">
-              {[
-                { id: "req-reference", label: "Require reference images", defaultChecked: true },
-                { id: "req-placement", label: "Request placement location", defaultChecked: true },
-                { id: "req-size", label: "Ask for size estimate", defaultChecked: true },
-                { id: "req-history", label: "Require previous tattoo info", defaultChecked: false },
-                { id: "req-budget", label: "Request budget range", defaultChecked: true },
-                { id: "req-colors", label: "Ask for preferred color palette", defaultChecked: false },
-              ].map((item) => (
+              {requirements.map((item) => (
                 <label key={item.id} htmlFor={item.id} className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-200">
-                  <Checkbox id={item.id} name="requirements" value={item.id} defaultChecked={requirements.includes(item.id) || item.defaultChecked} />
+                  <Checkbox id={item.id} name="requirements" value={item.id} defaultChecked={item.defaultChecked} />
                   <span>{item.label}</span>
                 </label>
               ))}
@@ -105,16 +97,7 @@ export default function BookingSettingsSection({ settings, action }) {
           {state.message ? <p className="text-xs text-red-600 dark:text-red-300">{state.message}</p> : null}
 
           <div className="sm:col-span-2 flex justify-end pt-2">
-            <Button className="rounded-full bg-violet-600 px-6 text-white hover:bg-violet-500" type="submit" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                "Save Booking Settings"
-              )}
-            </Button>
+            <SettingsSubmitButton isPending={isPending} label="Save Booking Settings" className="bg-violet-600 text-white hover:bg-violet-500" />
           </div>
         </form>
       </div>

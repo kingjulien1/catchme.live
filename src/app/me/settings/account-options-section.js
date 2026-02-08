@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { Bell, CalendarClock, Eye, Globe2, Loader2, Mail, ShieldCheck, Sparkles, UserCog } from "lucide-react";
+import { Bell, CalendarClock, Eye, Globe2, Mail, ShieldCheck, Sparkles, UserCog } from "lucide-react";
 
 import Section from "@/components/Section";
-import { Button } from "@/components/ui/button";
+import SettingsSubmitButton from "@/components/settings-submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
@@ -172,16 +172,11 @@ export default function AccountOptionsSection({ options, action }) {
         {state.message ? <p className="sm:col-span-2 text-xs text-red-600 dark:text-red-300">{state.message}</p> : null}
 
         <div className="sm:col-span-2 flex justify-end pt-2">
-          <Button className="ml-auto rounded-full bg-slate-900 px-6 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white" type="submit" disabled={isPending}>
-            {isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save Account Preferences"
-            )}
-          </Button>
+          <SettingsSubmitButton
+            isPending={isPending}
+            label="Save Account Preferences"
+            className="ml-auto bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+          />
         </div>
       </form>
     </Section>

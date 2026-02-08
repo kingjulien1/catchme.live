@@ -3,10 +3,10 @@
 import { useActionState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { Building2, Check, Info, Loader2, Paintbrush } from "lucide-react";
+import { Building2, Check, Info, Paintbrush } from "lucide-react";
 
 import Section from "@/components/Section";
-import { Button } from "@/components/ui/button";
+import SettingsSubmitButton from "@/components/settings-submit-button";
 
 function AccountTypeCard({ value, id, title, description, points, icon, iconClassName }) {
   return (
@@ -82,16 +82,7 @@ export default function AccountTypeSection({ user, action }) {
 
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
           <span>Last updated: 2 days ago</span>
-          <Button className="ml-auto rounded-full bg-violet-600 px-6 text-white hover:bg-violet-500" type="submit" disabled={isPending}>
-            {isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save Account Type"
-            )}
-          </Button>
+          <SettingsSubmitButton isPending={isPending} label="Save Account Type" className="ml-auto bg-violet-600 text-white hover:bg-violet-500" />
         </div>
       </form>
     </Section>

@@ -120,7 +120,6 @@ export async function updateBookingSettings(_prevState, formData) {
   const maxAdvance = formData.get("max_advance");
   const depositRequired = formData.get("deposit_required");
   const cancellationPolicy = formData.get("cancellation_policy");
-  const requirements = formData.getAll("requirements").map((value) => value.toString());
   const sessionTitles = formData.getAll("session_title").map((value) => value.toString());
   const sessionDurations = formData.getAll("session_duration").map((value) => value.toString());
   const sessionPrices = formData.getAll("session_price").map((value) => value.toString());
@@ -157,17 +156,6 @@ export async function updateBookingSettings(_prevState, formData) {
       cancellation_policy = excluded.cancellation_policy,
       updated_at = now()
   `;
-
-  await sql`
-    delete from user_booking_requirements
-    where user_id = ${sessionUser.id}
-  `;
-  for (const key of requirements) {
-    await sql`
-      insert into user_booking_requirements (user_id, requirement_key, is_enabled)
-      values (${sessionUser.id}, ${key}, true)
-    `;
-  }
 
   await sql`
     delete from user_booking_session_types

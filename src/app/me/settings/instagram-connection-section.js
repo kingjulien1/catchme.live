@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useState } from "react";
-import { BadgeCheck, Check, Clock, Cloud, CloudSync, ImagePlus, Info, Instagram, Link2, Loader2, RotateCw, ShieldCheck, Sparkles, Unlink, UserRound } from "lucide-react";
+import { BadgeCheck, Check, Clock, Cloud, CloudSync, ImagePlus, Info, Instagram, Link2, RotateCw, ShieldCheck, Sparkles, Unlink, UserRound } from "lucide-react";
 
 import Section from "@/components/Section";
+import SettingsSubmitButton from "@/components/settings-submit-button";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -260,16 +261,7 @@ export default function InstagramConnectionSection({ user, instagramToken, setti
         <div className="lg:col-span-2">
           {state.message ? <p className="text-xs text-red-600 dark:text-red-300">{state.message}</p> : null}
           <div className="mt-4 flex justify-end pt-2">
-            <Button type="submit" className="rounded-full px-6" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                "Save Instagram Connection Settings"
-              )}
-            </Button>
+            <SettingsSubmitButton isPending={isPending} label="Save Instagram Connection Settings" />
           </div>
         </div>
       </form>
