@@ -6,7 +6,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { getSessionUser, sql } from "@/lib/db";
 import { formatShortDate, formatVisitDateRange, formatVisitTimeRange, formatVisitType } from "@/lib/utils";
 import { Archive, CalendarDays, Clock, Copy, MapPin, MoreHorizontal, Pencil, Tag, Trash2, User } from "lucide-react";
-import AccountHandle from "@/components/account-handle";
 
 export default async function VisitsPage() {
   const user = await getSessionUser();
@@ -17,21 +16,15 @@ export default async function VisitsPage() {
   const visits = await sql`
     select
       visits.id,
-      visits.destination_instagram_handle,
       visits.visit_location,
       visits.visit_start_time,
       visits.visit_end_time,
       visits.visit_type,
-      visits.description,
-      visits.bookings_open,
-      visits.appointment_only,
-      visits.age_18_plus,
-      visits.deposit_required,
-      visits.digital_payments,
-      visits.custom_requests,
       visits.status,
       visits.created_at,
       visits.updated_at,
+      visit_options.special_notes as description,
+      destination_link.account_handle as destination_instagram_handle,
       destination.username as destination_username,
       destination.name as destination_name,
       destination.profile_picture_url as destination_profile_picture_url,
@@ -39,7 +32,16 @@ export default async function VisitsPage() {
       destination.account_type as destination_account_type,
       destination.media_count as destination_media_count
     from visits
-    left join users as destination on destination.id = visits.destination_user_id
+    left join lateral (
+      select account_handle, account_user_id
+      from visit_linked_accounts
+      where visit_id = visits.id
+        and account_type = 'destination'
+      order by created_at asc
+      limit 1
+    ) as destination_link on true
+    left join users as destination on destination.id = destination_link.account_user_id
+    left join visit_options on visit_options.visit_id = visits.id
     where visits.author_user_id = ${user.id}
     order by visits.visit_start_time desc nulls last, visits.created_at desc
   `;
@@ -84,7 +86,9 @@ export default async function VisitsPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-gray-700 dark:text-slate-200">{displayName}</p>
-                        <AccountHandle username={handle} name={displayName} profilePictureUrl={visit.destination_profile_picture_url || null} className="text-lg" />
+                        <Link href={`/artists/${handle.replace(/^@/, "")}`} className="text-lg font-semibold text-fuchsia-600 transition hover:text-fuchsia-700 dark:text-fuchsia-300 dark:hover:text-fuchsia-200">
+                          {handle}
+                        </Link>
                       </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-slate-400">

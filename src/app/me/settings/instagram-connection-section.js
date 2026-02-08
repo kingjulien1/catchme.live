@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { cn, formatFollowers } from "@/lib/utils";
-import AccountHandle from "@/components/account-handle";
+import Link from "next/link";
 
 const defaultSyncSettings = {
   autoSync: true,
@@ -145,7 +145,11 @@ export default function InstagramConnectionSection({ user, instagramToken, setti
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
-                  <AccountHandle username={user?.username} className="text-base font-semibold text-slate-900 dark:text-slate-100" />
+                  {user?.username ? (
+                    <Link href={`/artists/${user.username}`} className="text-base font-semibold text-fuchsia-600 transition hover:text-fuchsia-700 dark:text-fuchsia-300 dark:hover:text-fuchsia-200">
+                      @{user.username}
+                    </Link>
+                  ) : null}
                   <div className="text-xs text-slate-500 dark:text-slate-400">{user?.name || "Connected profile"}</div>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200">

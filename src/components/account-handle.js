@@ -87,11 +87,7 @@ export default function AccountHandleClient({ username, name, profilePictureUrl,
           </Avatar>
           <div className="text-sm font-semibold text-fuchsia-500 sm:text-base dark:text-fuchsia-400">{handle}</div>
         </div>
-        {bio ? (
-          <p className="relative z-10 mt-4 text-xs leading-relaxed text-slate-600 line-clamp-4 sm:mt-5 sm:text-sm dark:text-slate-300">
-            {bio}
-          </p>
-        ) : null}
+        {bio ? <p className="relative z-10 mt-4 text-xs leading-relaxed text-slate-600 line-clamp-4 sm:mt-5 sm:text-sm dark:text-slate-300">{bio}</p> : null}
       </HoverCardContent>
     </HoverCard>
   );

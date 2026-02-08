@@ -1,5 +1,5 @@
+import NextLink from "next/link";
 import Section from "@/components/Section";
-import AccountHandle from "@/components/account-handle";
 import { Separator } from "@/components/ui/separator";
 import { getSessionUser } from "@/lib/db";
 import {
@@ -32,6 +32,7 @@ export default async function Me() {
   const user = await getSessionUser();
   const hasInstagramConnection = Boolean(!!user);
   console.log("HAS INSTAGRAM ", hasInstagramConnection);
+  const handle = user?.username ? `@${user.username}` : null;
 
   return (
     <div className="w-full pb-20">
@@ -49,16 +50,11 @@ export default async function Me() {
                     <p className="text-xs text-emerald-700/80 dark:text-emerald-100/80">Keep your sync settings, notifications, and profile visibility up to date in the settings dashboard.</p>
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-emerald-700/80 dark:text-emerald-100/80">
                       <span>Signed in as</span>
-                      <AccountHandle
-                        username={user?.username}
-                        name={user?.name || null}
-                        profilePictureUrl={user?.profile_picture_url || null}
-                        followersCount={user?.followers_count ?? null}
-                        accountType={user?.account_type || null}
-                        mediaCount={user?.media_count ?? null}
-                        bio={user?.bio || null}
-                        className="text-xs font-semibold text-emerald-900 dark:text-emerald-100"
-                      />
+                      {handle ? (
+                        <NextLink href={`/artists/${user.username}`} className="text-xs font-semibold text-emerald-900 hover:underline dark:text-emerald-100">
+                          {handle}
+                        </NextLink>
+                      ) : null}
                     </div>
                   </div>
                 </div>
