@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { getProfileByUsername, getUserVisits } from "@/lib/db";
 import VisitCountdown from "@/components/visit-countdown";
-import VisitCard from "@/components/visit-card";
+import LiveCard from "@/components/live-card";
 import { ChevronUp } from "lucide-react";
 
 export default async function ArtistProfilePage({ params }) {
@@ -14,6 +14,7 @@ export default async function ArtistProfilePage({ params }) {
   if (!profile) notFound();
 
   const visits = await getUserVisits(profile.id, 25);
+  const linkedAccountsByVisit = new Map();
 
   const now = new Date();
   const liveVisits = visits.filter((visit) => {
@@ -51,7 +52,7 @@ export default async function ArtistProfilePage({ params }) {
               <section className="group space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {liveVisits.map((visit) => (
-                    <VisitCard key={visit.id} visit={visit} isLive author={profile} />
+                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} isLive />
                   ))}
                 </div>
               </section>
@@ -72,7 +73,7 @@ export default async function ArtistProfilePage({ params }) {
               <section className="mt-10 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {upcomingVisits.map((visit) => (
-                    <VisitCard key={visit.id} visit={visit} isLive={false} author={profile} />
+                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
                   ))}
                 </div>
               </section>
@@ -86,7 +87,7 @@ export default async function ArtistProfilePage({ params }) {
               <section className="mt-8 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   {pastVisits.map((visit) => (
-                    <VisitCard key={visit.id} visit={visit} isPast author={profile} />
+                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
                   ))}
                 </div>
               </section>

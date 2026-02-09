@@ -67,9 +67,9 @@ export default async function ArtistProfileLayout({ children, params }) {
             </div>
           </div>
         </section>
-        <div className="relative w-full lg:w-1/2 lg:pt-12">
+        <div className="relative w-full lg:w-1/2 lg:pt-14">
           <div className="absolute inset-0 -z-20 bg-white dark:bg-slate-950" />
-          <div className="px-6 pt-6 sm:px-8 lg:px-10 lg:sticky lg:top-16 lg:z-20 lg:bg-white/90 lg:backdrop-blur dark:lg:bg-slate-950/90">
+          <div className="px-6 pt-6 sm:px-8 lg:px-10">
             <ArtistTabs basePath={`/artists/${handle}`} />
           </div>
           {children}
