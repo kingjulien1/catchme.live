@@ -42,17 +42,18 @@ export default async function ArtistProfilePage({ params }) {
   const latestLiveEnd = liveVisits[0]?.visit_end_time ? new Date(liveVisits[0].visit_end_time) : null;
 
   return (
-    <div className="relative w-full max-w-5xl px-4 pt-0 pb-20 mx-auto sm:px-6 sm:pt-8 lg:px-8">
+    <div className="relative w-full max-w-5xl px-6 pb-20 mx-auto sm:px-6 sm:pt-8 lg:px-8">
       <div className="relative z-10 space-y-6">
         {visits.length === 0 ? (
-          <div className="p-8 text-sm border border-dashed rounded-2xl border-slate-200 bg-white/80 text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
+          <div className="text-sm border border-dashed rounded-2xl border-slate-200 bg-white/80 text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
         ) : (
           <div className="space-y-10">
             {liveVisits.length > 0 ? (
               <section className="group space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
+                  <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Now Live</h2>
                   {liveVisits.map((visit) => (
-                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} isLive />
+                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
                   ))}
                 </div>
               </section>
@@ -72,6 +73,7 @@ export default async function ArtistProfilePage({ params }) {
             {upcomingVisits.length > 0 ? (
               <section className="mt-10 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
+                  <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Upcoming</h2>
                   {upcomingVisits.map((visit) => (
                     <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
                   ))}

@@ -2,8 +2,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { formatVisitDateRange, formatFollowers } from "@/lib/utils";
-import { Tag } from "lucide-react";
+import { Share2, Tag } from "lucide-react";
 import Link from "next/link";
+import HandleBadge from "@/components/handle-badge";
 
 const UNSPLASH_IMAGES = [
   "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
@@ -22,7 +23,7 @@ function hashString(value) {
   return hash;
 }
 
-export default function LiveCard({ visit, profile, linkedAccountsByVisit, isLive = false }) {
+export default function LiveCard({ visit, profile, linkedAccountsByVisit }) {
   const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
   const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
   const progressValue = (() => {
@@ -63,8 +64,8 @@ export default function LiveCard({ visit, profile, linkedAccountsByVisit, isLive
   const bannerImageUrl = UNSPLASH_IMAGES[Math.abs(hashString(String(visit.id || destinationSlug))) % UNSPLASH_IMAGES.length];
 
   return (
-    <Card key={visit.id} className="group/livecard max-h-[420px] overflow-hidden rounded-[28px] border-0 bg-slate-700/80 p-0 shadow-lg shadow-black/15">
-      <div className="relative aspect-[3/4] h-full max-h-[420px] w-full bg-slate-700/70 dark:bg-slate-800/60">
+    <Card key={visit.id} className="group/livecard max-h-[380px] overflow-hidden rounded-[28px] border-0 bg-slate-700/80 p-0 shadow-lg shadow-black/15 sm:max-h-[420px]">
+      <div className="relative aspect-[3/4] h-full max-h-[380px] w-full bg-slate-700/70 dark:bg-slate-800/60 sm:max-h-[420px]">
         {bannerImageUrl ? (
           <div className="absolute inset-0 overflow-hidden">
             <img src={bannerImageUrl} alt={`${destinationHandle} banner`} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/livecard:scale-[1.18]" />
@@ -84,53 +85,52 @@ export default function LiveCard({ visit, profile, linkedAccountsByVisit, isLive
             </Link>
           </div>
         </div>
-        <div className="absolute right-5 top-5 flex items-center gap-2">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/90 backdrop-blur">
-            <span className="inline-flex h-4 w-4 items-center justify-center text-white/90">
-              <Tag className="h-3 w-3" />
-            </span>
-            {visit.visit_type || "Residency"}
-          </div>
-          {isLive ? (
-            <div className="inline-flex items-center gap-2 rounded-full bg-black/85 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-              Live
-            </div>
-          ) : null}
-        </div>
-        <div className="absolute right-5 top-14 flex items-center">
-          {visibleAvatars.map((account, index) => (
-            <Link key={`${account.slug}-${index}`} href={`/artists/${account.slug}`} aria-label={`Open ${account.slug}`} className="-ml-2 first:ml-0">
-              <Avatar className="h-9 w-9 border-2 border-white/80 bg-slate-800 text-slate-200 shadow-md">
-                <AvatarImage src={account.image || undefined} alt={account.handle} className="object-cover" />
-                <AvatarFallback className="text-[10px] font-semibold text-slate-200">@</AvatarFallback>
-              </Avatar>
-            </Link>
-          ))}
-          {remainingAvatars > 0 ? <div className="-ml-2 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/80 bg-slate-900/80 text-xs font-semibold text-white/90 shadow-md">+{remainingAvatars}</div> : null}
-        </div>
+        <button
+          type="button"
+          aria-label="Share visit"
+          className="absolute right-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25"
+        >
+          <Share2 className="h-4 w-4" />
+        </button>
         <div className="absolute left-5 right-5 top-24">
           <h3 className="block text-4xl font-semibold text-white drop-shadow-sm">"{visit.destination_name || destinationHandle}"</h3>
-          <Link href={`/artists/${destinationSlug}`} className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-base font-semibold text-white/90 backdrop-blur">
-            <Avatar className="h-7 w-7 border border-white/20">
-              <AvatarImage src={avatarUrl || undefined} alt={destinationHandle} className="object-cover" />
-              <AvatarFallback className="text-[10px] font-semibold text-slate-200">@</AvatarFallback>
-            </Avatar>
-            @{destinationSlug}
-          </Link>
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <HandleBadge href={`/artists/${destinationSlug}`} avatarUrl={avatarUrl} alt={destinationHandle} handle={`@${destinationSlug}`} />
+            {visibleAvatars.length ? (
+              <div className="flex items-center">
+                {visibleAvatars.map((account, index) => (
+                  <Link key={`${account.slug}-${index}`} href={`/artists/${account.slug}`} aria-label={`Open ${account.slug}`} className="-ml-2 first:ml-0">
+                    <Avatar className="h-9 w-9 border-2 border-white/80 bg-slate-800 text-slate-200 shadow-md">
+                      <AvatarImage src={account.image || undefined} alt={account.handle} className="object-cover" />
+                      <AvatarFallback className="text-[10px] font-semibold text-slate-200">@</AvatarFallback>
+                    </Avatar>
+                  </Link>
+                ))}
+                {remainingAvatars > 0 ? <div className="-ml-2 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/80 bg-slate-900/80 text-xs font-semibold text-white/90 shadow-md">+{remainingAvatars}</div> : null}
+              </div>
+            ) : null}
+          </div>
+          <div className="mt-3 flex items-center gap-2">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/90 backdrop-blur">
+              <span className="inline-flex h-4 w-4 items-center justify-center text-white/90">
+                <Tag className="h-3 w-3" />
+              </span>
+              {visit.visit_type || "Residency"}
+            </div>
+          </div>
         </div>
-        <div className="absolute bottom-6 left-5 text-white/85">
+        <div className="absolute bottom-8 left-5 text-white/85">
           <div className="text-[11px] font-semibold uppercase tracking-wide sm:text-base">Duration</div>
           <div className="text-lg font-semibold sm:text-2xl">{formatVisitDateRange(start, end)}</div>
         </div>
         {visitLocation ? (
-          <div className="absolute bottom-6 right-5 text-right text-white/85">
+          <div className="absolute bottom-8 right-5 text-right text-white/85">
             <div className="text-[11px] font-semibold uppercase tracking-wide sm:text-base">Location</div>
             <div className="text-lg font-semibold sm:text-2xl">{visitLocation}</div>
           </div>
         ) : null}
         {progressValue !== null ? (
-          <div className="absolute bottom-3 left-4 right-4">
+          <div className="absolute bottom-4 left-4 mx-1 right-4">
             <Progress value={progressValue} className="h-2 rounded-full bg-white/15" indicatorClassName="bg-white/70" />
           </div>
         ) : null}
