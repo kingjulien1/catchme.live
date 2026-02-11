@@ -42,7 +42,7 @@ export default async function ArtistProfilePage({ params }) {
   const latestLiveEnd = liveVisits[0]?.visit_end_time ? new Date(liveVisits[0].visit_end_time) : null;
 
   return (
-    <div className="relative w-full max-w-5xl px-6 pb-20 mx-auto sm:px-6 sm:pt-8 lg:px-8">
+    <div className="relative w-full max-w-5xl px-6 pb-20 mx-auto sm:px-6 sm:pt-4 lg:px-8">
       <div className="relative z-10 space-y-6">
         {visits.length === 0 ? (
           <div className="text-sm border border-dashed rounded-2xl border-slate-200 bg-white/80 text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
@@ -50,33 +50,25 @@ export default async function ArtistProfilePage({ params }) {
           <div className="space-y-10">
             {liveVisits.length > 0 ? (
               <section className="group space-y-4">
-                <div className="w-full max-w-4xl mx-auto space-y-6">
+                <div className="w-full max-w-4xl mx-auto space-y-4">
                   <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Now Live</h2>
-                  {liveVisits.map((visit) => (
-                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
-                  ))}
+                  <div className="grid gap-6 2xl:grid-cols-2">
+                    {liveVisits.map((visit) => (
+                      <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
+                    ))}
+                  </div>
                 </div>
               </section>
-            ) : null}
-            {liveVisits.length > 0 && upcomingVisits.length > 0 ? (
-              <div className="relative my-8">
-                <Separator />
-                {nextUpcomingStart ? (
-                  <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-300">
-                    <ChevronUp className="h-3 w-3" />
-                    <VisitCountdown start={nextUpcomingStart} className="text-center text-gray-700 dark:text-gray-300 sm:text-center" />
-                    <ChevronUp className="h-3 w-3" />
-                  </div>
-                ) : null}
-              </div>
             ) : null}
             {upcomingVisits.length > 0 ? (
               <section className="mt-10 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
                   <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Upcoming</h2>
-                  {upcomingVisits.map((visit) => (
-                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
-                  ))}
+                  <div className="grid gap-6 2xl:grid-cols-2">
+                    {upcomingVisits.map((visit) => (
+                      <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
+                    ))}
+                  </div>
                 </div>
               </section>
             ) : null}
@@ -88,9 +80,11 @@ export default async function ArtistProfilePage({ params }) {
             {pastVisits.length > 0 ? (
               <section className="mt-8 space-y-4">
                 <div className="w-full max-w-4xl mx-auto space-y-6">
-                  {pastVisits.map((visit) => (
-                    <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
-                  ))}
+                  <div className="grid gap-6 2xl:grid-cols-2">
+                    {pastVisits.map((visit) => (
+                      <LiveCard key={visit.id} visit={visit} profile={profile} linkedAccountsByVisit={linkedAccountsByVisit} />
+                    ))}
+                  </div>
                 </div>
               </section>
             ) : null}

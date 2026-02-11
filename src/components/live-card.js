@@ -6,22 +6,14 @@ import { Share2, Tag } from "lucide-react";
 import Link from "next/link";
 import HandleBadge from "@/components/handle-badge";
 
-const UNSPLASH_IMAGES = [
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1495567720989-cebdbdd97913?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80",
+const UNSPLASH_TATTOO_IMAGES = [
+  "https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1562962230-16e4623d36e6?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1605647533135-51b5906087d0?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1542727365-19732a80dcfd?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1562379825-415aea84ebcf?auto=format&fit=crop&w=1200&q=80",
 ];
-
-function hashString(value) {
-  let hash = 0;
-  for (let i = 0; i < value.length; i += 1) {
-    hash = (hash << 5) - hash + value.charCodeAt(i);
-    hash |= 0;
-  }
-  return hash;
-}
 
 export default function LiveCard({ visit, profile, linkedAccountsByVisit }) {
   const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
@@ -61,7 +53,7 @@ export default function LiveCard({ visit, profile, linkedAccountsByVisit }) {
   const remainingAvatars = Math.max(0, avatarStack.length - visibleAvatars.length);
 
   // const bannerImageUrl = visit.destination_banner_image_url || null;
-  const bannerImageUrl = UNSPLASH_IMAGES[Math.abs(hashString(String(visit.id || destinationSlug))) % UNSPLASH_IMAGES.length];
+  const bannerImageUrl = `${UNSPLASH_TATTOO_IMAGES[Math.floor(Math.random() * UNSPLASH_TATTOO_IMAGES.length)]}&sig=${Date.now()}`;
 
   return (
     <Card key={visit.id} className="group/livecard max-h-[380px] overflow-hidden rounded-[28px] border-0 bg-slate-700/80 p-0 shadow-lg shadow-black/15 sm:max-h-[420px]">
@@ -75,14 +67,16 @@ export default function LiveCard({ visit, profile, linkedAccountsByVisit }) {
           <div className="absolute inset-0 bg-linear-to-br from-slate-400 via-pink-400 to-slate-600 transition-all duration-500 ease-out group-hover/livecard:from-slate-300 group-hover/livecard:via-pink-300 group-hover/livecard:to-slate-700 dark:from-slate-800 dark:via-pink-700 dark:to-slate-800 dark:group-hover/livecard:from-slate-700 dark:group-hover/livecard:via-pink-600 dark:group-hover/livecard:to-slate-900" />
         ) : null}
         <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute left-5 top-5 h-16 w-16 overflow-hidden rounded-2xl bg-white/15 p-1">
-          <div className="h-full w-full overflow-hidden rounded-[18px] bg-white/95 ring-[3px] ring-white/90 shadow-md">
-            <Link href={`/artists/${destinationSlug}`} aria-label={`Open ${destinationSlug}`} className="block h-full w-full">
-              <Avatar className="h-full w-full rounded-[18px]">
-                <AvatarImage src={avatarUrl || undefined} alt={destinationHandle} className="object-cover" />
-                <AvatarFallback className="text-xs font-semibold text-slate-700">@</AvatarFallback>
-              </Avatar>
-            </Link>
+        <div className="absolute left-5 top-5">
+          <div className="h-16 w-16 overflow-hidden rounded-2xl bg-white/15 p-1">
+            <div className="h-full w-full overflow-hidden rounded-[18px] bg-white/95 ring-[3px] ring-white/90 shadow-md">
+              <Link href={`/artists/${destinationSlug}`} aria-label={`Open ${destinationSlug}`} className="block h-full w-full">
+                <Avatar className="h-full w-full rounded-[18px]">
+                  <AvatarImage src={avatarUrl || undefined} alt={destinationHandle} className="object-cover" />
+                  <AvatarFallback className="text-xs font-semibold text-slate-700">@</AvatarFallback>
+                </Avatar>
+              </Link>
+            </div>
           </div>
         </div>
         <button
@@ -94,21 +88,8 @@ export default function LiveCard({ visit, profile, linkedAccountsByVisit }) {
         </button>
         <div className="absolute left-5 right-5 top-24">
           <h3 className="block text-4xl font-semibold text-white drop-shadow-sm">"{visit.destination_name || destinationHandle}"</h3>
-          <div className="mt-4 flex items-center justify-between gap-3">
+          <div className="mt-4 flex items-center gap-3">
             <HandleBadge href={`/artists/${destinationSlug}`} avatarUrl={avatarUrl} alt={destinationHandle} handle={`@${destinationSlug}`} />
-            {visibleAvatars.length ? (
-              <div className="flex items-center">
-                {visibleAvatars.map((account, index) => (
-                  <Link key={`${account.slug}-${index}`} href={`/artists/${account.slug}`} aria-label={`Open ${account.slug}`} className="-ml-2 first:ml-0">
-                    <Avatar className="h-9 w-9 border-2 border-white/80 bg-slate-800 text-slate-200 shadow-md">
-                      <AvatarImage src={account.image || undefined} alt={account.handle} className="object-cover" />
-                      <AvatarFallback className="text-[10px] font-semibold text-slate-200">@</AvatarFallback>
-                    </Avatar>
-                  </Link>
-                ))}
-                {remainingAvatars > 0 ? <div className="-ml-2 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/80 bg-slate-900/80 text-xs font-semibold text-white/90 shadow-md">+{remainingAvatars}</div> : null}
-              </div>
-            ) : null}
           </div>
           <div className="mt-3 flex items-center gap-2">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/90 backdrop-blur">
@@ -120,13 +101,13 @@ export default function LiveCard({ visit, profile, linkedAccountsByVisit }) {
           </div>
         </div>
         <div className="absolute bottom-8 left-5 text-white/85">
-          <div className="text-[11px] font-semibold uppercase tracking-wide sm:text-base">Duration</div>
-          <div className="text-lg font-semibold sm:text-2xl">{formatVisitDateRange(start, end)}</div>
+          <div className="text-[8px] font-semibold uppercase tracking-wide sm:text-xs">Duration</div>
+          <div className="text-[13px] font-semibold sm:text-lg">{formatVisitDateRange(start, end)}</div>
         </div>
         {visitLocation ? (
           <div className="absolute bottom-8 right-5 text-right text-white/85">
-            <div className="text-[11px] font-semibold uppercase tracking-wide sm:text-base">Location</div>
-            <div className="text-lg font-semibold sm:text-2xl">{visitLocation}</div>
+            <div className="text-[8px] font-semibold uppercase tracking-wide sm:text-xs">Location</div>
+            <div className="text-[13px] font-semibold sm:text-lg">{visitLocation}</div>
           </div>
         ) : null}
         {progressValue !== null ? (

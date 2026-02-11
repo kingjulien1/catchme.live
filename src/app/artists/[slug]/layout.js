@@ -37,15 +37,15 @@ export default async function ArtistProfileLayout({ children, params }) {
   return (
     <div className="w-full pb-16">
       <div className="w-full lg:flex">
-        <section className="w-full min-h-screen bg-white pt-20 text-slate-900 lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:overflow-hidden dark:bg-slate-950 dark:text-slate-100">
-          <div className="w-full h-screen px-6 sm:px-6 lg:px-8 lg:pt-0 lg:pb-10 flex flex-col gap-6">
+        <section className="w-full min-h-screen bg-white pt-20 text-slate-900 lg:sticky lg:top-0 lg:h-screen lg:w-[42rem] lg:flex-none lg:overflow-hidden dark:bg-slate-950 dark:text-slate-100">
+          <div className="mx-auto w-full max-w-2xl h-screen px-6 sm:px-6 lg:px-8 lg:pt-0 lg:pb-10 flex flex-col gap-6">
             <BannerImage bannerUrl={bannerUrl} />
 
-            <div className="flex flex-1 flex-col gap-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <ProfileBanners bookingStatus={bookingStatus} location={profile.location} accountTypeLabel={accountTypeLabel} />
-                <ActionButtons className="hidden sm:flex" />
-              </div>
+              <div className="flex flex-1 flex-col gap-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <ProfileBanners bookingStatus={bookingStatus} location={profile.location} accountTypeLabel={accountTypeLabel} />
+                  {/* <ActionButtons className="hidden sm:flex" /> */}
+                </div>
               <div className="flex flex-col gap-4">
                 <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100">&quot;{displayName}&quot;</h1>
                 {profile.username ? <HandleBadge href={`/artists/${profile.username}`} avatarUrl={profile.profile_picture_url} alt={displayName} handle={`@${profile.username}`} variant="header" /> : null}
@@ -56,7 +56,7 @@ export default async function ArtistProfileLayout({ children, params }) {
             </div>
           </div>
         </section>
-        <div className="relative w-full lg:w-1/2 lg:pt-10">
+        <div className="relative w-full lg:flex-1 lg:pt-10">
           <div className="absolute inset-0 -z-20 bg-white dark:bg-slate-950" />
           <div className="px-6 lg:pt-6 sm:px-8 lg:px-10">{/* <ArtistTabs basePath={`/artists/${handle}`} /> */}</div>
           {children}
@@ -72,14 +72,14 @@ function ActionButtons({ className = "" }) {
       <button
         type="button"
         aria-label="Share profile"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25"
       >
         <Share2 className="h-4 w-4" />
       </button>
       <button
         type="button"
         aria-label="Share Profile"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25"
       >
         <SquareArrowOutUpRight className="h-4 w-4" />
       </button>
@@ -145,11 +145,11 @@ function BannerImage({ bannerUrl }) {
         <div className="h-full w-full bg-linear-to-br from-slate-200 via-slate-100 to-slate-300 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900" />
       )}
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-black/10 via-transparent to-black/5 dark:from-black/30 dark:to-black/20" />
-      <Badge className="absolute left-4 top-4 border border-slate-200 bg-white/90 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
-        <Stars className="h-3.5 w-3.5 mr-1 text-yellow-500" />
+      <Badge className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/90 backdrop-blur">
+        <Stars className="h-3 w-3 text-yellow-300" />
         Featured Instagram Posts
       </Badge>
-      <ActionButtons className="absolute top-3 right-3 sm:hidden" />
+      <ActionButtons className="absolute top-3 right-3" />
     </div>
   );
 }
