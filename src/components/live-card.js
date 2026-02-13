@@ -1,122 +1,133 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { formatVisitDateRange, formatFollowers } from "@/lib/utils";
-import { Share2, Tag } from "lucide-react";
-import Link from "next/link";
-import HandleBadge from "@/components/handle-badge";
+import { Avatar, AvatarFallback, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
+import { format } from "date-fns";
+import { formatVisitType } from "@/lib/utils";
 
-const UNSPLASH_TATTOO_IMAGES = [
-  "https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1562962230-16e4623d36e6?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1605647533135-51b5906087d0?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1542727365-19732a80dcfd?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1562379825-415aea84ebcf?auto=format&fit=crop&w=1200&q=80",
+const UNSPLASH_AVATARS = [
+  "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
 ];
 
-export default function LiveCard({ visit, profile, linkedAccountsByVisit }) {
-  const start = visit.visit_start_time ? new Date(visit.visit_start_time) : null;
-  const end = visit.visit_end_time ? new Date(visit.visit_end_time) : null;
-  const progressValue = (() => {
-    if (!start || !end) return null;
-    const total = end.getTime() - start.getTime();
-    if (total <= 0) return 0;
-    const elapsed = Date.now() - start.getTime();
-    const raw = (elapsed / total) * 100;
-    return Math.max(0, Math.min(100, raw));
-  })();
-  const destinationHandle = visit.destination_username || visit.destination_instagram_handle || profile.username || "artist";
-  const avatarUrl = visit.destination_profile_picture_url || profile.profile_picture_url || null;
-  const accountTypeLabel = (visit.destination_account_type || profile.account_type || "Artist").replace(/_/g, " ");
-  const followersLabel = visit.destination_followers_count ? `${formatFollowers(visit.destination_followers_count)} followers` : null;
-  const bioSnippet = visit.destination_bio || profile.bio || null;
-  const destinationSlug = destinationHandle.replace(/^@/, "");
-  const visitLocation = visit.visit_location || profile.location || null;
-  const linkedAccounts = linkedAccountsByVisit.get(visit.id) || [];
-  const partnerAvatars = linkedAccounts
-    .map((account) => ({
-      handle: account.account_handle || account.username || "partner",
-      image: account.profile_picture_url || null,
-      slug: (account.account_handle || account.username || "").replace(/^@/, ""),
-    }))
-    .filter((account) => account.slug);
-  const avatarStack = [
-    {
-      handle: destinationHandle,
-      image: avatarUrl,
-      slug: destinationSlug,
-    },
-    ...partnerAvatars,
-  ];
-  const visibleAvatars = avatarStack.slice(0, 4);
-  const remainingAvatars = Math.max(0, avatarStack.length - visibleAvatars.length);
+const hashSeed = (value) =>
+  String(value || "")
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
 
-  // const bannerImageUrl = visit.destination_banner_image_url || null;
-  const bannerImageUrl = `${UNSPLASH_TATTOO_IMAGES[Math.floor(Math.random() * UNSPLASH_TATTOO_IMAGES.length)]}&sig=${Date.now()}`;
+const pickImage = (list, seed) => {
+  const index = Math.abs(hashSeed(seed)) % list.length;
+  return `${list[index]}&sig=${Math.floor(Math.random() * 10000)}`;
+};
+
+function coerceVisitDate(value) {
+  if (!value) return null;
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+  if (typeof value === "string" && value.includes(" ") && !value.includes("T")) {
+    const normalized = value.replace(" ", "T");
+    const normalizedDate = new Date(normalized);
+    if (!Number.isNaN(normalizedDate.getTime())) return normalizedDate;
+  }
+  const asDate = new Date(value);
+  if (!Number.isNaN(asDate.getTime())) return asDate;
+  const asNumber = typeof value === "string" ? Number(value) : value;
+  if (Number.isNaN(asNumber)) return null;
+  const numericMs = asNumber < 10_000_000_000 ? asNumber * 1000 : asNumber;
+  const numericDate = new Date(numericMs);
+  return Number.isNaN(numericDate.getTime()) ? null : numericDate;
+}
+
+function formatShortTime(value) {
+  if (!value) return "--";
+  return format(value, "h:mm a").replace(" ", "\u202F");
+}
+
+function formatShortDay(value) {
+  if (!value) return "--";
+  return format(value, "MMM d");
+}
+
+export default function LiveCard({ visit, linkedAccountsByVisit }) {
+  const startSource = visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start;
+  const endSource = visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end;
+  const start = coerceVisitDate(startSource);
+  const end = coerceVisitDate(endSource);
+  const now = new Date();
+  const isLive = Boolean(start && start <= now && (!end || end >= now));
+  const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
+  const title = `@${String(handleBase).replace(/^@/, "")}`;
+  const location = visit.visit_location || "Location TBA";
+  const seedBase = `${visit.id || title}-${Date.now()}`;
+  const avatarUrl = pickImage(UNSPLASH_AVATARS, seedBase);
+  const timeLabel = formatVisitType(visit.visit_type);
+  const destinationAvatarUrl = visit.destination_profile_picture_url || null;
+  const mapLinkedAccounts = linkedAccountsByVisit?.get?.(visit.id) || [];
+  const rawLinkedAccounts = Array.isArray(visit.linked_accounts) ? visit.linked_accounts : Array.isArray(visit.partner_accounts) ? visit.partner_accounts : Array.isArray(visit.linkedAccounts) ? visit.linkedAccounts : [];
+  const linkedAccounts = [...rawLinkedAccounts, ...mapLinkedAccounts]
+    .map((account) => ({
+      handle: account.account_handle || account.username || account.handle || "account",
+      image: account.profile_picture_url || account.avatar_url || account.image || null,
+    }))
+    .filter((account) => account.handle || account.image);
+  const stackAccounts = [{ handle: handleBase, image: destinationAvatarUrl }, ...linkedAccounts]
+    .map((account, index) => ({
+      ...account,
+      image: account.image || pickImage(UNSPLASH_AVATARS, `${seedBase}-stack-${account.handle}-${index}`),
+    }))
+    .filter((account, index, array) => {
+      const signature = `${account.handle}-${account.image || ""}`;
+      return array.findIndex((item) => `${item.handle}-${item.image || ""}` === signature) === index;
+    });
+  const visibleStackAccounts = stackAccounts.slice(0, 2);
+  const remainingStackCount = Math.max(0, stackAccounts.length - visibleStackAccounts.length);
 
   return (
-    <Card key={visit.id} className="group/livecard max-h-[380px] overflow-hidden rounded-[28px] border-0 bg-slate-700/80 p-0 shadow-lg shadow-black/15 sm:max-h-[420px]">
-      <div className="relative aspect-[3/4] h-full max-h-[380px] w-full bg-slate-700/70 dark:bg-slate-800/60 sm:max-h-[420px]">
-        {bannerImageUrl ? (
-          <div className="absolute inset-0 overflow-hidden">
-            <img src={bannerImageUrl} alt={`${destinationHandle} banner`} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/livecard:scale-[1.18]" />
-          </div>
-        ) : null}
-        {!bannerImageUrl ? (
-          <div className="absolute inset-0 bg-linear-to-br from-slate-400 via-pink-400 to-slate-600 transition-all duration-500 ease-out group-hover/livecard:from-slate-300 group-hover/livecard:via-pink-300 group-hover/livecard:to-slate-700 dark:from-slate-800 dark:via-pink-700 dark:to-slate-800 dark:group-hover/livecard:from-slate-700 dark:group-hover/livecard:via-pink-600 dark:group-hover/livecard:to-slate-900" />
-        ) : null}
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute left-5 top-5">
-          <div className="h-16 w-16 overflow-hidden rounded-2xl bg-white/15 p-1">
-            <div className="h-full w-full overflow-hidden rounded-[18px] bg-white/95 ring-[3px] ring-white/90 shadow-md">
-              <Link href={`/artists/${destinationSlug}`} aria-label={`Open ${destinationSlug}`} className="block h-full w-full">
-                <Avatar className="h-full w-full rounded-[18px]">
-                  <AvatarImage src={avatarUrl || undefined} alt={destinationHandle} className="object-cover" />
-                  <AvatarFallback className="text-xs font-semibold text-slate-700">@</AvatarFallback>
-                </Avatar>
-              </Link>
-            </div>
-          </div>
+    <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-5">
+      <div className="flex w-full items-start justify-between gap-4 text-base font-medium tracking-[0.04em] text-slate-500 dark:text-white/60 sm:w-auto sm:flex-col sm:items-start sm:justify-start sm:gap-1 sm:text-[13px]">
+        <div className="font-semibold text-slate-700 dark:text-white/90 whitespace-nowrap">
+          {formatShortDay(start)} {formatShortTime(start)}
         </div>
-        <button
-          type="button"
-          aria-label="Share visit"
-          className="absolute right-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25"
-        >
-          <Share2 className="h-4 w-4" />
-        </button>
-        <div className="absolute left-5 right-5 top-24">
-          <h3 className="block text-4xl font-semibold text-white drop-shadow-sm">"{visit.destination_name || destinationHandle}"</h3>
-          <div className="mt-4 flex items-center gap-3">
-            <HandleBadge href={`/artists/${destinationSlug}`} avatarUrl={avatarUrl} alt={destinationHandle} handle={`@${destinationSlug}`} />
-          </div>
-          <div className="mt-3 flex items-center gap-2">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/90 backdrop-blur">
-              <span className="inline-flex h-4 w-4 items-center justify-center text-white/90">
-                <Tag className="h-3 w-3" />
-              </span>
-              {visit.visit_type || "Residency"}
-            </div>
-          </div>
-        </div>
-        <div className="absolute bottom-8 left-5 text-white/85">
-          <div className="text-[8px] font-semibold uppercase tracking-wide sm:text-xs">Duration</div>
-          <div className="text-[13px] font-semibold sm:text-lg">{formatVisitDateRange(start, end)}</div>
-        </div>
-        {visitLocation ? (
-          <div className="absolute bottom-8 right-5 text-right text-white/85">
-            <div className="text-[8px] font-semibold uppercase tracking-wide sm:text-xs">Location</div>
-            <div className="text-[13px] font-semibold sm:text-lg">{visitLocation}</div>
-          </div>
-        ) : null}
-        {progressValue !== null ? (
-          <div className="absolute bottom-4 left-4 mx-1 right-4">
-            <Progress value={progressValue} className="h-2 rounded-full bg-white/15" indicatorClassName="bg-white/70" />
+        {end ? (
+          <div className="text-right text-sm font-medium text-slate-400 dark:text-white/50 whitespace-nowrap sm:text-left">
+            {formatShortDay(end)} {formatShortTime(end)}
           </div>
         ) : null}
       </div>
-      <CardContent className="hidden" />
-    </Card>
+      <Card className="flex w-full flex-row items-center gap-3 rounded-full border border-slate-200 bg-white py-4 pl-4 pr-5 text-slate-900 shadow-sm dark:border-white/15 dark:bg-black dark:text-white">
+        <div className="flex items-center flex-row-reverse -space-x-4 space-x-reverse">
+          {remainingStackCount > 0 ? (
+            <AvatarGroupCount className="h-9 w-9 text-[10px] dark:border-white/15 dark:bg-white/10">
+              +{remainingStackCount}
+            </AvatarGroupCount>
+          ) : null}
+          {visibleStackAccounts.map((account, index) => (
+            <Avatar key={`${account.handle}-${index}`} className="h-9 w-9 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10">
+              <AvatarImage src={account.image || undefined} alt={account.handle} className="object-cover" />
+              <AvatarFallback className="text-[9px] font-semibold text-slate-500 dark:text-white/80">@</AvatarFallback>
+            </Avatar>
+          ))}
+          <Avatar className="h-12 w-12 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10 relative z-10">
+            <AvatarImage src={avatarUrl} alt={title} className="object-cover" />
+            <AvatarFallback className="text-[11px] font-semibold text-slate-500 dark:text-white/80">@</AvatarFallback>
+          </Avatar>
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-base font-semibold text-slate-900 dark:text-white">{title}</p>
+          <p className="truncate text-sm text-slate-500 dark:text-white/60">
+            {timeLabel} · {location}
+          </p>
+        </div>
+        {isLive ? (
+          <div className="ml-auto flex items-center">
+            <span className="relative flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500/70" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500" />
+            </span>
+          </div>
+        ) : null}
+      </Card>
+    </div>
   );
 }

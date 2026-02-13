@@ -23,7 +23,7 @@ export default async function NewVisitPage() {
       return `${dateValue}T${resolvedTime}`;
     };
     const visitStartValue = raw.visit_start_time || mergeDateTime(raw.visit_start_date, raw.visit_start_clock, "00:00");
-    const visitEndValue = raw.visit_end_time || mergeDateTime(raw.visit_end_date, raw.visit_end_clock);
+    const visitEndValue = raw.visit_end_time || mergeDateTime(raw.visit_end_date, raw.visit_end_clock, "23:59");
     const errors = {};
 
     const parseHandles = (value) =>

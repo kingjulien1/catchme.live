@@ -37,15 +37,15 @@ export default async function ArtistProfileLayout({ children, params }) {
   return (
     <div className="w-full pb-16">
       <div className="w-full lg:flex">
-        <section className="w-full min-h-screen bg-white pt-20 text-slate-900 lg:sticky lg:top-0 lg:h-screen lg:w-[42rem] lg:flex-none lg:overflow-hidden dark:bg-slate-950 dark:text-slate-100">
-          <div className="mx-auto w-full max-w-2xl h-screen px-6 sm:px-6 lg:px-8 lg:pt-0 lg:pb-10 flex flex-col gap-6">
-            <BannerImage bannerUrl={bannerUrl} />
+        <section className="w-full h-screen bg-white pt-20 text-slate-900 lg:sticky lg:top-0 lg:h-screen lg:w-[42rem] lg:flex-none lg:overflow-y-auto dark:bg-slate-950 dark:text-slate-100">
+          <div className="mx-auto w-full max-w-2xl h-full px-6 sm:px-6 lg:px-8 lg:pt-0 lg:pb-10 flex flex-col gap-6">
+            <BannerImage bannerUrl={bannerUrl} avatarUrl={profile.profile_picture_url} displayName={displayName} />
 
-              <div className="flex flex-1 flex-col gap-5">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <ProfileBanners bookingStatus={bookingStatus} location={profile.location} accountTypeLabel={accountTypeLabel} />
-                  {/* <ActionButtons className="hidden sm:flex" /> */}
-                </div>
+            <div className="flex flex1 flex-col gap-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <ProfileBanners bookingStatus={bookingStatus} location={profile.location} accountTypeLabel={accountTypeLabel} />
+                {/* <ActionButtons className="hidden sm:flex" /> */}
+              </div>
               <div className="flex flex-col gap-4">
                 <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-100">&quot;{displayName}&quot;</h1>
                 {profile.username ? <HandleBadge href={`/artists/${profile.username}`} avatarUrl={profile.profile_picture_url} alt={displayName} handle={`@${profile.username}`} variant="header" /> : null}
@@ -69,18 +69,10 @@ export default async function ArtistProfileLayout({ children, params }) {
 function ActionButtons({ className = "" }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <button
-        type="button"
-        aria-label="Share profile"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25"
-      >
+      <button type="button" aria-label="Share profile" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25">
         <Share2 className="h-4 w-4" />
       </button>
-      <button
-        type="button"
-        aria-label="Share Profile"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25"
-      >
+      <button type="button" aria-label="Share Profile" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/15 text-white/90 shadow-sm backdrop-blur transition hover:bg-white/25">
         <SquareArrowOutUpRight className="h-4 w-4" />
       </button>
     </div>
@@ -136,7 +128,7 @@ function LiveConnectionAvatars({ liveVisits, residentVisits }) {
   ) : null;
 }
 
-function BannerImage({ bannerUrl }) {
+function BannerImage({ bannerUrl, avatarUrl, displayName }) {
   return (
     <div className="relative h-[45%] min-h-[240px] overflow-hidden rounded-[28px] border border-slate-200 bg-slate-100 shadow-sm lg:h-auto lg:flex-1 dark:border-slate-800 dark:bg-slate-900">
       {bannerUrl ? (

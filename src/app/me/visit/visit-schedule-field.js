@@ -20,7 +20,7 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
   };
 
   const startDateTime = combineDateTime(startDate, startClock, "00:00");
-  const endDateTime = combineDateTime(endDate, endClock);
+  const endDateTime = combineDateTime(endDate, endClock, "23:59");
 
   const durationLabel = useMemo(() => {
     if (!startDateTime || !endDateTime) return "";
