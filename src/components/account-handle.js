@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { formatFollowers } from "@/lib/utils";
-import { Instagram, MapPin, Share2, SquareArrowOutUpRight, Tag, User } from "lucide-react";
+import { MapPin, Share2, SquareArrowOutUpRight, Tag, User } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 export default function AccountHandleClient({ username, name, profilePictureUrl, followersCount, accountType, mediaCount, bio, className = "" }) {

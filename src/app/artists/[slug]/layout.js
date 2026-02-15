@@ -1,17 +1,14 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import HandleBadge from "@/components/handle-badge";
+import ScrollRestorer from "@/components/scroll-restorer";
+import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { getProfileByUsername, getUserVisits } from "@/lib/db";
-import { formatFollowers } from "@/lib/utils";
-import { Instagram, MapPin, MoreHorizontal, Share2, Star, Tag, User } from "lucide-react";
-import { Stars } from "lucide-react";
-import { SquareArrowOutUpRight } from "lucide-react";
-import { Link2 } from "lucide-react";
-import ArtistTabs from "./artist-tabs";
+import { MapPin, Share2, SquareArrowOutUpRight, Stars, Tag, User } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import ArtistVisits from "./artist-visits";
 
-export default async function ArtistProfileLayout({ children, params }) {
+export default async function ArtistProfileLayout({ children, modal, params }) {
   const { slug } = await params;
   const handle = typeof slug === "string" ? slug.replace(/^@/, "") : "";
 
@@ -58,8 +55,11 @@ export default async function ArtistProfileLayout({ children, params }) {
         </section>
         <div className="relative w-full lg:flex-1 lg:pt-10">
           <div className="absolute inset-0 -z-20 bg-white dark:bg-slate-950" />
+          <ScrollRestorer storageKey={`artist-scroll-${handle}`} />
           <div className="px-6 lg:pt-6 sm:px-8 lg:px-10">{/* <ArtistTabs basePath={`/artists/${handle}`} /> */}</div>
+          <ArtistVisits visits={visits} artistSlug={handle} />
           {children}
+          {modal}
         </div>
       </div>
     </div>
@@ -120,10 +120,6 @@ function LiveConnectionAvatars({ liveVisits, residentVisits }) {
         ))}
         {remainingAvatars > 0 ? <AvatarGroupCount>+{remainingAvatars}</AvatarGroupCount> : null}
       </AvatarGroup>
-      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-        <Link2 className="inline-block h-3.5 w-3.5 mr-1" />
-        linked live accounts
-      </span>
     </div>
   ) : null;
 }

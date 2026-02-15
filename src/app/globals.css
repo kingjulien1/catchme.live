@@ -122,6 +122,11 @@
   body {
     @apply bg-background text-foreground;
   }
+  body.artist-body-lock {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+  }
 }
 
 @layer utilities {
