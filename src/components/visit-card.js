@@ -34,7 +34,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
         <article
           className={`relative overflow-hidden rounded-3xl border transition duration-300 ease-out shadow-[0_18px_40px_rgba(15,23,42,0.22)] dark:shadow-[0_18px_40px_rgba(0,0,0,0.55)] sm:shadow-none ${isOpen ? "p-5" : "px-5 pt-5 pb-5 sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20"} ${
             isLive
-              ? "border-transparent bg-black text-white shadow-[0_0_22px_rgba(16,185,129,0.12)] dark:bg-white dark:text-slate-900 dark:shadow-[0_0_18px_rgba(16,185,129,0.18)]"
+              ? "border-transparent bg-black text-white shadow-[0_0_22px_rgba(16,185,129,0.12)] dark:bg-gray-900 dark:text-white dark:shadow-[0_0_18px_rgba(16,185,129,0.18)]"
               : isUpcoming
                 ? "border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-black dark:text-slate-100"
                 : "border-slate-200 bg-gray-400/20 text-slate-900 dark:border-slate-800 dark:bg-gray-700/40  dark:text-slate-100"
@@ -75,7 +75,7 @@ function VisitStatusBadge({ isLive, isPast, visitType, location }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <span className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full border-0 bg-transparent px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] ${statusClass}`}>
-        {StatusIcon ? <StatusIcon className={cn("h-3 w-3 shrink-0", isLive && "text-rose-500")} /> : null}
+        {StatusIcon ? <StatusIcon className={cn("h-3 w-3 shrink-0", isLive && "text-fuchsia-500")} /> : null}
         {status}
       </span>
       {visitType ? (
@@ -86,7 +86,7 @@ function VisitStatusBadge({ isLive, isPast, visitType, location }) {
       ) : null}
       {location ? (
         <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border-0 bg-slate-100 px-2.5 py-1 text-[9px] font-semibold tracking-[0.18em] text-slate-600 dark:bg-slate-900/70 dark:text-slate-300">
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-500" aria-hidden="true" />
+          <span className={cn("h-1.5 w-1.5 rounded-full", isLive ? "bg-fuchsia-500" : "bg-slate-400 dark:bg-slate-500")} aria-hidden="true" />
           {location}
         </span>
       ) : null}
@@ -162,9 +162,7 @@ function VisitLocation({ isLive, isOpen, location }) {
     <div className="flex w-full items-center justify-between pb-2 text-center">
       <span
         className={`inline-flex h-8 w-8 items-center justify-center rounded-full border ${
-          isLive
-            ? "border-black/10 bg-white text-slate-900 dark:border-white/10 dark:bg-black dark:text-slate-100"
-            : "border-slate-200/60 bg-white/70 text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-300"
+          isLive ? "border-black/10 bg-white text-slate-900 dark:border-white/10 dark:bg-black dark:text-slate-100" : "border-slate-200/60 bg-white/70 text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-300"
         }`}
       >
         <Radio className="h-4 w-4" />
@@ -185,9 +183,7 @@ function VisitLocation({ isLive, isOpen, location }) {
         type="button"
         aria-label="Share visit"
         className={`inline-flex h-8 w-8 items-center justify-center rounded-full border ${
-          isLive
-            ? "border-black/10 bg-white text-slate-900 dark:border-white/10 dark:bg-black dark:text-slate-100"
-            : "border-slate-200/60 bg-white/70 text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-300"
+          isLive ? "border-black/10 bg-white text-slate-900 dark:border-white/10 dark:bg-black dark:text-slate-100" : "border-slate-200/60 bg-white/70 text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/60 dark:text-slate-300"
         }`}
       >
         <Share2 className="h-4 w-4" />
@@ -324,11 +320,7 @@ function VisitProgress({ isLive, isOpen, progressValue, start, end }) {
         <span className="font-semibold">{totalDuration ? `Total ${totalDuration}` : "Total"}</span>
         <VisitCountdown start={start} end={end} isLive className="text-white dark:text-black" />
       </div>
-      <Progress
-        value={progressValue}
-        className={`h-1.5 ${isLive ? "bg-white/15 dark:bg-slate-200/70" : "bg-slate-200/80 dark:bg-slate-800/80"}`}
-        indicatorClassName="bg-white shadow-[0_0_10px_rgba(255,255,255,0.6)] dark:bg-black dark:shadow-[0_0_10px_rgba(0,0,0,0.45)]"
-      />
+      <Progress value={progressValue} className={`h-1.5 ${isLive ? "bg-white/15 dark:bg-slate-200/70" : "bg-slate-200/80 dark:bg-slate-800/80"}`} indicatorClassName="bg-fuchsia-500 shadow-[0_0_10px_rgba(217,70,239,0.7)]" />
     </div>
   );
 }

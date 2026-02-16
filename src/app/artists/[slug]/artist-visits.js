@@ -26,6 +26,16 @@ function sortByStartAsc(a, b) {
   return aStart.getTime() - bStart.getTime();
 }
 
+function sortLiveVisits(a, b) {
+  const aEnd = coerceVisitDate(a.visit_end_time ?? a.end_time ?? a.end_date ?? a.end);
+  const bEnd = coerceVisitDate(b.visit_end_time ?? b.end_time ?? b.end_date ?? b.end);
+  const aHasEnd = Boolean(aEnd);
+  const bHasEnd = Boolean(bEnd);
+  if (aHasEnd !== bHasEnd) return aHasEnd ? -1 : 1;
+  if (aHasEnd && bHasEnd) return aEnd.getTime() - bEnd.getTime();
+  return sortByStartAsc(a, b);
+}
+
 function sortByEndDesc(a, b) {
   const aEnd = coerceVisitDate(a.visit_end_time ?? a.end_time ?? a.end_date ?? a.end) || coerceVisitDate(a.visit_start_time ?? a.start_time ?? a.start_date ?? a.start);
   const bEnd = coerceVisitDate(b.visit_end_time ?? b.end_time ?? b.end_date ?? b.end) || coerceVisitDate(b.visit_start_time ?? b.start_time ?? b.start_date ?? b.start);
@@ -67,7 +77,7 @@ export default function ArtistVisits({ visits = [], artistSlug }) {
     upcomingVisits.push(visit);
   });
 
-  liveVisits.sort(sortByStartAsc);
+  liveVisits.sort(sortLiveVisits);
   upcomingVisits.sort(sortByStartAsc);
   pastVisits.sort(sortByEndDesc);
 

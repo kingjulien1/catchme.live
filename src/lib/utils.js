@@ -110,3 +110,41 @@ export function formatShortDate(value) {
   if (!value) return "—";
   return format(value, "MMM d, yyyy");
 }
+
+export function resolveVisitById(visits, id) {
+  if (!id) return null;
+  const normalized = String(id);
+  return visits.find((visit) => String(visit.id) === normalized) || null;
+}
+
+export function getVisitParam() {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  return params.get("visit");
+}
+
+export function setVisitParam(visitId) {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  if (visitId) {
+    url.searchParams.set("visit", String(visitId));
+    window.history.pushState({ visitId }, "", url);
+  } else {
+    url.searchParams.delete("visit");
+    window.history.replaceState({}, "", url);
+  }
+}
+
+export function formatDurationMinutes(minutes) {
+  if (minutes == null) return "";
+  const safeMinutes = Math.max(0, Math.floor(minutes));
+  if (safeMinutes <= 0) return "0m";
+  const days = Math.floor(safeMinutes / 1440);
+  const hours = Math.floor((safeMinutes % 1440) / 60);
+  const mins = safeMinutes % 60;
+  const parts = [];
+  if (days) parts.push(`${days}d`);
+  if (hours) parts.push(`${hours}h`);
+  if (!days && !hours) parts.push(`${Math.max(1, mins)}m`);
+  return parts.join(" ");
+}

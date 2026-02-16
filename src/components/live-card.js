@@ -107,7 +107,7 @@ export default function LiveCard({ visit, artistSlug, onOpen }) {
           onOpen(visit);
         }}
       >
-        <Card className="flex w-full flex-row items-center gap-3 rounded-full border border-slate-200 bg-white py-4 pl-4 pr-5 text-slate-900 transition shadow-none hover:shadow-none dark:border-white/15 dark:bg-black dark:text-white">
+        <Card className="flex w-full flex-row items-center gap-3 rounded-full border border-slate-200 bg-white py-4 pl-4 pr-5 text-slate-900 transition shadow-none hover:shadow-none dark:border-white/15 dark:bg-gray-900/50 dark:text-white">
           <div className="flex items-center flex-row-reverse -space-x-4 space-x-reverse">
             {remainingStackCount > 0 ? <AvatarGroupCount className="h-9 w-9 text-[10px] dark:border-white/15 dark:bg-white/10">+{remainingStackCount}</AvatarGroupCount> : null}
             {visibleStackAccounts.map((account, index) => (
@@ -130,8 +130,8 @@ export default function LiveCard({ visit, artistSlug, onOpen }) {
           {isLive ? (
             <div className="ml-auto flex items-center">
               <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500/70" />
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-fuchsia-500/70" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-fuchsia-500" />
               </span>
             </div>
           ) : null}

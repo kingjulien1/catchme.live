@@ -14,7 +14,11 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[520px] max-h-[85vh] overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" showCloseButton={false}>
+        <DialogContent
+          className="sm:max-w-[520px] max-h-[85vh] rounded-[32px] overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          showCloseButton={false}
+          onOpenAutoFocus={(event) => event.preventDefault()}
+        >
           <DialogHeader>
             <VisuallyHidden>
               <DialogTitle>Visit Details</DialogTitle>
@@ -31,7 +35,7 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="w-full !top-[22vh] !bottom-0 !mt-0 !max-h-none rounded-t-[28px]">
+      <DrawerContent className="w-[calc(100%-1.5rem)] mx-auto !top-[22vh] !bottom-0 !mt-0 !max-h-none data-[vaul-drawer-direction=bottom]:!rounded-t-[56px] shadow-[0_-8px_36px_rgba(217,70,239,0.7),0_0_56px_rgba(217,70,239,0.45)]">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Visit Details</DrawerTitle>
           <DrawerDescription>Visit details drawer</DrawerDescription>

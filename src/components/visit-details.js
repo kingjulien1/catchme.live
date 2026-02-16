@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { differenceInMinutes, format } from "date-fns";
-import { ArrowRight, BadgeDollarSign, CalendarCheck, Check, ExternalLink, MapPin, ShieldAlert, Tag, Link } from "lucide-react";
+import { ArrowRight, BadgeDollarSign, CalendarCheck, Check, ExternalLink, MapPin, ShieldAlert, Tag, Link, Share2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { pickAvatarImage } from "@/lib/visit-media";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatVisitType } from "@/lib/utils";
+import { formatDurationMinutes, formatVisitType } from "@/lib/utils";
 
 function formatDate(value) {
   if (!value) return "TBD";
@@ -37,9 +37,20 @@ function formatYearLine(start, end) {
   return "";
 }
 
+function formatTimeOnly(value) {
+  if (!value) return "TBD";
+  return format(new Date(value), "h:mm");
+}
+
 function formatDateTime(value) {
   if (!value) return "TBD";
   return format(new Date(value), "MMM d, h:mm a");
+}
+
+function formatTimeRange(start, end) {
+  if (!start) return "TBD";
+  if (!end) return `${format(start, "h:mm")} - Open end`;
+  return `${format(start, "h:mm")} - ${format(end, "h:mm")}`;
 }
 
 function formatRemainingLabel(minutes) {
@@ -60,6 +71,8 @@ export default function VisitDetails({ visit }) {
   const now = new Date();
   const rangeLabel = formatRange(start, end);
   const yearLine = formatYearLine(start, end);
+  const isSameDay = Boolean(start && end && start.toDateString() === end.toDateString());
+  const timeRangeLine = isSameDay ? formatTimeRange(start, end) : null;
   const isLive = Boolean(start && end && start <= now && end >= now);
   const totalMinutes = start && end ? differenceInMinutes(end, start) : null;
   const elapsedMinutes = start ? differenceInMinutes(now, start) : null;
@@ -127,21 +140,13 @@ export default function VisitDetails({ visit }) {
 
   return (
     <div className="text-center">
-      <div className="flex items-center justify-center gap-3 pb-10 pt-6">
-        <div className="flex items-center gap-2">
-          {leftAccounts.map((account, index) => (
-            <Avatar key={`${account.handle}-${index}`} className="h-12 w-12 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10">
-              <AvatarImage src={account.image || undefined} alt={account.handle} className="object-cover" />
-              <AvatarFallback className="text-xs font-semibold text-slate-600 dark:text-white/80">{(account.handle || "?").replace(/^@/, "").slice(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-          ))}
-        </div>
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-500 dark:border-white/15 dark:text-white/70">
-          <Link className="h-4 w-4" />
-        </span>
-        <div className="flex items-center gap-2">
-          {rightAccounts.map((account, index) => (
-            <Avatar key={`${account.handle}-${index}`} className="h-12 w-12 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10">
+      <div className="flex flex-col items-center gap-4 pb-10 pt-6">
+        <button type="button" aria-label="Share visit" className="h-12 w-12 rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:text-slate-900 dark:border-white/15 dark:bg-slate-950 dark:text-white/80">
+          <Share2 className="h-5 w-5 mx-auto" />
+        </button>
+        <div className="flex items-center -space-x-5">
+          {[...leftAccounts.slice(0, 1), ...rightAccounts].map((account, index, array) => (
+            <Avatar key={`${account.handle}-${index}`} className="h-12 w-12 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10" style={{ zIndex: array.length - index }}>
               <AvatarImage src={account.image || undefined} alt={account.handle} className="object-cover" />
               <AvatarFallback className="text-xs font-semibold text-slate-600 dark:text-white/80">{(account.handle || "?").replace(/^@/, "").slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
@@ -152,30 +157,34 @@ export default function VisitDetails({ visit }) {
       <div className="grid gap-6">
         <div className="rounded-2xl border border-slate-200 bg-white/90 px-6 py-4 text-left dark:border-slate-800 dark:bg-slate-950/80">
           <div className="text-center">
-            <p className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{rangeLabel}</p>
-            {yearLine ? <p className="text-sm text-slate-500 dark:text-slate-400">{yearLine}</p> : null}
+            {isSameDay ? (
+              <>
+                <p className="text-3xl font-semibold text-slate-900 dark:text-slate-100">{timeRangeLine}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{formatDate(start)}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-3xl font-semibold text-slate-900 dark:text-slate-100">{rangeLabel}</p>
+                {yearLine ? <p className="text-sm text-slate-500 dark:text-slate-400">{yearLine}</p> : null}
+              </>
+            )}
           </div>
           <div className="mt-4">
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Start</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{formatDateTime(visit.visit_start_time)}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{isSameDay ? formatTimeOnly(visit.visit_start_time) : formatDateTime(visit.visit_start_time)}</p>
               </div>
-              <ArrowRight className="h-4 w-4 justify-self-center text-slate-400 dark:text-slate-500" />
+              <span className="justify-self-center text-sm font-semibold text-slate-400 dark:text-slate-500">-</span>
               <div className="text-right">
                 <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">End</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{visit.visit_end_time ? formatDateTime(visit.visit_end_time) : "Open end"}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{visit.visit_end_time ? (isSameDay ? formatTimeOnly(visit.visit_end_time) : formatDateTime(visit.visit_end_time)) : "Open end"}</p>
               </div>
             </div>
             {isLive ? (
               <div className="mt-4">
-                {remainingLabel ? (
-                  <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                    <span>{remainingLabel}</span>
-                    {totalMinutes ? <span>{Math.max(0, totalMinutes)}m total</span> : null}
-                  </div>
-                ) : null}
-                <Progress className="mt-2 h-2 bg-slate-200 dark:bg-slate-800" indicatorClassName="bg-slate-900 dark:bg-white" value={progressValue} />
+                {remainingLabel ? <div className="mt-5 flex items-center justify-center text-sm font-semibold text-fuchsia-600 dark:text-fuchsia-400">{remainingLabel}</div> : null}
+                <Progress className="mt-2 h-2 bg-slate-200 dark:bg-slate-800" indicatorClassName="bg-fuchsia-500" value={progressValue} />
               </div>
             ) : null}
           </div>
@@ -308,7 +317,7 @@ export default function VisitDetails({ visit }) {
                       </Avatar>
                       <div>
                         <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">@{(account.handle || "account").replace(/^@/, "")}</p>
-                        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Destination</p>
+                        <p className="text-sm text-slate-500 dark:text-white/60">Destination</p>
                       </div>
                     </div>
                     {isLive ? (
@@ -327,7 +336,7 @@ export default function VisitDetails({ visit }) {
                     </Avatar>
                     <div>
                       <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">@{(authorAccount.handle || "author").replace(/^@/, "")}</p>
-                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Author</p>
+                      <p className="text-sm text-slate-500 dark:text-white/60">Author</p>
                     </div>
                   </div>
                   {isLive ? (
@@ -346,12 +355,12 @@ export default function VisitDetails({ visit }) {
                       </Avatar>
                       <div>
                         <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">@{(account.handle || "account").replace(/^@/, "")}</p>
-                        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Partner</p>
+                        <p className="text-sm text-slate-500 dark:text-white/60">Partner</p>
                       </div>
                     </div>
                     {isLive ? (
                       <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                        <span className="h-2 w-2 animate-pulse rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)]" />
+                        <span className="h-2 w-2 animate-pulse rounded-full bg-fuchisa-500 shadow-[0_0_8px_rgba(239,68,68,0.7)]" />
                         <span>Live</span>
                       </div>
                     ) : null}

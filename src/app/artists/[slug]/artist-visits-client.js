@@ -4,30 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import LiveCard from "@/components/live-card";
 import { Separator } from "@/components/ui/separator";
 import VisitDialogOverlay from "@/components/visit-dialog-overlay";
-
-function resolveVisitById(visits, id) {
-  if (!id) return null;
-  const normalized = String(id);
-  return visits.find((visit) => String(visit.id) === normalized) || null;
-}
-
-function getVisitParam() {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.search);
-  return params.get("visit");
-}
-
-function setVisitParam(visitId) {
-  if (typeof window === "undefined") return;
-  const url = new URL(window.location.href);
-  if (visitId) {
-    url.searchParams.set("visit", String(visitId));
-    window.history.pushState({ visitId }, "", url);
-  } else {
-    url.searchParams.delete("visit");
-    window.history.replaceState({}, "", url);
-  }
-}
+import { getVisitParam, resolveVisitById, setVisitParam } from "@/lib/utils";
 
 export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVisits, pastVisits, artistSlug }) {
   const allVisits = useMemo(() => [...liveVisits, ...upcomingVisits, ...pastVisits], [liveVisits, upcomingVisits, pastVisits]);
