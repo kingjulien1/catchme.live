@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 
-export default function ThemeToggleButton() {
+export default function ThemeToggleButton({ className = "" }) {
   const { theme, setTheme, systemTheme } = useTheme();
   const mounted = useSyncExternalStore(
     () => () => {},
@@ -20,7 +20,7 @@ export default function ThemeToggleButton() {
       type="button"
       variant="ghost"
       size="icon"
-      className="h-9 w-9 rounded-full text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-slate-100"
+      className={`h-9 w-9 rounded-full text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-slate-100 ${className}`}
       aria-label="Toggle theme"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >

@@ -1,9 +1,9 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import HandleBadge from "@/components/handle-badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { format } from "date-fns";
-import { formatVisitType } from "@/lib/utils";
+import { formatVisitDateRange, formatVisitType } from "@/lib/utils";
 import Link from "next/link";
 
 const UNSPLASH_AVATARS = [
@@ -43,98 +43,87 @@ function coerceVisitDate(value) {
   return Number.isNaN(numericDate.getTime()) ? null : numericDate;
 }
 
-function formatShortTime(value) {
-  if (!value) return "--";
-  return format(value, "h:mm a").replace(" ", "\u202F");
-}
-
-function formatShortDay(value) {
-  if (!value) return "--";
-  return format(value, "MMM d");
-}
-
 export default function LiveCard({ visit, artistSlug, onOpen }) {
   const startSource = visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start;
   const endSource = visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end;
   const start = coerceVisitDate(startSource);
   const end = coerceVisitDate(endSource);
-  const now = new Date();
-  const isLive = Boolean(start && start <= now && (!end || end >= now));
   const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
   const title = `@${String(handleBase).replace(/^@/, "")}`;
-  const location = visit.visit_location || "Location TBA";
   const seedBase = `${visit.id || title}`;
   const avatarUrl = pickImage(UNSPLASH_AVATARS, seedBase);
   const timeLabel = formatVisitType(visit.visit_type);
+  const durationLabel = start ? formatVisitDateRange(start, end) : "TBD";
   const destinationAvatarUrl = visit.destination_profile_picture_url || null;
   const rawLinkedAccounts = Array.isArray(visit.linked_accounts) ? visit.linked_accounts : Array.isArray(visit.partner_accounts) ? visit.partner_accounts : Array.isArray(visit.linkedAccounts) ? visit.linkedAccounts : [];
-  const linkedAccounts = rawLinkedAccounts
+  const secondaryAccount = rawLinkedAccounts
     .map((account) => ({
-      handle: account.account_handle || account.username || account.handle || "account",
+      handle: account.account_handle || account.username || account.handle || null,
       image: account.profile_picture_url || account.avatar_url || account.image || null,
     }))
-    .filter((account) => account.handle || account.image);
-  const stackAccounts = [{ handle: handleBase, image: destinationAvatarUrl }, ...linkedAccounts]
-    .map((account, index) => ({
-      ...account,
-      image: account.image || pickImage(UNSPLASH_AVATARS, `${seedBase}-stack-${account.handle}-${index}`),
-    }))
-    .filter((account, index, array) => {
-      const signature = `${account.handle}-${account.image || ""}`;
-      return array.findIndex((item) => `${item.handle}-${item.image || ""}` === signature) === index;
-    });
-  const visibleStackAccounts = stackAccounts.slice(0, 2);
-  const remainingStackCount = Math.max(0, stackAccounts.length - visibleStackAccounts.length);
+    .find((account) => account.handle || account.image);
+  const secondaryHandle = secondaryAccount?.handle ? `@${secondaryAccount.handle.replace(/^@/, "")}` : title;
+  const secondaryAvatar = secondaryAccount?.image || pickImage(UNSPLASH_AVATARS, `${seedBase}-secondary`);
+  const bannerImage = visit.destination_banner_image_url || visit.banner_image_url || visit.cover_image_url || pickImage(UNSPLASH_AVATARS, `${seedBase}-banner`);
   const baseSlug = artistSlug || String(handleBase).replace(/^@/, "");
 
   return (
-    <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-5">
-      <div className="flex w-full items-end justify-between gap-4 text-base font-medium tracking-[0.04em] text-slate-500 dark:text-white/60 sm:w-auto sm:flex-col sm:items-start sm:justify-start sm:gap-1 sm:text-[13px]">
-        <div className="font-semibold text-slate-700 dark:text-white/90 whitespace-nowrap">
-          {formatShortDay(start)} {formatShortTime(start)}
-        </div>
-        {end ? (
-          <div className="text-right text-sm font-medium text-slate-400 dark:text-white/50 whitespace-nowrap sm:text-left">
-            {formatShortDay(end)} {formatShortTime(end)}
-          </div>
-        ) : null}
-      </div>
+    <div className="flex w-full flex-col gap-2">
       <Link
         href={`/artists/${baseSlug}/${visit.id}`}
-        className="w-full sm:max-w-2xl"
+        className="w-full"
         onClick={(e) => {
           e.preventDefault();
           onOpen(visit);
         }}
       >
-        <Card className="flex w-full flex-row items-center gap-3 rounded-full border border-slate-200 bg-white py-4 pl-4 pr-5 text-slate-900 transition shadow-none hover:shadow-none dark:border-white/15 dark:bg-gray-900/50 dark:text-white">
-          <div className="flex items-center flex-row-reverse -space-x-4 space-x-reverse">
-            {remainingStackCount > 0 ? <AvatarGroupCount className="h-9 w-9 text-[10px] dark:border-white/15 dark:bg-white/10">+{remainingStackCount}</AvatarGroupCount> : null}
-            {visibleStackAccounts.map((account, index) => (
-              <Avatar key={`${account.handle}-${index}`} className="h-9 w-9 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10">
-                <AvatarImage src={account.image || undefined} alt={account.handle} className="object-cover" />
+        <Card className="w-full overflow-hidden rounded-3xl border border-slate-200 bg-white text-slate-900 shadow-sm transition hover:shadow-md dark:border-white/10 dark:bg-gray-950 dark:text-white">
+          <div className="relative h-80 w-full bg-black">
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${bannerImage})` }} />
+            <div className="absolute inset-0 bg-black/35" />
+            <div className="relative z-10 flex h-full flex-col justify-between p-5">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-9 w-9 border border-white/30 bg-white/10">
+                  <AvatarImage src={destinationAvatarUrl || avatarUrl} alt={title} className="object-cover" />
+                  <AvatarFallback className="text-[10px] font-semibold text-white/80">@</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="truncate text-lg font-semibold text-white">{visit.visit_title || visit.title || visit.visit_name || timeLabel}</p>
+                </div>
+              </div>
+              <div className="text-left">
+                <p className="text-3xl font-semibold text-white">{durationLabel}</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-6 px-5 py-4">
+            <div className="flex items-center gap-3 text-slate-600 dark:text-white/70">
+              <Avatar className="h-8 w-8 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10">
+                <AvatarImage src={destinationAvatarUrl || avatarUrl} alt={title} className="object-cover" />
                 <AvatarFallback className="text-[9px] font-semibold text-slate-500 dark:text-white/80">@</AvatarFallback>
               </Avatar>
-            ))}
-            <Avatar className="h-12 w-12 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10 relative z-10">
-              <AvatarImage src={avatarUrl} alt={title} className="object-cover" />
-              <AvatarFallback className="text-[11px] font-semibold text-slate-500 dark:text-white/80">@</AvatarFallback>
-            </Avatar>
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-base font-semibold text-slate-900 dark:text-white">{title}</p>
-            <p className="truncate text-sm text-slate-500 dark:text-white/60">
-              {timeLabel} · {location}
-            </p>
-          </div>
-          {isLive ? (
-            <div className="ml-auto flex items-center">
-              <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-fuchsia-500/70" />
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-fuchsia-500" />
-              </span>
+              <HandleBadge
+                href={`/artists/${String(handleBase).replace(/^@/, "")}`}
+                avatarUrl={destinationAvatarUrl || avatarUrl}
+                alt={title}
+                handle={`@${String(handleBase).replace(/^@/, "")}`}
+                className="bg-transparent border-0 px-0 py-0 text-xs font-semibold text-slate-700 shadow-none dark:text-white/80"
+              />
             </div>
-          ) : null}
+            <div className="flex items-center gap-3 text-slate-500 dark:text-white/60">
+              <Avatar className="h-8 w-8 border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/10">
+                <AvatarImage src={secondaryAvatar} alt={secondaryHandle} className="object-cover" />
+                <AvatarFallback className="text-[9px] font-semibold text-slate-500 dark:text-white/80">@</AvatarFallback>
+              </Avatar>
+              <HandleBadge
+                href={`/artists/${secondaryHandle.replace(/^@/, "")}`}
+                avatarUrl={secondaryAvatar}
+                alt={secondaryHandle}
+                handle={secondaryHandle}
+                className="bg-transparent border-0 px-0 py-0 text-xs font-semibold text-slate-600 shadow-none dark:text-white/60"
+              />
+            </div>
+          </div>
         </Card>
       </Link>
     </div>

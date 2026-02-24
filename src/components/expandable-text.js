@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 
-export default function ExpandableText({ text, className = "", clampLines = 3 }) {
+export default function ExpandableText({ text, className = "", clampLines = 3, clampClass = "" }) {
   const [expanded, setExpanded] = useState(false);
   if (!text) return null;
 
   const shouldToggle = text.length > 140;
-  const clampClass = !expanded ? `line-clamp-${clampLines}` : "";
+  const resolvedClamp = !expanded ? (clampClass || `line-clamp-${clampLines}`) : "";
 
   return (
     <div className={`relative ${className}`}>
-      <p className={`${clampClass} ${shouldToggle ? "pr-16" : ""}`}>{text}</p>
+      <p className={`${resolvedClamp} ${shouldToggle ? "pr-16" : ""}`}>{text}</p>
       {shouldToggle ? (
         <button
           type="button"
