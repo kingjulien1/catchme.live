@@ -75,12 +75,12 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
   }, [allVisits]);
 
   return (
-    <div className="relative mx-auto w-full pb-12 sm:px-6 sm:pt-4 lg:px-8">
+    <div className="relative mx-auto w-full pb-12 sm:pt-4">
       <div className="relative z-10 space-y-6">
         {visitsCount === 0 || allVisits.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-white/80 p-4 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white/80 py-4 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
         ) : (
-          <div className="mx-auto w-full max-w-4xl space-y-5 sm:space-y-5">
+          <div className="mx-auto w-full space-y-5 sm:space-y-5">
             {allVisits.map((visit) => {
               const start = coerceVisitDate(visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start);
               const end = coerceVisitDate(visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end);

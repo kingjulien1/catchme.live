@@ -81,6 +81,23 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+html {
+  scrollbar-gutter: stable both-edges;
+  overflow-y: scroll;
+}
+
+body {
+  overflow-y: scroll;
+}
+
+body[data-scroll-locked] {
+  padding-right: 0 !important;
+}
+
+html[data-scroll-locked] {
+  padding-right: 0 !important;
+}
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

@@ -1,11 +1,12 @@
 import HandleBadge from "@/components/handle-badge";
-import ExpandableText from "@/components/expandable-text";
 import ScrollRestorer from "@/components/scroll-restorer";
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import { getProfileByUsername, getUserVisits } from "@/lib/db";
-import { BadgeCheck, MoreHorizontal, Share2, User } from "lucide-react";
+import { BadgeCheck, MoreHorizontal, User } from "lucide-react";
+import ShareDialog from "@/components/share-dialog";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import ArtistVisits from "./artist-visits";
 
 export default async function ArtistProfileLayout({ children, modal, params }) {
@@ -34,6 +35,14 @@ export default async function ArtistProfileLayout({ children, modal, params }) {
   const followersCount = typeof profile.followers_count === "number" ? profile.followers_count : 0;
   const followingCount = typeof profile.media_count === "number" ? profile.media_count : 0;
 
+  const headerList = await headers();
+  const forwardedProto = headerList.get("x-forwarded-proto");
+  const forwardedHost = headerList.get("x-forwarded-host");
+  const host = forwardedHost || headerList.get("host");
+  const protocol = forwardedProto || "https";
+  const baseUrl = host ? `${protocol}://${host}` : "https://catchme.live";
+  const profileUrl = `${baseUrl}/artists/${handle}`;
+
   return (
     <div className="w-full bg-white pb-16 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <section className="w-full border-b border-slate-200/70 bg-white dark:border-slate-800/80 dark:bg-slate-950">
@@ -51,13 +60,7 @@ export default async function ArtistProfileLayout({ children, modal, params }) {
                 </Avatar>
               </div>
               <div className="flex items-center gap-2 self-end">
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-                >
-                  <Share2 className="h-4 w-4" />
-                  Share
-                </button>
+                <ShareDialog url={profileUrl} />
                 <button
                   type="button"
                   aria-label="More options"
@@ -70,21 +73,9 @@ export default async function ArtistProfileLayout({ children, modal, params }) {
 
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
               <div className="max-w-2xl">
-                <h1 className="flex items-center gap-2 text-3xl font-semibold text-slate-900 sm:text-4xl dark:text-white">{displayName}</h1>
+                <h1 className="flex items-center gap-2 text-4xl font-semibold text-slate-900 sm:text-4xl dark:text-white">{displayName}</h1>
                 {profile.username ? <span className="text-base font-semibold text-slate-600 dark:text-slate-300">@{profile.username}</span> : null}
-                {profile.bio ? <ExpandableText text={profile.bio} className="text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300 py-4" clampClass="line-clamp-3 sm:line-clamp-3 lg:line-clamp-4" /> : null}
-                <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-slate-300">
-                  <div className="flex items-center gap-2">
-                    <LiveConnectionAvatars liveVisits={liveVisits} residentVisits={residentVisits} />
-                    <span className="font-semibold text-slate-900 dark:text-white">{connectedAccounts}</span>
-                    Total Visits
-                  </div>
-                  <div className="hidden h-5 w-px bg-slate-200 dark:bg-slate-800 sm:block" />
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-900 dark:text-white">{galleriesCount}</span>
-                    Live Now
-                  </div>
-                </div>
+                {profile.bio ? <p className="text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300 my-4 line-clamp-3 lg:line-clamp-4">{profile.bio}</p> : null}
               </div>
             </div>
           </div>
