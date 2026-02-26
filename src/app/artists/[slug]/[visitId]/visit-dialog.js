@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import VisitDetails from "@/components/visit-details";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import VisitDialogOverlay from "@/components/visit-dialog-overlay";
 import { formatShortDate, formatVisitDateRange, formatVisitType, getVisitParam, resolveVisitById, setVisitParam } from "@/lib/utils";
-import HandleBadge from "@/components/handle-badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const BANNER_IMAGES = [
@@ -23,7 +22,15 @@ const PROFILE_IMAGES = [
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
 ];
 
-const pickRandom = (list) => list[Math.floor(Math.random() * list.length)];
+const hashSeed = (value) =>
+  String(value || "")
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+const pickRandom = (list, seed) => {
+  const hash = Math.abs(hashSeed(seed));
+  return list[hash % list.length];
+};
 
 function coerceVisitDate(value) {
   if (!value) return null;
@@ -88,48 +95,47 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
               const location = visit.visit_location || visit.destination_name || visit.destination_instagram_handle || "Location TBA";
               const visitTypeLabel = formatVisitType(visit.visit_type);
               const dateRange = formatVisitDateRange(start, end);
-              const dateLabel = start ? start.toLocaleString("en-US", { month: "short", day: "numeric" }) : "TBD";
+              const dayLabel = start ? String(start.getDate()) : "—";
+              const monthLabel = start ? start.toLocaleString("en-US", { month: "short" }) : "";
               const yearLabel = start ? start.toLocaleString("en-US", { year: "numeric" }) : "";
               const now = new Date();
               const isLive = start && start <= now && (!end || end >= now);
               const cardTone = isLive ? "bg-green-400 dark:bg-green-600" : "bg-white/90 dark:bg-slate-950/80";
-              const liveTone = "text-green-400 dark:text-green-600";
-              const bannerImage = pickRandom(BANNER_IMAGES);
-              const profileImage = pickRandom(PROFILE_IMAGES);
+              const liveTone = "text-slate-900 dark:text-slate-100";
+              const badgeTone = isLive ? "border-white/20 bg-white/10 text-white/80 dark:border-slate-200 dark:bg-slate-100 dark:text-slate-900" : "border-slate-200 bg-slate-50 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70";
+              const bannerImage = pickRandom(BANNER_IMAGES, `banner-${visit.id}`);
+              const profileImage = pickRandom(PROFILE_IMAGES, `profile-${visit.id}`);
               const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
               const handle = `@${String(handleBase).replace(/^@/, "")}`;
-
               return (
                 <button key={visit.id} type="button" onClick={() => openVisit(visit)} className="group flex w-full flex-row items-center gap-3 text-left sm:gap-6">
-                  <div className="w-fit px-1 text-base font-semibold text-slate-900 sm:min-w-[110px] sm:text-lg dark:text-slate-100">
-                    <div>{dateLabel}</div>
-                    {yearLabel ? <div className="text-xs font-semibold text-slate-500 dark:text-white/60">{yearLabel}</div> : null}
+                  <div className="w-fit px-1 text-base font-semibold text-center text-slate-900 sm:min-w-[110px] sm:text-lg dark:text-slate-100">
+                    <div className="text-3xl font-semibold leading-none sm:text-4xl text-slate-900 text-center dark:text-slate-100">{dayLabel}</div>
+                    {monthLabel ? <div className="text-xs font-medium text-slate-900 text-center dark:text-slate-100">{monthLabel}</div> : null}
+                    {yearLabel ? <div className="text-[10px] font-medium text-slate-400 text-center dark:text-slate-500">{yearLabel}</div> : null}
                   </div>
-                  <div className="flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-white/90 px-2.5 py-2 transition hover:-translate-y-0.5 hover:shadow-md sm:gap-4 sm:px-5 sm:py-4 dark:border-white/10 dark:bg-slate-950/80">
+                  <div className="relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-white/90 px-2.5 py-2 transition hover:-translate-y-0.5 hover:shadow-md sm:gap-4 sm:px-5 sm:py-4 dark:border-white/10 dark:bg-slate-950/80">
                     <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
-                      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-slate-100 sm:h-20 sm:w-20">
+                      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-slate-100 sm:h-20 sm:w-20">
                         <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${bannerImage})` }} />
                       </div>
                       <div className="min-w-0 flex-1 space-y-1">
-                        <div className="flex ml-2 items-start justify-between gap-3">
-                          <div className="text-lg font-semibold text-slate-900 sm:text-xl dark:text-white">{title}</div>
-                          <span className="inline-flex shrink-0 items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[9px] font-semibold text-slate-600 sm:hidden dark:border-white/10 dark:bg-white/5 dark:text-white/70">
-                            {visitTypeLabel}
-                          </span>
+                        <div className="flex min-w-0 items-center gap-2 ml-2">
+                          <div className="min-w-0 truncate text-lg font-semibold text-slate-900 sm:text-xl dark:text-white">
+                            <span>{title}</span>
+                            <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500"> / {location}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <HandleBadge
-                            href={`/artists/${String(handleBase).replace(/^@/, "")}`}
-                            avatarUrl={profileImage}
-                            alt={handle}
-                            handle={handle}
-                            className="bg-transparent border border-slate-200 px-2 py-1.5 text-sm font-semibold text-slate-500 shadow-none dark:border-white/10 dark:text-slate-300"
-                          />
+                        <div className="flex min-w-0 items-center gap-1.5 pl-2">
+                          <Avatar className="h-7 w-7 border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5">
+                            <AvatarImage src={profileImage} alt={handle} />
+                            <AvatarFallback className="text-[10px] font-semibold text-slate-500 dark:text-slate-300">AR</AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0 truncate text-sm font-semibold text-slate-900 dark:text-white">
+                            <span>{handle}</span>
+                            <span className="text-[11px] font-semibold"> • {visitTypeLabel}</span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="ml-auto hidden text-right sm:flex sm:min-w-[160px] sm:flex-col sm:items-end sm:gap-1">
-                        <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">{visitTypeLabel}</span>
-                        <div className="text-sm text-slate-500 dark:text-white/70">{location}</div>
                       </div>
                     </div>
                   </div>
