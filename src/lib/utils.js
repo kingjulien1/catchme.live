@@ -152,9 +152,27 @@ export function formatDurationMinutes(minutes) {
   return parts.join(" ");
 }
 
+/**
+ * Safely capitalize the first letter of a string, returning an empty string for non-string inputs.
+ *
+ * @param {string | null | undefined} str
+ * @returns {string}
+ */
 export function safeCapitalize(str) {
   if (typeof str !== "string" || str.length === 0) {
     return "";
   }
   return str[0].toUpperCase() + str.slice(1);
 }
+
+/**
+ * Generate a simple hash from a string value by summing character codes.
+ * This is not cryptographically secure and is intended for non-sensitive use cases like color generation or bucketing.
+ *
+ * @param {string | number | null | undefined} value
+ * @returns {number}
+ */
+export const hashSeed = (value) =>
+  String(value || "")
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);

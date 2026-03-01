@@ -1,18 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
+import HandleBadge from "@/components/handle-badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
-import HandleBadge from "@/components/handle-badge";
-import { Share2 } from "lucide-react";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
-import { cn, safeCapitalize } from "@/lib/utils";
-
-const hashSeed = (value) =>
-  String(value || "")
-    .split("")
-    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+import { cn, hashSeed, safeCapitalize } from "@/lib/utils";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -33,7 +28,7 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
                 <DialogDescription>Visit details dialog</DialogDescription>
               </VisuallyHidden>
             </DialogHeader>
-            <div className="max-h-[85vh] w-[min(94vw,26rem)] no-scrollbar overflow-y-auto overflow-x-hidden rounded-[24px] border border-slate-200 bg-white text-[12px] shadow-2xl dark:border-slate-800 dark:bg-slate-950 sm:w-full sm:max-w-xl sm:rounded-[32px] sm:text-base [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="max-h-[85vh] w-[min(94vw,26rem)] no-scrollbar overflow-y-auto overflow-x-hidden bg-white text-[12px] rounded-md sm:w-full sm:max-w-xl sm:text-base [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
             </div>
           </DialogContent>
@@ -52,6 +47,23 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
         <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
       </DrawerContent>
     </Drawer>
+  );
+}
+
+function ArtistAccountCard({ account, avatarUrl }) {
+  return (
+    <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-white p-2 px-3 dark:border-slate-800 dark:bg-slate-900">
+      <div className="flex items-center gap-3">
+        <div className="h-10 w-10 overflow-hidden rounded-md bg-slate-200">
+          <img src={avatarUrl} alt={account.name} className="h-full w-full object-cover" />
+        </div>
+        <div>
+          <div className="text-sm font-semibold text-slate-900 dark:text-white">{account.name}</div>
+          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">@{String(account.handle).replace(/^@/, "")}</div>
+        </div>
+      </div>
+      <span className="text-xs capitalize font-semibold text-slate-400 dark:text-slate-500">{(account.accountType || "author").replace(/_/g, " ")}</span>
+    </div>
   );
 }
 
@@ -84,6 +96,9 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
   const startDateValue = startDate ? new Date(startDate) : null;
   const endDateValue = endDate ? new Date(endDate) : null;
   const isLive = startDateValue && startDateValue <= now && (!endDateValue || endDateValue >= now);
+  const isUpcoming = !isLive && Boolean(startDateValue && startDateValue > now);
+  const statusLabel = isLive ? "Live" : isUpcoming ? "Upcoming" : "Expired";
+  const statusColor = isLive ? "text-purple-500 dark:text-purple-400" : isUpcoming ? "text-fuchsia-500 dark:text-fuchsia-400" : "text-rose-500 dark:text-rose-400";
   const descriptionText = "You stand against a wall; you sink into it. You rest your back against a tree, the breeze rubs you green. The city hums while the ink settles into your skin. Every line is a memory, every mark a promise.";
   const normalizedHandle = (value) => String(value || "account").replace(/^@/, "");
   const rawLinkedAccounts = Array.isArray(visit?.linked_accounts) ? visit.linked_accounts : [];
@@ -132,7 +147,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
     return profileImages[hash % profileImages.length];
   };
   return (
-    <div className="flex-1 overflow-y-auto px-4 pb-10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex-1 rounded-md overflow-y-auto px-4 pb-10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="pt-4">
         <div className="mt-5 flex flex-col items-center gap-3 text-center">
           <HandleBadge
@@ -147,11 +162,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
             <span className="block">{endText}</span>
           </div>
           <div className="text-sm font-normal text-slate-500 dark:text-slate-400">
-            {(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")
-              .split(" ")
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(" ")}{" "}
-            • {locationLabel}
+            {safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")} • {locationLabel} • <span className={`font-semibold ${statusColor}`}>{statusLabel}</span>
           </div>
         </div>
         <div className="mt-8 border-t border-slate-200 pt-6 dark:border-slate-800">
@@ -169,16 +180,24 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-slate-200 pb-4 text-sm dark:border-slate-800">
                 <span className="text-slate-500 dark:text-slate-400">Now Live</span>
-                <span className={cn("font-semibold underline-offset-4", isLive ? "text-emerald-500" : "text-red-500")}>{isLive ? "Yes" : "No"}</span>
+                <span className={cn("font-semibold underline-offset-4", isLive ? "text-emerald-500" : "text-gray-500")}>{isLive ? "Yes" : "No"}</span>
+              </div>
+              <div className="flex items-center justify-between border-b border-slate-200 pb-4 text-sm dark:border-slate-800">
+                <span className="text-slate-500 dark:text-slate-400">Author</span>
+                <Link href={`/profile/${visit.author_username || visit.author_name || "author"}`} className="flex items-center gap-2 underline">
+                  <div className="h-5 w-5 overflow-hidden rounded-full bg-slate-200">
+                    <img src={pickProfileImage(visit.author_username || visit.author_name || "author")} alt={authorAccount.name} className="h-full w-full object-cover" />
+                  </div>
+                  <span className="font-semibold underline-offset-4">{authorAccount.name}</span>
+                </Link>
               </div>
               {[
+                ["Start", startLabel],
+                ["End", endLabel],
                 ["Visit Type", safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "N/A")],
                 ["Location", locationLabel],
                 ["Bookings Open", visit.booking_open_date ? new Date(visit.booking_open_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "TBD"],
                 ["Age Policy", visit.age_policy || "N/A"],
-                ["Author", authorAccount.name],
-                ["Start", startLabel],
-                ["End", endLabel],
                 ["Total Linked Accounts", (visit.linked_accounts ? visit.linked_accounts.length : 0) + 1],
               ].map(([label, value]) => (
                 <div key={label} className="flex items-center justify-between border-b border-slate-200 pb-4 text-sm dark:border-slate-800">
@@ -191,20 +210,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
               <div className="text-sm font-semibold text-slate-900 dark:text-white">Linked Partners</div>
               <div className="space-y-3">
                 {presentedByAccounts.map((account) => (
-                  <div key={account.id || account.handle} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 overflow-hidden rounded-xl bg-slate-200">
-                        <img src={pickProfileImage(account.handle)} alt={account.name} className="h-full w-full object-cover" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold text-slate-900 dark:text-white">{account.name}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400">@{String(account.handle).replace(/^@/, "")}</div>
-                      </div>
-                    </div>
-                    <div className="text-xs font-semibold text-slate-400 dark:text-slate-500">
-                      {(account.accountType || "Account").replace(/_/g, " ")}
-                    </div>
-                  </div>
+                  <ArtistAccountCard key={account.id || account.handle} account={account} avatarUrl={pickProfileImage(account.handle)} />
                 ))}
               </div>
             </div>
@@ -212,20 +218,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
               <div className="text-sm font-semibold text-slate-900 dark:text-white">Linked Destinations</div>
               <div className="space-y-3">
                 {destinationAccounts.map((account) => (
-                  <div key={account.id || account.handle} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 overflow-hidden rounded-xl bg-slate-200">
-                        <img src={pickProfileImage(account.handle)} alt={account.name} className="h-full w-full object-cover" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold text-slate-900 dark:text-white">{account.name}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400">@{String(account.handle).replace(/^@/, "")}</div>
-                      </div>
-                    </div>
-                    <div className="text-xs font-semibold text-slate-400 dark:text-slate-500">
-                      {(account.accountType || "Account").replace(/_/g, " ")}
-                    </div>
-                  </div>
+                  <ArtistAccountCard key={account.id || account.handle} account={account} avatarUrl={pickProfileImage(account.handle)} />
                 ))}
               </div>
             </div>
