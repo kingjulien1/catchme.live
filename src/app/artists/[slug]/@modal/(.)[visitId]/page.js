@@ -20,8 +20,29 @@ export default async function ArtistVisitModal({ params }) {
       visit_options.special_notes as description,
       destination_link.account_handle as destination_instagram_handle,
       destination.name as destination_name,
-      destination.username as destination_username
+      destination.username as destination_username,
+      linked_accounts.linked_accounts as linked_accounts
     from visits
+    left join lateral (
+      select coalesce(
+        json_agg(
+          json_build_object(
+            'id', vla.id,
+            'account_user_id', vla.account_user_id,
+            'account_handle', vla.account_handle,
+            'account_type', vla.account_type,
+            'created_at', vla.created_at,
+            'name', u.name,
+            'username', u.username
+          )
+          order by vla.created_at asc
+        ),
+        '[]'::json
+      ) as linked_accounts
+      from visit_linked_accounts vla
+      left join users u on u.id = vla.account_user_id
+      where vla.visit_id = visits.id
+    ) as linked_accounts on true
     left join lateral (
       select account_handle, account_user_id
       from visit_linked_accounts

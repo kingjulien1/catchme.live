@@ -154,4 +154,15 @@ html[data-scroll-locked] {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Hide scrollbar for IE, Edge, and Firefox */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
 }

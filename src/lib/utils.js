@@ -58,7 +58,10 @@ export function formatFollowers(count) {
  *   Title-cased label for UI display, or "Visit" when the value is missing.
  */
 export function formatVisitType(value) {
-  return value ? value.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "Visit";
+  if (!value) return "Visit";
+  const normalized = value.replace(/_/g, " ").trim().toLowerCase();
+  if (normalized === "guest") return "Guest Spot";
+  return normalized.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /**
@@ -147,4 +150,11 @@ export function formatDurationMinutes(minutes) {
   if (hours) parts.push(`${hours}h`);
   if (!days && !hours) parts.push(`${Math.max(1, mins)}m`);
   return parts.join(" ");
+}
+
+export function safeCapitalize(str) {
+  if (typeof str !== "string" || str.length === 0) {
+    return "";
+  }
+  return str[0].toUpperCase() + str.slice(1);
 }

@@ -52,7 +52,10 @@ export default function TopAppBarClient({ user }) {
           {user ? (
             <ProfileMenu name={user.name || user.username} username={user.username} imageUrl={user.profile_picture_url || "/default-avatar.png"} />
           ) : (
-            <Link href="/me" className="inline-flex items-center px-4 py-0 ml-2 text-sm font-semibold text-white transition bg-black rounded-full shadow-sm h-11 hover:bg-gray-900 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100">
+            <Link
+              href="/me"
+              className="inline-flex h-11 items-center px-4 py-0 ml-2 text-sm font-semibold text-slate-900 transition rounded-full bg-white shadow-sm hover:bg-slate-100 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+            >
               <Instagram className="w-4 h-4 mr-2" />
               <span className="sm:hidden">Connect</span>
               <span className="hidden sm:inline">Connect Instagram</span>

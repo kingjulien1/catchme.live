@@ -205,9 +205,30 @@ export async function getUserVisits(userId, limit = 25) {
       destination.account_type as destination_account_type,
       destination.media_count as destination_media_count,
       destination.bio as destination_bio,
-      destination_settings.banner_image_url as destination_banner_image_url
+      destination_settings.banner_image_url as destination_banner_image_url,
+      linked_accounts.linked_accounts as linked_accounts
     from visits
     left join users as author on author.id = visits.author_user_id
+    left join lateral (
+      select coalesce(
+        json_agg(
+          json_build_object(
+            'id', vla.id,
+            'account_user_id', vla.account_user_id,
+            'account_handle', vla.account_handle,
+            'account_type', vla.account_type,
+            'created_at', vla.created_at,
+            'name', u.name,
+            'username', u.username
+          )
+          order by vla.created_at asc
+        ),
+        '[]'::json
+      ) as linked_accounts
+      from visit_linked_accounts vla
+      left join users u on u.id = vla.account_user_id
+      where vla.visit_id = visits.id
+    ) as linked_accounts on true
     left join lateral (
       select account_handle, account_user_id
       from visit_linked_accounts

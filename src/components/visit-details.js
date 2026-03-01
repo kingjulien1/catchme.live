@@ -141,9 +141,6 @@ export default function VisitDetails({ visit }) {
   return (
     <div className="text-center">
       <div className="flex flex-col items-center gap-4 pb-10 pt-6">
-        <button type="button" aria-label="Share visit" className="h-12 w-12 rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:text-slate-900 dark:border-white/15 dark:bg-slate-950 dark:text-white/80">
-          <Share2 className="h-5 w-5 mx-auto" />
-        </button>
         <div className="flex items-center -space-x-5">
           {[...leftAccounts.slice(0, 1), ...rightAccounts].map((account, index, array) => (
             <Avatar key={`${account.handle}-${index}`} className="h-12 w-12 border border-slate-200 bg-slate-50 dark:border-white/15 dark:bg-white/10" style={{ zIndex: array.length - index }}>
