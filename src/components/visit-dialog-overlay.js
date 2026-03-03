@@ -3,9 +3,11 @@
 import HandleBadge from "@/components/handle-badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import ShareDialog from "@/components/share-dialog";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn, hashSeed, safeCapitalize } from "@/lib/utils";
+import { MoreHorizontal, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -84,6 +86,9 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
     "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80",
   ];
   const bannerUrl = bannerImages[Math.floor(Math.random() * bannerImages.length)];
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://catchme.live";
+  const destinationHandle = (visit?.destination_username || visit?.destination_instagram_handle || "").replace(/^@/, "");
+  const shareUrl = destinationHandle ? `${baseUrl}/artists/${destinationHandle}` : `${baseUrl}/artists`;
   const startDate = visit?.visit_start_time || visit?.start_time || visit?.start_date || visit?.start;
   const endDate = visit?.visit_end_time || visit?.end_time || visit?.end_date || visit?.end;
   const startLabel = startDate ? new Date(startDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "TBD";
@@ -164,6 +169,13 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
           <div className="text-sm font-normal text-slate-500 dark:text-slate-400">
             {safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")} • {locationLabel} • <span className={`font-semibold ${statusColor}`}>{statusLabel}</span>
           </div>
+          <HandleBadge
+            href={`/artists/${visit.destination_username || visit.destination_instagram_handle || ""}`}
+            avatarUrl={pickProfileImage(visit.destination_username || visit.destination_instagram_handle || "handle")}
+            alt={visit.destination_username || "Artist"}
+            handle={`@${String(visit.destination_username || visit.destination_instagram_handle || "artist").replace(/^@/, "")}`}
+            className="mx-auto mt-4 border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+          />
         </div>
         <div className="mt-8 border-t border-slate-200 pt-6 dark:border-slate-800">
           <div className="space-y-4">
@@ -221,6 +233,27 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
                   <ArtistAccountCard key={account.id || account.handle} account={account} avatarUrl={pickProfileImage(account.handle)} />
                 ))}
               </div>
+            </div>
+            <div className="mt-12 flex items-center justify-between border-t border-slate-200 pt-8 dark:border-slate-800">
+              <ShareDialog
+                url={shareUrl}
+                trigger={
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
+                  >
+                    <Share2 className="h-4 w-4" />
+                    Share
+                  </button>
+                }
+              />
+              <button
+                type="button"
+                aria-label="More options"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                <MoreHorizontal className="h-5 w-5" />
+              </button>
             </div>
           </div>
         </div>

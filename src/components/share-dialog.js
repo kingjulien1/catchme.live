@@ -15,7 +15,7 @@ const SOCIAL_LINKS = [
   { label: "Discord", icon: MessageCircle, tone: "bg-indigo-500 text-white" },
 ];
 
-export default function ShareDialog({ url = "https://foundation.app/collection/bg-00bb" }) {
+export default function ShareDialog({ url = "https://foundation.app/collection/bg-00bb", trigger }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -26,13 +26,15 @@ export default function ShareDialog({ url = "https://foundation.app/collection/b
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button
-          type="button"
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-        >
-          <Share2 className="h-4 w-4" />
-          Share
-        </button>
+        {trigger || (
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </button>
+        )}
       </DialogTrigger>
       <DialogPortal>
         <DialogOverlay className="backdrop-blur-xl" />
