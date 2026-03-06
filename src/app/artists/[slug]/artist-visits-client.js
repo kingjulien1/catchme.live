@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import VisitDialogOverlay from "@/components/visit-dialog-overlay";
 import { formatShortDate, formatVisitDateRange, formatVisitType, getVisitParam, resolveVisitById, setVisitParam } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -48,6 +48,68 @@ function coerceVisitDate(value) {
   const numericMs = asNumber < 10_000_000_000 ? asNumber * 1000 : asNumber;
   const numericDate = new Date(numericMs);
   return Number.isNaN(numericDate.getTime()) ? null : numericDate;
+}
+
+function StickyHeading({ children, offset = 64, className = "" }) {
+  const placeholderRef = useRef(null);
+  const headerRef = useRef(null);
+  const [metrics, setMetrics] = useState({ height: 0, pinned: false, left: 0, width: 0 });
+
+  useLayoutEffect(() => {
+    if (!headerRef.current) return;
+    const element = headerRef.current;
+    const updateHeight = () => {
+      const height = element.offsetHeight;
+      setMetrics((prev) => (prev.height === height ? prev : { ...prev, height }));
+    };
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        if (!placeholderRef.current) return;
+        const rect = placeholderRef.current.getBoundingClientRect();
+        const shouldPin = rect.top <= offset;
+        setMetrics((prev) => {
+          if (prev.pinned === shouldPin) return prev;
+          if (!shouldPin) return { ...prev, pinned: false };
+          return { ...prev, pinned: true, left: rect.left, width: rect.width };
+        });
+      });
+    };
+    const updatePinnedPosition = () => {
+      if (!placeholderRef.current) return;
+      const rect = placeholderRef.current.getBoundingClientRect();
+      setMetrics((prev) => (prev.pinned ? { ...prev, left: rect.left, width: rect.width } : prev));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", updatePinnedPosition);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", updatePinnedPosition);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, [offset]);
+
+  return (
+    <div ref={placeholderRef} style={{ height: metrics.height || undefined }}>
+      <div
+        ref={headerRef}
+        className={`${metrics.pinned ? "fixed" : "relative"} ${className}`}
+        style={metrics.pinned ? { top: offset, left: metrics.left, width: metrics.width, zIndex: 40 } : undefined}
+      >
+        {children}
+      </div>
+    </div>
+  );
 }
 
 export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVisits, pastVisits, artistSlug }) {
@@ -137,37 +199,36 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
   }, [allVisits]);
 
   return (
-    <div className="relative mx-auto w-full pb-12 sm:pt-4">
-      <div className="relative z-10 space-y-6">
+    <div className="relative mx-auto w-full pb-12 sm:pt-4 overflow-visible">
+      <div className="relative z-10 space-y-6 overflow-visible">
         {visitsCount === 0 || allVisits.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-200 bg-white/80 py-4 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
         ) : (
           <div className="mx-auto w-full space-y-5 sm:space-y-5">
-            <div className="flex items-center justify-between">
+            <StickyHeading className="z-30 -mx-4 flex items-center justify-between border-b border-slate-200/70 bg-white/95 py-3 backdrop-blur sm:mx-0 sm:rounded-2xl sm:border dark:border-slate-800/80 dark:bg-slate-950/90">
               <div>
                 <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Now Live</h2>
-                <div className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">/ next live ends in {latestLiveCountdown}</div>
               </div>
               <ChevronDown className="h-7 w-7 text-slate-900 dark:text-white" />
-            </div>
+            </StickyHeading>
             {orderedSections
               .filter((section) => section.visits.length)
               .map((section, sectionIndex) => (
                 <div key={section.key} className={section.key === "upcoming" || section.key === "past" ? "mt-10 sm:mt-12" : sectionIndex ? "mt-6" : ""}>
                   {section.key === "upcoming" ? (
-                    <div className="mb-6 flex items-center justify-between">
+                    <StickyHeading className="z-30 -mx-4 mb-6 flex items-center justify-between border-b border-slate-200/70 bg-white/95 py-3 backdrop-blur sm:mx-0 sm:rounded-2xl sm:border dark:border-slate-800/80 dark:bg-slate-950/90">
                       <div>
                         <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Next Up</h2>
-                        <div className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">/ next live starts in {nextUpCountdown}</div>
                       </div>
                       <ChevronDown className="h-7 w-7 text-slate-900 dark:text-white" />
-                    </div>
+                    </StickyHeading>
                   ) : null}
                   <div className="space-y-5 sm:space-y-5">
                     {section.visits.map((visit, visitIndex) => {
                       const start = coerceVisitDate(visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start);
                       const end = coerceVisitDate(visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end);
-                      const title = visit.visit_title || visit.title || visit.destination_name || formatVisitType(visit.visit_type);
+                      const accountName = visit.destination_name || visit.destination_username || visit.destination_instagram_handle || "Artist";
+                      const title = visit.visit_title || visit.title || accountName;
                       const location = visit.visit_location || visit.destination_name || visit.destination_instagram_handle || "Location TBA";
                       const visitTypeLabel = formatVisitType(visit.visit_type);
                       const dateRange = formatVisitDateRange(start, end);
@@ -215,7 +276,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
                               <div className="min-w-0 flex-1 space-y-1">
                                 <div className="flex min-w-0 items-center gap-2 ml-2">
                                   <div className="min-w-0 truncate text-lg font-semibold text-slate-900 sm:text-xl dark:text-white">
-                                    <span>{visitTypeLabel}</span>
+                                    <span>{title}</span>
                                     <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500"> / {location}</span>
                                   </div>
                                 </div>
@@ -226,6 +287,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
                                   </Avatar>
                                   <div className="min-w-0 truncate text-sm font-semibold text-slate-900 dark:text-white">
                                     <span>{handle}</span>
+                                    <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500"> • {visitTypeLabel}</span>
                                   </div>
                                 </div>
                               </div>

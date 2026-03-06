@@ -7,7 +7,7 @@ import ShareDialog from "@/components/share-dialog";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn, hashSeed, safeCapitalize } from "@/lib/utils";
-import { MoreHorizontal, Share2 } from "lucide-react";
+import { Link2, MoreHorizontal, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -21,17 +21,19 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogPortal>
           <DialogOverlay className="backdrop-blur-xl" />
-          <DialogContent showCloseButton={false} className="p-0 m-0" onOpenAutoFocus={(event) => event.preventDefault()}>
-            <DialogHeader className="sr-only">
-              <VisuallyHidden>
-                <DialogTitle>Visit Details</DialogTitle>
-              </VisuallyHidden>
-              <VisuallyHidden>
-                <DialogDescription>Visit details dialog</DialogDescription>
-              </VisuallyHidden>
-            </DialogHeader>
-            <div className="max-h-[85vh] w-[min(94vw,26rem)] no-scrollbar overflow-y-auto overflow-x-hidden bg-white text-[12px] rounded-md sm:w-full sm:max-w-xl sm:text-base [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
+          <DialogContent showCloseButton={false} className="p-0 m-0 overflow-hidden rounded-3xl ring-1 ring-purple-400/80 shadow-[0_20px_60px_rgba(168,85,247,0.45),0_0_120px_rgba(168,85,247,0.45)]" onOpenAutoFocus={(event) => event.preventDefault()}>
+            <div className="rounded-3xl ring-1 ring-purple-300/80">
+              <DialogHeader className="sr-only">
+                <VisuallyHidden>
+                  <DialogTitle>Visit Details</DialogTitle>
+                </VisuallyHidden>
+                <VisuallyHidden>
+                  <DialogDescription>Visit details dialog</DialogDescription>
+                </VisuallyHidden>
+              </DialogHeader>
+              <div className="max-h-[85vh] w-[min(94vw,26rem)] no-scrollbar overflow-y-auto overflow-x-hidden rounded-3xl bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-[12px] text-slate-100 sm:w-full sm:max-w-xl sm:text-base [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
+              </div>
             </div>
           </DialogContent>
         </DialogPortal>
@@ -41,7 +43,7 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="w-full mx-auto !top-[12vh] !bottom-0 !mt-0 !max-h-none data-[vaul-drawer-direction=bottom]:!rounded-t-2xl shadow-none">
+      <DrawerContent className="w-full mx-auto !top-[12vh] !bottom-0 !mt-0 !max-h-none data-[vaul-drawer-direction=bottom]:!rounded-t-2xl border border-purple-500/60 shadow-[0_24px_70px_rgba(168,85,247,0.5),0_0_140px_rgba(168,85,247,0.45)] bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-slate-100">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Visit Details</DrawerTitle>
           <DrawerDescription>Visit details drawer</DrawerDescription>
@@ -52,19 +54,27 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
   );
 }
 
-function ArtistAccountCard({ account, avatarUrl }) {
+function ArtistAccountCard({ account, avatarUrl, locationLabel }) {
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-white p-2 px-3 dark:border-slate-800 dark:bg-slate-900">
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 overflow-hidden rounded-md bg-slate-200">
-          <img src={avatarUrl} alt={account.name} className="h-full w-full object-cover" />
+    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-3 py-3 text-white shadow-inner">
+      <div className="h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/10">
+        <img src={avatarUrl} alt={account.name} className="h-full w-full object-cover" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-semibold text-white">
+          {account.name}
+          {locationLabel ? <span className="text-white/55"> / {locationLabel}</span> : null}
         </div>
-        <div>
-          <div className="text-sm font-semibold text-slate-900 dark:text-white">{account.name}</div>
-          <div className="text-xs font-medium text-slate-600 dark:text-slate-400">@{String(account.handle).replace(/^@/, "")}</div>
+        <div className="mt-1 flex min-w-0 items-center gap-2">
+          <div className="h-6 w-6 shrink-0 overflow-hidden rounded-full border border-white/10 bg-white/10">
+            <img src={avatarUrl} alt={account.name} className="h-full w-full object-cover" />
+          </div>
+          <div className="min-w-0 truncate text-xs font-semibold text-white/80">
+            @{String(account.handle).replace(/^@/, "")}
+            <span className="text-[11px] font-semibold text-white/50"> • {(account.accountType || "author").replace(/_/g, " ")}</span>
+          </div>
         </div>
       </div>
-      <span className="text-xs capitalize font-semibold text-slate-400 dark:text-slate-500">{(account.accountType || "author").replace(/_/g, " ")}</span>
     </div>
   );
 }
@@ -91,20 +101,36 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
   const shareUrl = destinationHandle ? `${baseUrl}/artists/${destinationHandle}` : `${baseUrl}/artists`;
   const startDate = visit?.visit_start_time || visit?.start_time || visit?.start_date || visit?.start;
   const endDate = visit?.visit_end_time || visit?.end_time || visit?.end_date || visit?.end;
-  const startLabel = startDate ? new Date(startDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "TBD";
-  const endLabel = endDate ? new Date(endDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "TBD";
+  const startLabel = startDate ? new Date(startDate).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "TBD";
+  const endLabel = endDate ? new Date(endDate).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "TBD";
   const accountName = visit?.destination_name || visit?.visit_title || visit?.title || "Artist";
-  const startText = startDate ? new Date(startDate).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }) : "TBD";
-  const endText = endDate ? new Date(endDate).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }) : "TBD";
+  const startText = startDate ? new Date(startDate).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "TBD";
+  const endText = endDate ? new Date(endDate).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "TBD";
+  const startTimeOnly = startDate ? new Date(startDate).toLocaleString("en-US", { hour: "numeric", minute: "2-digit" }) : "TBD";
+  const endTimeOnly = endDate ? new Date(endDate).toLocaleString("en-US", { hour: "numeric", minute: "2-digit" }) : "TBD";
   const locationLabel = visit?.visit_location || visit?.destination_name || visit?.destination_instagram_handle || "Location TBA";
   const now = new Date();
   const startDateValue = startDate ? new Date(startDate) : null;
   const endDateValue = endDate ? new Date(endDate) : null;
   const isLive = startDateValue && startDateValue <= now && (!endDateValue || endDateValue >= now);
   const isUpcoming = !isLive && Boolean(startDateValue && startDateValue > now);
+  const isSameDay = startDateValue && endDateValue ? startDateValue.toDateString() === endDateValue.toDateString() : false;
   const statusLabel = isLive ? "Live" : isUpcoming ? "Upcoming" : "Expired";
   const statusColor = isLive ? "text-purple-500 dark:text-purple-400" : isUpcoming ? "text-fuchsia-500 dark:text-fuchsia-400" : "text-rose-500 dark:text-rose-400";
   const descriptionText = "You stand against a wall; you sink into it. You rest your back against a tree, the breeze rubs you green. The city hums while the ink settles into your skin. Every line is a memory, every mark a promise.";
+  const countdownTarget = isLive ? endDateValue : isUpcoming ? startDateValue : null;
+  const countdownLabel = isLive ? "Time Remaining" : isUpcoming ? "Starts In" : "Visit Ended";
+  const formatCountdown = (target) => {
+    if (!target) return null;
+    const diffSeconds = Math.max(0, Math.floor((target.getTime() - Date.now()) / 1000));
+    const days = Math.floor(diffSeconds / 86400);
+    const hours = Math.floor((diffSeconds % 86400) / 3600);
+    const mins = Math.floor((diffSeconds % 3600) / 60);
+    const secs = diffSeconds % 60;
+    const pad = (value) => String(value).padStart(2, "0");
+    return { days: pad(days), hours: pad(hours), mins: pad(mins), secs: pad(secs) };
+  };
+  const countdown = formatCountdown(countdownTarget);
   const normalizedHandle = (value) => String(value || "account").replace(/^@/, "");
   const rawLinkedAccounts = Array.isArray(visit?.linked_accounts) ? visit.linked_accounts : [];
   const authorAccount = {
@@ -147,57 +173,92 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
       ];
   const authorHandleValue = normalizedHandle(visit?.author_username || visit?.author_name || "author");
   const presentedByAccounts = [{ ...authorAccount, id: "author", handle: authorHandleValue }, ...linkedPartnerAccounts];
+  const allLinkedAccounts = [{ ...authorAccount, id: "author", handle: authorHandleValue }, ...linkedPartnerAccounts, ...destinationAccounts];
+  const featuredAccounts = presentedByAccounts.slice(0, 3);
   const pickProfileImage = (seed) => {
     const hash = Math.abs(hashSeed(seed));
     return profileImages[hash % profileImages.length];
   };
   return (
-    <div className="flex-1 rounded-md overflow-y-auto px-4 pb-10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex-1 rounded-md overflow-y-auto px-4 pb-10 text-white/90 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="pt-4">
-        <div className="mt-5 flex flex-col items-center gap-3 text-center">
-          <HandleBadge
-            href={`/artists/${visit.destination_username || visit.destination_instagram_handle || ""}`}
-            avatarUrl={pickProfileImage(visit.destination_username || visit.destination_instagram_handle || "handle")}
-            alt={visit.destination_username || "Artist"}
-            handle={`@${String(visit.destination_username || visit.destination_instagram_handle || "artist").replace(/^@/, "")}`}
-            className="border mb-4 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-white"
-          />
-          <div className="text-2xl font-semibold text-slate-900 dark:text-white">
-            <span className="block">{startText}</span>
-            <span className="block">{endText}</span>
+        <div className="mt-3 flex flex-col items-center gap-4 text-center text-white">
+          <span className="inline-flex items-center gap-2 rounded-full border border-pink-400/70 bg-pink-500/55 px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-pink-50 mb-6">
+            <span className="h-1.5 w-1.5 rounded-full bg-pink-300" />
+            {statusLabel === "Live" ? "Live Now" : statusLabel}
+          </span>
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="text-[12px] font-semibold text-white/90">{countdownLabel}</div>
+            <div className="flex items-end gap-1.5 text-2xl font-semibold text-white sm:text-3xl">
+              <span className="min-w-[2.2ch] text-center">{countdown?.days ?? "00"}</span>
+              <span className="text-white/55">:</span>
+              <span className="min-w-[2.2ch] text-center">{countdown?.hours ?? "00"}</span>
+              <span className="text-white/55">:</span>
+              <span className="min-w-[2.2ch] text-center">{countdown?.mins ?? "00"}</span>
+              <span className="text-white/55">:</span>
+              <span className="min-w-[2.2ch] text-center">{countdown?.secs ?? "00"}</span>
+            </div>
+            <div className="flex items-center gap-4 text-[10px] font-semibold uppercase tracking-[0.35em] text-white/50">
+              <span>Days</span>
+              <span>Hours</span>
+              <span>Mins</span>
+              <span>Secs</span>
+            </div>
           </div>
-          <div className="text-sm font-normal text-slate-500 dark:text-slate-400">
-            {safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")} • {locationLabel} • <span className={`font-semibold ${statusColor}`}>{statusLabel}</span>
+          <div className="mt-3 w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-center shadow-inner">
+            <div className="text-2xl font-semibold text-white sm:text-3xl">{isSameDay ? startTimeOnly : startText}</div>
+            <div className="mt-0.5 text-base font-medium text-white/80">{endText ? `Ends ${isSameDay ? endTimeOnly : endText}` : "Ends TBD"}</div>
+            <div className="mt-3 text-sm font-normal text-cyan-300">
+              {safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")} • <span className="text-white/50"> {locationLabel}</span>
+            </div>
           </div>
-          <HandleBadge
-            href={`/artists/${visit.destination_username || visit.destination_instagram_handle || ""}`}
-            avatarUrl={pickProfileImage(visit.destination_username || visit.destination_instagram_handle || "handle")}
-            alt={visit.destination_username || "Artist"}
-            handle={`@${String(visit.destination_username || visit.destination_instagram_handle || "artist").replace(/^@/, "")}`}
-            className="mx-auto mt-4 border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-white"
-          />
+          <div className="mt-8 flex flex-col items-center gap-1.5 mb-6">
+            <div className="flex items-center gap-2">
+              <HandleBadge
+                href={`/artists/${visit.destination_username || visit.destination_instagram_handle || ""}`}
+                avatarUrl={pickProfileImage(visit.destination_username || visit.destination_instagram_handle || "handle")}
+                alt={visit.destination_username || "Artist"}
+                handle={`@${String(visit.destination_username || visit.destination_instagram_handle || "artist").replace(/^@/, "")}`}
+                className="border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white shadow-sm"
+              />
+              {destinationAccounts[0] ? (
+                <>
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/60">
+                    <Link2 className="h-3 w-3" />
+                  </span>
+                  <HandleBadge
+                    href={`/artists/${destinationAccounts[0].handle || ""}`}
+                    avatarUrl={pickProfileImage(destinationAccounts[0].handle)}
+                    alt={destinationAccounts[0].name}
+                    handle={`@${String(destinationAccounts[0].handle).replace(/^@/, "")}`}
+                    className="border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white shadow-sm"
+                  />
+                </>
+              ) : null}
+            </div>
+          </div>
         </div>
-        <div className="mt-8 border-t border-slate-200 pt-6 dark:border-slate-800">
+        <div className="mt-8 border-t border-white/10 pt-6">
           <div className="space-y-4">
             <div>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-white">Description</h3>
-              <p className={`mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300 ${isDescriptionExpanded ? "" : "line-clamp-3"}`}>{descriptionText}</p>
-              <button type="button" onClick={() => setIsDescriptionExpanded((prev) => !prev)} className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">
+              <h3 className="text-base font-semibold text-white">Description</h3>
+              <p className={`mt-2 text-sm leading-relaxed text-white/70 ${isDescriptionExpanded ? "" : "line-clamp-3"}`}>{descriptionText}</p>
+              <button type="button" onClick={() => setIsDescriptionExpanded((prev) => !prev)} className="mt-2 text-sm font-semibold text-white/50">
                 {isDescriptionExpanded ? "Read less" : "Read more"}
               </button>
             </div>
-            <div className="mt-6 flex items-center gap-6 border-b border-slate-200 pb-3 text-sm font-semibold text-slate-500 dark:border-slate-800 dark:text-slate-400">
-              <span className="text-slate-900 dark:text-white">Details</span>
+            <div className="mt-6 flex items-center gap-6 border-b border-white/10 pb-3 text-sm font-semibold text-white/60">
+              <span className="text-white">Details</span>
             </div>
             <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-4 text-sm dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Now Live</span>
-                <span className={cn("font-semibold underline-offset-4", isLive ? "text-emerald-500" : "text-gray-500")}>{isLive ? "Yes" : "No"}</span>
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 text-sm">
+                <span className="text-white/60">Now Live</span>
+                <span className={cn("font-semibold underline-offset-4", isLive ? "text-emerald-300" : "text-white/40")}>{isLive ? "Yes" : "No"}</span>
               </div>
-              <div className="flex items-center justify-between border-b border-slate-200 pb-4 text-sm dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400">Author</span>
-                <Link href={`/profile/${visit.author_username || visit.author_name || "author"}`} className="flex items-center gap-2 underline">
-                  <div className="h-5 w-5 overflow-hidden rounded-full bg-slate-200">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 text-sm">
+                <span className="text-white/60">Author</span>
+                <Link href={`/profile/${visit.author_username || visit.author_name || "author"}`} className="flex items-center gap-2 text-white/90">
+                  <div className="h-5 w-5 overflow-hidden rounded-full bg-white/10">
                     <img src={pickProfileImage(visit.author_username || visit.author_name || "author")} alt={authorAccount.name} className="h-full w-full object-cover" />
                   </div>
                   <span className="font-semibold underline-offset-4">{authorAccount.name}</span>
@@ -212,46 +273,44 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
                 ["Age Policy", visit.age_policy || "N/A"],
                 ["Total Linked Accounts", (visit.linked_accounts ? visit.linked_accounts.length : 0) + 1],
               ].map(([label, value]) => (
-                <div key={label} className="flex items-center justify-between border-b border-slate-200 pb-4 text-sm dark:border-slate-800">
-                  <span className="text-slate-500 dark:text-slate-400">{label}</span>
-                  <span className="font-semibold text-slate-900 underline-offset-4 dark:text-white">{value}</span>
+                <div key={label} className="flex items-center justify-between border-b border-white/10 pb-4 text-sm">
+                  <span className="text-white/55">{label}</span>
+                  <span className="font-semibold text-white/90 underline-offset-4">{value}</span>
                 </div>
               ))}
             </div>
-            <div className="space-y-3">
-              <div className="text-sm font-semibold text-slate-900 dark:text-white">Linked Partners</div>
-              <div className="space-y-3">
-                {presentedByAccounts.map((account) => (
-                  <ArtistAccountCard key={account.id || account.handle} account={account} avatarUrl={pickProfileImage(account.handle)} />
-                ))}
+            <div className="space-y-3" id="linked-accounts">
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-inner">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="text-sm font-semibold text-white">Linked Accounts</div>
+                  <div className="text-xs font-medium text-white/50">{allLinkedAccounts.length} total</div>
+                </div>
+                <div className="mb-3 h-px w-full bg-white/10" />
+                <div className="flex flex-wrap items-center gap-4">
+                  {allLinkedAccounts.map((account) => (
+                    <HandleBadge
+                      key={account.id || account.handle}
+                      href={`/artists/${account.handle || ""}`}
+                      avatarUrl={pickProfileImage(account.handle)}
+                      alt={account.name}
+                      handle={`@${String(account.handle).replace(/^@/, "")}`}
+                      className="border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white shadow-sm"
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="space-y-3">
-              <div className="text-sm font-semibold text-slate-900 dark:text-white">Linked Destinations</div>
-              <div className="space-y-3">
-                {destinationAccounts.map((account) => (
-                  <ArtistAccountCard key={account.id || account.handle} account={account} avatarUrl={pickProfileImage(account.handle)} />
-                ))}
-              </div>
-            </div>
-            <div className="mt-12 flex items-center justify-between border-t border-slate-200 pt-8 dark:border-slate-800">
+            <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-8">
               <ShareDialog
                 url={shareUrl}
                 trigger={
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
-                  >
+                  <button type="button" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-white/15">
                     <Share2 className="h-4 w-4" />
                     Share
                   </button>
                 }
               />
-              <button
-                type="button"
-                aria-label="More options"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
+              <button type="button" aria-label="More options" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 shadow-sm transition hover:-translate-y-0.5 hover:bg-white/15">
                 <MoreHorizontal className="h-5 w-5" />
               </button>
             </div>

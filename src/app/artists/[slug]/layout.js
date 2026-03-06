@@ -124,7 +124,7 @@ export default async function ArtistProfileLayout({ children, modal, params }) {
         </div>
       </section>
 
-      <section className="relative mx-auto w-full max-w-6xl px-4 pt-10 sm:px-8">
+      <section className="relative mx-auto w-full max-w-6xl px-4 pt-10 sm:px-8 overflow-visible">
         <ScrollRestorer storageKey={`artist-scroll-${handle}`} />
         <ArtistVisits visits={visits} artistSlug={handle} />
         {children}
