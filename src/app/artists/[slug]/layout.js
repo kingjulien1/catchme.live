@@ -96,7 +96,18 @@ export default async function ArtistProfileLayout({ children, modal, params }) {
                   {displayName}
                   <span className="mb-0.5 text-sm font-semibold text-slate-400 dark:text-slate-500">/ {accountTypeLabel}</span>
                 </h1>
-                {profile.username ? <span className="text-base font-semibold text-slate-900 dark:text-white">@{profile.username}</span> : null}
+                {profile.username ? (
+                  <div className="mt-2">
+                    <HandleBadge
+                      href={`/artists/${profile.username}`}
+                      avatarUrl={profile.profile_picture_url || avatarUrl}
+                      alt={displayName}
+                      handle={`@${profile.username}`}
+                      size="sm"
+                      className="border border-slate-200 bg-white/90 px-3 py-1.5 text-sm text-slate-700 shadow-sm dark:border-white/15 dark:bg-white/10 dark:text-white/90"
+                    />
+                  </div>
+                ) : null}
                 {profile.bio ? <p className="text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300 my-4 line-clamp-3 lg:line-clamp-4">{profile.bio}</p> : null}
                 {profile.location || joinedDate ? (
                   <div className="flex w-full flex-nowrap items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">

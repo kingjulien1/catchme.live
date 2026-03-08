@@ -23,7 +23,7 @@ export default function TopAppBarClient({ user }) {
   return (
     <nav
       className={`fixed top-0 z-50 w-full transition-colors ${
-        isScrolled ? "bg-white dark:bg-slate-950" : "bg-transparent"
+        isScrolled ? "bg-white/20 backdrop-blur-xl dark:bg-slate-950/20" : "bg-transparent"
       }`}
     >
       <div className="flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 mx-auto sm:px-6 lg:px-8">

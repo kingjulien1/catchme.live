@@ -8,7 +8,7 @@ import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useCountdown } from "@/lib/hooks/use-countdown";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn, hashSeed, safeCapitalize } from "@/lib/utils";
-import { Link2, MoreHorizontal, Share2 } from "lucide-react";
+import { Link2, MoreHorizontal, Share2, Tag } from "lucide-react";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 
@@ -90,6 +90,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
   const endDateValue = endDate ? new Date(endDate) : null;
   const isLive = startDateValue && startDateValue <= nowValue && (!endDateValue || endDateValue >= nowValue);
   const isUpcoming = !isLive && Boolean(startDateValue && startDateValue > nowValue);
+  const isResidency = visit?.visit_type === "residency";
   const isSameDay = startDateValue && endDateValue ? startDateValue.toDateString() === endDateValue.toDateString() : false;
   const statusLabel = isLive ? "Live" : isUpcoming ? "Upcoming" : "Expired";
   const statusColor = isLive ? "text-purple-500 dark:text-purple-400" : isUpcoming ? "text-fuchsia-500 dark:text-fuchsia-400" : "text-rose-500 dark:text-rose-400";
@@ -149,60 +150,101 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
     <div className="flex-1 rounded-md overflow-y-auto px-4 pb-10 text-white/90 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="pt-4">
         <div className="mt-3 flex flex-col items-center gap-4 text-center text-white">
-          <span className="inline-flex items-center gap-2 rounded-full border border-pink-400/70 bg-pink-500/55 px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-pink-50 mb-6">
-            <span className="h-1.5 w-1.5 rounded-full bg-pink-300 animate-pulse" />
-            {statusLabel === "Live" ? "Live Now" : statusLabel}
-          </span>
-          <div className="flex flex-col items-center gap-1.5">
-            <div className="text-[12px] font-semibold text-white/90">{countdownLabel}</div>
-            <div className="flex items-end gap-1.5 text-2xl font-semibold text-white sm:text-3xl">
+          <div className="mb-6 flex flex-col items-center justify-center gap-2">
+            <div className="flex flex-wrap items-center justify-center gap-2">
+            <span
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-[0.18em]",
+                isLive
+                  ? "border-pink-400/70 bg-pink-500/55 text-pink-50"
+                  : isUpcoming
+                    ? "border-emerald-400/70 bg-emerald-500/40 text-emerald-50"
+                    : "border-white/20 bg-white/10 text-white/70",
+              )}
+            >
               <span
-                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
-                  countdownPulse.days ? "scale-105 text-white" : ""
-                }`}
-              >
-                {countdown?.days ?? "00"}
-              </span>
-              <span className="text-white/55">:</span>
-              <span
-                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
-                  countdownPulse.hours ? "scale-105 text-white" : ""
-                }`}
-              >
-                {countdown?.hours ?? "00"}
-              </span>
-              <span className="text-white/55">:</span>
-              <span
-                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
-                  countdownPulse.mins ? "scale-105 text-white" : ""
-                }`}
-              >
-                {countdown?.mins ?? "00"}
-              </span>
-              <span className="text-white/55">:</span>
-              <span
-                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
-                  countdownPulse.secs ? "scale-105 text-white" : ""
-                }`}
-              >
-                {countdown?.secs ?? "00"}
-              </span>
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full animate-pulse",
+                  isLive ? "bg-pink-300" : isUpcoming ? "bg-emerald-300" : "bg-white/50",
+                )}
+              />
+              {statusLabel === "Live" ? "Live Now" : statusLabel}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80">
+              <Tag className="h-3 w-3" />
+              {safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")}
+            </span>
             </div>
-            <div className="flex items-center gap-4 text-[10px] font-semibold uppercase tracking-[0.35em] text-white/50">
-              {["Days", "Hours", "Mins", "Secs"].map((label) => (
-                <span key={label} className="transition md:hover:-translate-y-0.5 md:hover:text-white/80">
-                  {label}
-                </span>
-              ))}
-            </div>
+            {/* location badge moved into date card */}
           </div>
-          <div className="mt-3 w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-center shadow-inner transition md:hover:-translate-y-0.5 md:hover:border-white/25 md:hover:bg-white/15">
-            <div className="text-2xl font-semibold text-white sm:text-3xl">{isSameDay ? startTimeOnly : startText}</div>
-            <div className="mt-0.5 text-base font-medium text-white/80">{endText ? `Ends ${isSameDay ? endTimeOnly : endText}` : "Ends TBD"}</div>
-            <div className="mt-3 text-sm font-normal text-cyan-300">
-              {safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")} • <span className="text-white/50"> {locationLabel}</span>
-            </div>
-          </div>
+          {!isResidency ? (
+            <>
+              {isLive || isUpcoming ? (
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="text-[12px] font-semibold text-white/90">{countdownLabel}</div>
+                  <div className="flex items-end gap-1.5 text-2xl font-semibold text-white sm:text-3xl">
+                    <span
+                      className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                        countdownPulse.days ? "scale-105 text-white" : ""
+                      }`}
+                    >
+                      {countdown?.days ?? "00"}
+                    </span>
+                    <span className="text-white/55">:</span>
+                    <span
+                      className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                        countdownPulse.hours ? "scale-105 text-white" : ""
+                      }`}
+                    >
+                      {countdown?.hours ?? "00"}
+                    </span>
+                    <span className="text-white/55">:</span>
+                    <span
+                      className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                        countdownPulse.mins ? "scale-105 text-white" : ""
+                      }`}
+                    >
+                      {countdown?.mins ?? "00"}
+                    </span>
+                    <span className="text-white/55">:</span>
+                    <span
+                      className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                        countdownPulse.secs ? "scale-105 text-white" : ""
+                      }`}
+                    >
+                      {countdown?.secs ?? "00"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 text-[10px] font-semibold uppercase tracking-[0.35em] text-white/50">
+                    {["Days", "Hours", "Mins", "Secs"].map((label) => (
+                      <span key={label} className="transition md:hover:-translate-y-0.5 md:hover:text-white/80">
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              <div className={cn("mt-3 w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-center shadow-inner transition md:hover:-translate-y-0.5 md:hover:border-white/25 md:hover:bg-white/15", isLive || isUpcoming ? "" : "mt-6")}>
+                <div className={cn("text-xl font-semibold text-white sm:text-2xl", isLive ? "text-sm font-medium text-white/80 sm:text-base" : "")}>
+                  Starts {isSameDay ? startTimeOnly : startText}
+                </div>
+                <div
+                  className={cn(
+                    "mt-0.5 text-sm font-medium text-white/80 sm:text-base",
+                    isLive ? "text-xl font-semibold text-white sm:text-2xl" : "",
+                  )}
+                >
+                  {endText ? `Ends ${isSameDay ? endTimeOnly : endText}` : "Ends TBD"}
+                </div>
+                <div className="mt-4 flex justify-center">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold text-white/80">
+                    <Tag className="h-3 w-3" />
+                    {locationLabel}
+                  </span>
+                </div>
+              </div>
+            </>
+          ) : null}
           <div className="mt-8 flex flex-col items-center gap-1.5 mb-6">
             <div className="flex items-center gap-2">
               <HandleBadge
