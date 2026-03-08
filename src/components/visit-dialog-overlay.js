@@ -5,11 +5,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogOverlay, 
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import ShareDialog from "@/components/share-dialog";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
+import { useCountdown } from "@/lib/hooks/use-countdown";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { cn, hashSeed, safeCapitalize } from "@/lib/utils";
 import { Link2, MoreHorizontal, Share2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -54,31 +55,6 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
   );
 }
 
-function ArtistAccountCard({ account, avatarUrl, locationLabel }) {
-  return (
-    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-3 py-3 text-white shadow-inner">
-      <div className="h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/10">
-        <img src={avatarUrl} alt={account.name} className="h-full w-full object-cover" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="truncate text-sm font-semibold text-white">
-          {account.name}
-          {locationLabel ? <span className="text-white/55"> / {locationLabel}</span> : null}
-        </div>
-        <div className="mt-1 flex min-w-0 items-center gap-2">
-          <div className="h-6 w-6 shrink-0 overflow-hidden rounded-full border border-white/10 bg-white/10">
-            <img src={avatarUrl} alt={account.name} className="h-full w-full object-cover" />
-          </div>
-          <div className="min-w-0 truncate text-xs font-semibold text-white/80">
-            @{String(account.handle).replace(/^@/, "")}
-            <span className="text-[11px] font-semibold text-white/50"> • {(account.accountType || "author").replace(/_/g, " ")}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function VisitDetailsContent({ visit, open, onOpenChange }) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const bannerImages = [
@@ -95,7 +71,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
     "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
     "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=80",
   ];
-  const bannerUrl = bannerImages[Math.floor(Math.random() * bannerImages.length)];
+  const bannerUrl = useMemo(() => bannerImages[Math.floor(Math.random() * bannerImages.length)], []);
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://catchme.live";
   const destinationHandle = (visit?.destination_username || visit?.destination_instagram_handle || "").replace(/^@/, "");
   const shareUrl = destinationHandle ? `${baseUrl}/artists/${destinationHandle}` : `${baseUrl}/artists`;
@@ -109,28 +85,18 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
   const startTimeOnly = startDate ? new Date(startDate).toLocaleString("en-US", { hour: "numeric", minute: "2-digit" }) : "TBD";
   const endTimeOnly = endDate ? new Date(endDate).toLocaleString("en-US", { hour: "numeric", minute: "2-digit" }) : "TBD";
   const locationLabel = visit?.visit_location || visit?.destination_name || visit?.destination_instagram_handle || "Location TBA";
-  const now = new Date();
+  const nowValue = new Date();
   const startDateValue = startDate ? new Date(startDate) : null;
   const endDateValue = endDate ? new Date(endDate) : null;
-  const isLive = startDateValue && startDateValue <= now && (!endDateValue || endDateValue >= now);
-  const isUpcoming = !isLive && Boolean(startDateValue && startDateValue > now);
+  const isLive = startDateValue && startDateValue <= nowValue && (!endDateValue || endDateValue >= nowValue);
+  const isUpcoming = !isLive && Boolean(startDateValue && startDateValue > nowValue);
   const isSameDay = startDateValue && endDateValue ? startDateValue.toDateString() === endDateValue.toDateString() : false;
   const statusLabel = isLive ? "Live" : isUpcoming ? "Upcoming" : "Expired";
   const statusColor = isLive ? "text-purple-500 dark:text-purple-400" : isUpcoming ? "text-fuchsia-500 dark:text-fuchsia-400" : "text-rose-500 dark:text-rose-400";
   const descriptionText = "You stand against a wall; you sink into it. You rest your back against a tree, the breeze rubs you green. The city hums while the ink settles into your skin. Every line is a memory, every mark a promise.";
   const countdownTarget = isLive ? endDateValue : isUpcoming ? startDateValue : null;
   const countdownLabel = isLive ? "Time Remaining" : isUpcoming ? "Starts In" : "Visit Ended";
-  const formatCountdown = (target) => {
-    if (!target) return null;
-    const diffSeconds = Math.max(0, Math.floor((target.getTime() - Date.now()) / 1000));
-    const days = Math.floor(diffSeconds / 86400);
-    const hours = Math.floor((diffSeconds % 86400) / 3600);
-    const mins = Math.floor((diffSeconds % 3600) / 60);
-    const secs = diffSeconds % 60;
-    const pad = (value) => String(value).padStart(2, "0");
-    return { days: pad(days), hours: pad(hours), mins: pad(mins), secs: pad(secs) };
-  };
-  const countdown = formatCountdown(countdownTarget);
+  const { countdown, pulse: countdownPulse } = useCountdown(countdownTarget, { active: open });
   const normalizedHandle = (value) => String(value || "account").replace(/^@/, "");
   const rawLinkedAccounts = Array.isArray(visit?.linked_accounts) ? visit.linked_accounts : [];
   const authorAccount = {
@@ -184,28 +150,53 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
       <div className="pt-4">
         <div className="mt-3 flex flex-col items-center gap-4 text-center text-white">
           <span className="inline-flex items-center gap-2 rounded-full border border-pink-400/70 bg-pink-500/55 px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-pink-50 mb-6">
-            <span className="h-1.5 w-1.5 rounded-full bg-pink-300" />
+            <span className="h-1.5 w-1.5 rounded-full bg-pink-300 animate-pulse" />
             {statusLabel === "Live" ? "Live Now" : statusLabel}
           </span>
           <div className="flex flex-col items-center gap-1.5">
             <div className="text-[12px] font-semibold text-white/90">{countdownLabel}</div>
             <div className="flex items-end gap-1.5 text-2xl font-semibold text-white sm:text-3xl">
-              <span className="min-w-[2.2ch] text-center">{countdown?.days ?? "00"}</span>
+              <span
+                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                  countdownPulse.days ? "scale-105 text-white" : ""
+                }`}
+              >
+                {countdown?.days ?? "00"}
+              </span>
               <span className="text-white/55">:</span>
-              <span className="min-w-[2.2ch] text-center">{countdown?.hours ?? "00"}</span>
+              <span
+                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                  countdownPulse.hours ? "scale-105 text-white" : ""
+                }`}
+              >
+                {countdown?.hours ?? "00"}
+              </span>
               <span className="text-white/55">:</span>
-              <span className="min-w-[2.2ch] text-center">{countdown?.mins ?? "00"}</span>
+              <span
+                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                  countdownPulse.mins ? "scale-105 text-white" : ""
+                }`}
+              >
+                {countdown?.mins ?? "00"}
+              </span>
               <span className="text-white/55">:</span>
-              <span className="min-w-[2.2ch] text-center">{countdown?.secs ?? "00"}</span>
+              <span
+                className={`min-w-[2.2ch] text-center transition md:hover:-translate-y-0.5 md:hover:text-white/80 ${
+                  countdownPulse.secs ? "scale-105 text-white" : ""
+                }`}
+              >
+                {countdown?.secs ?? "00"}
+              </span>
             </div>
             <div className="flex items-center gap-4 text-[10px] font-semibold uppercase tracking-[0.35em] text-white/50">
-              <span>Days</span>
-              <span>Hours</span>
-              <span>Mins</span>
-              <span>Secs</span>
+              {["Days", "Hours", "Mins", "Secs"].map((label) => (
+                <span key={label} className="transition md:hover:-translate-y-0.5 md:hover:text-white/80">
+                  {label}
+                </span>
+              ))}
             </div>
           </div>
-          <div className="mt-3 w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-center shadow-inner">
+          <div className="mt-3 w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-4 text-center shadow-inner transition md:hover:-translate-y-0.5 md:hover:border-white/25 md:hover:bg-white/15">
             <div className="text-2xl font-semibold text-white sm:text-3xl">{isSameDay ? startTimeOnly : startText}</div>
             <div className="mt-0.5 text-base font-medium text-white/80">{endText ? `Ends ${isSameDay ? endTimeOnly : endText}` : "Ends TBD"}</div>
             <div className="mt-3 text-sm font-normal text-cyan-300">
@@ -279,13 +270,12 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
                 </div>
               ))}
             </div>
-            <div className="space-y-3" id="linked-accounts">
+            <div className="space-y-3 mt-10" id="linked-accounts">
               <div className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-inner">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="text-sm font-semibold text-white">Linked Accounts</div>
                   <div className="text-xs font-medium text-white/50">{allLinkedAccounts.length} total</div>
                 </div>
-                <div className="mb-3 h-px w-full bg-white/10" />
                 <div className="flex flex-wrap items-center gap-4">
                   {allLinkedAccounts.map((account) => (
                     <HandleBadge
@@ -300,7 +290,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
                 </div>
               </div>
             </div>
-            <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-8">
+            <div className="mt-12 flex items-center justify-between pt-8">
               <ShareDialog
                 url={shareUrl}
                 trigger={

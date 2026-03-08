@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import VisitDialogOverlay from "@/components/visit-dialog-overlay";
 import { formatShortDate, formatVisitDateRange, formatVisitType, getVisitParam, resolveVisitById, setVisitParam } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronDown } from "lucide-react";
+import { useCountdown } from "@/lib/hooks/use-countdown";
+import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
 
 const BANNER_IMAGES = [
   "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80",
@@ -50,71 +51,57 @@ function coerceVisitDate(value) {
   return Number.isNaN(numericDate.getTime()) ? null : numericDate;
 }
 
-function StickyHeading({ children, offset = 64, className = "" }) {
-  const placeholderRef = useRef(null);
-  const headerRef = useRef(null);
-  const [metrics, setMetrics] = useState({ height: 0, pinned: false, left: 0, width: 0 });
-
-  useLayoutEffect(() => {
-    if (!headerRef.current) return;
-    const element = headerRef.current;
-    const updateHeight = () => {
-      const height = element.offsetHeight;
-      setMetrics((prev) => (prev.height === height ? prev : { ...prev, height }));
-    };
-    updateHeight();
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(() => {
-        raf = 0;
-        if (!placeholderRef.current) return;
-        const rect = placeholderRef.current.getBoundingClientRect();
-        const shouldPin = rect.top <= offset;
-        setMetrics((prev) => {
-          if (prev.pinned === shouldPin) return prev;
-          if (!shouldPin) return { ...prev, pinned: false };
-          return { ...prev, pinned: true, left: rect.left, width: rect.width };
-        });
-      });
-    };
-    const updatePinnedPosition = () => {
-      if (!placeholderRef.current) return;
-      const rect = placeholderRef.current.getBoundingClientRect();
-      setMetrics((prev) => (prev.pinned ? { ...prev, left: rect.left, width: rect.width } : prev));
-    };
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", updatePinnedPosition);
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", updatePinnedPosition);
-      if (raf) window.cancelAnimationFrame(raf);
-    };
-  }, [offset]);
+function UpcomingCountdownBadge({ target, isMounted }) {
+  const { countdown } = useCountdown(target, { active: isMounted && Boolean(target) });
+  const label = useMemo(() => {
+    if (!isMounted) return "—";
+    if (!target || !countdown) return "TBD";
+    const isZero = countdown.days === "00" && countdown.hours === "00" && countdown.mins === "00" && countdown.secs === "00";
+    if (isZero) return "Starting now";
+    const daysValue = Number(countdown.days);
+    if (daysValue > 0) return `${daysValue}d ${countdown.hours}:${countdown.mins}:${countdown.secs}`;
+    return `${countdown.hours}:${countdown.mins}:${countdown.secs}`;
+  }, [countdown, isMounted, target]);
 
   return (
-    <div ref={placeholderRef} style={{ height: metrics.height || undefined }}>
-      <div
-        ref={headerRef}
-        className={`${metrics.pinned ? "fixed" : "relative"} ${className}`}
-        style={metrics.pinned ? { top: offset, left: metrics.left, width: metrics.width, zIndex: 40 } : undefined}
-      >
-        {children}
+    <div className="absolute -top-3 right-4 z-10 hidden lg:block">
+      <div className="inline-flex w-[160px] items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-semibold text-white shadow-[0_8px_20px_rgba(236,72,153,0.25)] backdrop-blur-xl transition sm:text-xs dark:border-white/20 dark:bg-black/30">
+        <ArrowUp className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
+        {label}
+        <ArrowUp className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
+      </div>
+    </div>
+  );
+}
+
+function LiveCountdownBadge({ target, isMounted }) {
+  const { countdown } = useCountdown(target, { active: isMounted && Boolean(target) });
+  const label = useMemo(() => {
+    if (!isMounted) return "—";
+    if (!target || !countdown) return "TBD";
+    const isZero = countdown.days === "00" && countdown.hours === "00" && countdown.mins === "00" && countdown.secs === "00";
+    if (isZero) return "Ending now";
+    const daysValue = Number(countdown.days);
+    if (daysValue > 0) return `${daysValue}d ${countdown.hours}:${countdown.mins}:${countdown.secs}`;
+    return `${countdown.hours}:${countdown.mins}:${countdown.secs}`;
+  }, [countdown, isMounted, target]);
+
+  return (
+    <div className="absolute -top-3 right-4 z-10 hidden lg:block">
+      <div className="inline-flex w-[160px] items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-semibold text-white shadow-[0_8px_20px_rgba(236,72,153,0.25)] backdrop-blur-xl transition sm:text-xs dark:border-white/20 dark:bg-black/30">
+        <ArrowDown className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
+        {label}
+        <ArrowDown className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
       </div>
     </div>
   );
 }
 
 export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVisits, pastVisits, artistSlug }) {
+  const [isMounted, setIsMounted] = useState(false);
   const residencyVisits = useMemo(() => [...liveVisits, ...upcomingVisits, ...pastVisits].filter((visit) => visit.visit_type === "residency"), [liveVisits, upcomingVisits, pastVisits]);
   const liveOnlyVisits = useMemo(() => liveVisits.filter((visit) => visit.visit_type !== "residency"), [liveVisits]);
+  const liveResidencyVisits = useMemo(() => liveVisits.filter((visit) => visit.visit_type === "residency"), [liveVisits]);
   const upcomingOnlyVisits = useMemo(() => upcomingVisits.filter((visit) => visit.visit_type !== "residency"), [upcomingVisits]);
   const pastOnlyVisits = useMemo(() => pastVisits.filter((visit) => visit.visit_type !== "residency"), [pastVisits]);
 
@@ -127,26 +114,6 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
     ],
     [residencyVisits, liveOnlyVisits, upcomingOnlyVisits, pastOnlyVisits],
   );
-  const nextUpCountdown = useMemo(() => {
-    if (!upcomingOnlyVisits.length) return "No upcoming";
-    const sorted = [...upcomingOnlyVisits].sort((a, b) => {
-      const aStart = coerceVisitDate(a.visit_start_time ?? a.start_time ?? a.start_date ?? a.start);
-      const bStart = coerceVisitDate(b.visit_start_time ?? b.start_time ?? b.start_date ?? b.start);
-      return (aStart?.getTime() || 0) - (bStart?.getTime() || 0);
-    });
-    const next = sorted[0];
-    const nextStart = coerceVisitDate(next.visit_start_time ?? next.start_time ?? next.start_date ?? next.start);
-    if (!nextStart) return "TBD";
-    const diffMs = nextStart.getTime() - Date.now();
-    if (diffMs <= 0) return "Starting now";
-    const totalMinutes = Math.ceil(diffMs / (1000 * 60));
-    const days = Math.floor(totalMinutes / (60 * 24));
-    const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-    if (days > 0 && hours > 0) return `${days}d ${hours}h`;
-    if (days > 0) return `${days}d`;
-    if (hours > 0) return `${hours}h`;
-    return `${totalMinutes}m`;
-  }, [upcomingOnlyVisits]);
   const latestLiveCountdown = useMemo(() => {
     if (!liveOnlyVisits.length) return "No live visits";
     const withEnd = [...liveOnlyVisits]
@@ -190,6 +157,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
   }, [allVisits]);
 
   useEffect(() => {
+    setIsMounted(true);
     const handlePopState = () => {
       const current = resolveVisitById(allVisits, getVisitParam());
       setActiveVisit(current);
@@ -199,110 +167,285 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
   }, [allVisits]);
 
   return (
-    <div className="relative mx-auto w-full pb-12 sm:pt-4 overflow-visible">
+    <div className="relative mx-auto w-full pb-12 sm:pt-4 px-0.5 overflow-visible">
       <div className="relative z-10 space-y-6 overflow-visible">
         {visitsCount === 0 || allVisits.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-200 bg-white/80 py-4 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300">No visits have been published yet.</div>
         ) : (
           <div className="mx-auto w-full space-y-5 sm:space-y-5">
-            <StickyHeading className="z-30 -mx-4 flex items-center justify-between border-b border-slate-200/70 bg-white/95 py-3 backdrop-blur sm:mx-0 sm:rounded-2xl sm:border dark:border-slate-800/80 dark:bg-slate-950/90">
-              <div>
-                <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Now Live</h2>
-              </div>
-              <ChevronDown className="h-7 w-7 text-slate-900 dark:text-white" />
-            </StickyHeading>
             {orderedSections
-              .filter((section) => section.visits.length)
+              .filter((section) => section.visits.length && section.key !== "residencies")
               .map((section, sectionIndex) => (
                 <div key={section.key} className={section.key === "upcoming" || section.key === "past" ? "mt-10 sm:mt-12" : sectionIndex ? "mt-6" : ""}>
-                  {section.key === "upcoming" ? (
-                    <StickyHeading className="z-30 -mx-4 mb-6 flex items-center justify-between border-b border-slate-200/70 bg-white/95 py-3 backdrop-blur sm:mx-0 sm:rounded-2xl sm:border dark:border-slate-800/80 dark:bg-slate-950/90">
-                      <div>
-                        <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Next Up</h2>
+                  {section.key === "live" ? (
+                    <div className="-mx-4 rounded-2xl overflow-hidden border border-fuchsia-400/70 bg-[radial-gradient(140%_140%_at_12%_88%,rgba(236,72,153,0.55)_0%,rgba(236,72,153,0.2)_35%,rgba(109,40,217,0.15)_62%,rgba(49,20,78,0.6)_100%),radial-gradient(120%_120%_at_90%_12%,rgba(244,114,182,0.55)_0%,rgba(219,39,119,0.3)_30%,rgba(147,51,234,0.2)_65%,rgba(49,20,78,0.6)_100%),linear-gradient(135deg,#7b2b7a_0%,#b12b6d_38%,#8a2a69_62%,#3a2852_100%)] px-4 pt-4 pb-8 shadow-[0_-12px_28px_rgba(88,28,135,0.22),0_18px_40px_rgba(88,28,135,0.28)] sm:mx-0 sm:p-6">
+                      <div className="mb-4 flex items-center justify-between pt-2 pb-3 border-b border-white/10">
+                        <h2 className="text-3xl font-semibold text-white">Now Live</h2>
+                        <div className="text-sm font-semibold text-white/70">{liveResidencyVisits.length + liveOnlyVisits.length}</div>
                       </div>
-                      <ChevronDown className="h-7 w-7 text-slate-900 dark:text-white" />
-                    </StickyHeading>
-                  ) : null}
-                  <div className="space-y-5 sm:space-y-5">
-                    {section.visits.map((visit, visitIndex) => {
-                      const start = coerceVisitDate(visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start);
-                      const end = coerceVisitDate(visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end);
-                      const accountName = visit.destination_name || visit.destination_username || visit.destination_instagram_handle || "Artist";
-                      const title = visit.visit_title || visit.title || accountName;
-                      const location = visit.visit_location || visit.destination_name || visit.destination_instagram_handle || "Location TBA";
-                      const visitTypeLabel = formatVisitType(visit.visit_type);
-                      const dateRange = formatVisitDateRange(start, end);
-                      const isResidency = visit.visit_type === "residency";
-                      const dayLabel = isResidency ? `#${visitIndex + 1}` : start ? String(start.getDate()) : "—";
-                      const residencyRoles = ["owner", "co owner", "trainee"];
-                      const residencyRole = isResidency ? residencyRoles[visitIndex % residencyRoles.length] : "";
-                      const monthLabel = isResidency ? residencyRole : start ? start.toLocaleString("en-US", { month: "short" }) : "";
-                      const yearLabel = isResidency ? "" : start ? start.toLocaleString("en-US", { year: "numeric" }) : "";
-                      const now = new Date();
-                      const isLive = start && start <= now && (!end || end >= now);
-                      const durationLabel =
-                        start && end
-                          ? (() => {
-                              const totalMinutes = Math.max(1, Math.round((end - start) / (1000 * 60)));
-                              const days = Math.floor(totalMinutes / (60 * 24));
-                              const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-                              if (days > 0 && hours > 0) return `${days}d ${hours}h`;
-                              if (days > 0) return `${days}d`;
-                              if (hours > 0) return `${hours}h`;
-                              return `${totalMinutes}m`;
-                            })()
-                          : "Ongoing";
-                      const cardTone = isLive ? "bg-green-400 dark:bg-green-600" : "bg-white/90 dark:bg-slate-950/80";
-                      const liveTone = "text-slate-900 dark:text-slate-100";
-                      const badgeTone = isLive
-                        ? "border-white/20 bg-white/10 text-white/80 dark:border-slate-200 dark:bg-slate-100 dark:text-slate-900"
-                        : "border-slate-200 bg-slate-50 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70";
-                      const bannerImage = pickRandom(BANNER_IMAGES, `banner-${visit.id}`);
-                      const profileImage = pickRandom(PROFILE_IMAGES, `profile-${visit.id}`);
-                      const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
-                      const handle = `@${String(handleBase).replace(/^@/, "")}`;
-                      return (
-                        <button key={visit.id} type="button" onClick={() => openVisit(visit)} className="group flex w-full flex-row items-center gap-3 text-left sm:gap-6">
-                          <div className="w-[45px] px-1 text-base font-semibold text-center text-slate-900 sm:w-auto sm:min-w-[110px] sm:text-lg dark:text-slate-100">
-                            <div className="text-3xl font-bold leading-none sm:text-4xl text-center text-slate-900 dark:text-slate-100">{dayLabel}</div>
-                            {monthLabel ? <div className="text-xs font-medium text-slate-900 text-center dark:text-slate-100">{monthLabel}</div> : null}
-                            {yearLabel ? <div className="text-[10px] font-medium text-slate-400 text-center dark:text-slate-500">{yearLabel}</div> : null}
-                          </div>
-                          <div className="relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-white/90 px-2.5 py-2 transition hover:-translate-y-0.5 hover:shadow-md sm:gap-4 sm:px-5 sm:py-4 dark:border-white/10 dark:bg-slate-950/80">
-                            <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
-                              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:h-20 sm:w-20">
-                                <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${bannerImage})` }} />
+                      <div className="space-y-5 sm:space-y-5">
+                        {[...liveResidencyVisits, ...liveOnlyVisits].map((visit, visitIndex) => {
+                          const start = coerceVisitDate(visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start);
+                          const end = coerceVisitDate(visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end);
+                          const accountName = visit.destination_name || visit.destination_username || visit.destination_instagram_handle || "Artist";
+                          const title = visit.visit_title || visit.title || accountName;
+                          const location = visit.visit_location || visit.destination_name || visit.destination_instagram_handle || "Location TBA";
+                          const visitTypeLabel = formatVisitType(visit.visit_type);
+                          const isResidency = visit.visit_type === "residency";
+                          const dayLabel = isResidency ? `#${visitIndex + 1}` : start ? String(start.getDate()).padStart(2, "0") : "—";
+                          const residencyRoles = ["owner", "co owner", "trainee"];
+                          const residencyRole = isResidency ? residencyRoles[visitIndex % residencyRoles.length] : "";
+                          const monthLabel = isResidency ? residencyRole : start ? start.toLocaleString("en-US", { month: "short" }) : "";
+                          const yearLabel = isResidency ? "" : start ? start.toLocaleString("en-US", { year: "numeric" }) : "";
+                          const durationLabel =
+                            start && end
+                              ? (() => {
+                                  const totalMinutes = Math.max(1, Math.round((end - start) / (1000 * 60)));
+                                  const days = Math.floor(totalMinutes / (60 * 24));
+                                  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+                                  if (days > 0 && hours > 0) return `${days}d ${hours}h`;
+                                  if (days > 0) return `${days}d`;
+                                  if (hours > 0) return `${hours}h`;
+                                  return `${totalMinutes}m`;
+                                })()
+                              : "Ongoing";
+                          const bannerImage = pickRandom(BANNER_IMAGES, `banner-${visit.id}`);
+                          const profileImage = pickRandom(PROFILE_IMAGES, `profile-${visit.id}`);
+                          const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
+                          const handle = `@${String(handleBase).replace(/^@/, "")}`;
+                          return (
+                            <div key={visit.id} className="relative group">
+                              {!isResidency ? <LiveCountdownBadge target={end} isMounted={isMounted} /> : null}
+                              <button type="button" onClick={() => openVisit(visit)} className="flex w-full flex-row items-center gap-3 text-left transition-transform lg:hover:translate-x-2 sm:gap-6">
+                              <div className="w-[45px] px-1 text-base font-semibold text-center text-white/90 sm:w-auto sm:min-w-[110px] sm:text-lg">
+                                <div className="text-3xl font-bold leading-none sm:text-4xl text-center text-white">{dayLabel}</div>
+                                {monthLabel ? <div className="text-[12px] font-medium text-white/80 text-center">{monthLabel}</div> : null}
+                                {yearLabel ? <div className="text-[10px] font-medium text-white/50 text-center">{yearLabel}</div> : null}
                               </div>
-                              <div className="min-w-0 flex-1 space-y-1">
-                                <div className="flex min-w-0 items-center gap-2 ml-2">
-                                  <div className="min-w-0 truncate text-lg font-semibold text-slate-900 sm:text-xl dark:text-white">
-                                    <span>{title}</span>
-                                    <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500"> / {location}</span>
+                                <div className="relative flex flex-1 flex-col gap-3 rounded-3xl border border-white/25 bg-white/10 backdrop-blur-xl px-3 py-3 shadow-[0_14px_28px_rgba(236,72,153,0.18)] transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/70 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/20 dark:bg-black/20">
+                                  <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+                                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:h-20 sm:w-20">
+                                      <div className="h-full w-full bg-cover bg-center transition-transform duration-300 lg:group-hover:scale-110" style={{ backgroundImage: `url(${bannerImage})` }} />
+                                    </div>
+                                    <div className="min-w-0 flex-1 space-y-1">
+                                      <div className="flex min-w-0 items-center gap-2 ml-2">
+                                        <div className="min-w-0 truncate text-lg font-semibold text-white sm:text-xl">
+                                          <span>{title}</span>
+                                          <span className="text-[11px] font-semibold text-white/60 lg:hidden"> / {location}</span>
+                                          <span className="hidden lg:inline text-sm font-semibold text-white/80"> / {visitTypeLabel} / {location}</span>
+                                        </div>
+                                      </div>
+                                      <div className="flex min-w-0 items-center gap-1.5 pl-2">
+                                        <Avatar className="h-7 w-7 border border-white/20 bg-white/10">
+                                          <AvatarImage src={profileImage} alt={handle} />
+                                          <AvatarFallback className="text-[10px] font-semibold text-white/70">AR</AvatarFallback>
+                                        </Avatar>
+                                        <div className="min-w-0 truncate text-sm font-semibold text-white">
+                                          <span>{handle}</span>
+                                          <span className="text-[11px] font-semibold text-white/60 lg:hidden"> • {visitTypeLabel}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {!isResidency ? (
+                                      <div className="ml-auto hidden min-w-[110px] flex-col items-end gap-1 text-right sm:flex">
+                                        <span className="text-xs font-semibold text-white/60">Duration</span>
+                                        <span className="text-sm font-semibold text-white">{durationLabel}</span>
+                                      </div>
+                                    ) : null}
                                   </div>
                                 </div>
-                                <div className="flex min-w-0 items-center gap-1.5 pl-2">
-                                  <Avatar className="h-7 w-7 border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5">
-                                    <AvatarImage src={profileImage} alt={handle} />
-                                    <AvatarFallback className="text-[10px] font-semibold text-slate-500 dark:text-slate-300">AR</AvatarFallback>
-                                  </Avatar>
-                                  <div className="min-w-0 truncate text-sm font-semibold text-slate-900 dark:text-white">
-                                    <span>{handle}</span>
-                                    <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500"> • {visitTypeLabel}</span>
-                                  </div>
-                                </div>
-                              </div>
-                              {!isResidency ? (
-                                <div className="ml-auto hidden min-w-[110px] flex-col items-end gap-1 text-right sm:flex">
-                                  <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">Duration</span>
-                                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{durationLabel}</span>
-                                </div>
-                              ) : null}
+                              </button>
                             </div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
+                  {section.key === "upcoming" ? (
+                    <div className="-mx-4 rounded-2xl overflow-hidden border border-fuchsia-400/70 bg-[radial-gradient(140%_140%_at_12%_88%,rgba(236,72,153,0.55)_0%,rgba(236,72,153,0.2)_35%,rgba(109,40,217,0.15)_62%,rgba(49,20,78,0.6)_100%),radial-gradient(120%_120%_at_90%_12%,rgba(244,114,182,0.55)_0%,rgba(219,39,119,0.3)_30%,rgba(147,51,234,0.2)_65%,rgba(49,20,78,0.6)_100%),linear-gradient(135deg,#7b2b7a_0%,#b12b6d_38%,#8a2a69_62%,#3a2852_100%)] px-4 pt-4 pb-6 shadow-[0_-12px_28px_rgba(88,28,135,0.22),0_18px_40px_rgba(88,28,135,0.28)] sm:mx-0 sm:p-6">
+                      <div className="mb-4 flex items-center justify-between pt-2 pb-3 border-b border-white/10">
+                        <h2 className="text-3xl font-semibold text-white">Next Up</h2>
+                      </div>
+                      <div className="relative mt-5 space-y-5 sm:space-y-5">
+                        {section.visits.map((visit, visitIndex) => {
+                          const start = coerceVisitDate(visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start);
+                          const end = coerceVisitDate(visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end);
+                          const accountName = visit.destination_name || visit.destination_username || visit.destination_instagram_handle || "Artist";
+                          const title = visit.visit_title || visit.title || accountName;
+                          const location = visit.visit_location || visit.destination_name || visit.destination_instagram_handle || "Location TBA";
+                          const visitTypeLabel = formatVisitType(visit.visit_type);
+                          const isResidency = visit.visit_type === "residency";
+                          const dayLabel = isResidency ? `#${visitIndex + 1}` : start ? String(start.getDate()).padStart(2, "0") : "—";
+                          const residencyRoles = ["owner", "co owner", "trainee"];
+                          const residencyRole = isResidency ? residencyRoles[visitIndex % residencyRoles.length] : "";
+                          const monthLabel = isResidency ? residencyRole : start ? start.toLocaleString("en-US", { month: "short" }) : "";
+                          const yearLabel = isResidency ? "" : start ? start.toLocaleString("en-US", { year: "numeric" }) : "";
+                          const durationLabel =
+                            start && end
+                              ? (() => {
+                                  const totalMinutes = Math.max(1, Math.round((end - start) / (1000 * 60)));
+                                  const days = Math.floor(totalMinutes / (60 * 24));
+                                  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+                                  if (days > 0 && hours > 0) return `${days}d ${hours}h`;
+                                  if (days > 0) return `${days}d`;
+                                  if (hours > 0) return `${hours}h`;
+                                  return `${totalMinutes}m`;
+                                })()
+                              : "Ongoing";
+                          const bannerImage = pickRandom(BANNER_IMAGES, `banner-${visit.id}`);
+                          const profileImage = pickRandom(PROFILE_IMAGES, `profile-${visit.id}`);
+                          const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
+                          const handle = `@${String(handleBase).replace(/^@/, "")}`;
+                          return (
+                            <div key={visit.id} className="relative group">
+                              <UpcomingCountdownBadge target={start} isMounted={isMounted} />
+                              <button type="button" onClick={() => openVisit(visit)} className="flex w-full flex-row items-center gap-3 text-left transition-transform lg:hover:translate-x-2 sm:gap-6">
+                                <div className="w-[45px] px-1 text-base font-semibold text-center text-white/90 sm:w-auto sm:min-w-[110px] sm:text-lg">
+                                  <div className="text-3xl font-bold leading-none sm:text-4xl text-center text-white">{dayLabel}</div>
+                                  {monthLabel ? <div className="text-[12px] font-medium text-white/80 text-center">{monthLabel}</div> : null}
+                                  {yearLabel ? <div className="text-[10px] font-medium text-white/50 text-center">{yearLabel}</div> : null}
+                                </div>
+                                <div className="relative flex flex-1 flex-col gap-3 rounded-3xl border border-white/25 bg-white/10 backdrop-blur-xl px-3 py-3 shadow-[0_14px_28px_rgba(236,72,153,0.18)] transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/70 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/20 dark:bg-black/20">
+                                  <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+                                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:h-20 sm:w-20">
+                                      <div className="h-full w-full bg-cover bg-center transition-transform duration-300 lg:group-hover:scale-110" style={{ backgroundImage: `url(${bannerImage})` }} />
+                                    </div>
+                                  <div className="min-w-0 flex-1 space-y-1">
+                                    <div className="flex min-w-0 items-center gap-2 ml-2">
+                                      <div className="min-w-0 truncate text-lg font-semibold text-white sm:text-xl">
+                                        <span>{title}</span>
+                                        <span className="text-[11px] font-semibold text-white/60 lg:hidden"> / {location}</span>
+                                        <span className="hidden lg:inline text-sm font-semibold text-white/80"> / {visitTypeLabel} / {location}</span>
+                                      </div>
+                                    </div>
+                                  <div className="flex min-w-0 items-center gap-1.5 pl-2">
+                                    <Avatar className="h-7 w-7 border border-white/20 bg-white/10">
+                                      <AvatarImage src={profileImage} alt={handle} />
+                                      <AvatarFallback className="text-[10px] font-semibold text-white/70">AR</AvatarFallback>
+                                    </Avatar>
+                                    <div className="min-w-0 truncate text-sm font-semibold text-white">
+                                      <span>{handle}</span>
+                                      <span className="text-[11px] font-semibold text-white/60 lg:hidden"> • {visitTypeLabel}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                {!isResidency ? (
+                                  <div className="ml-auto hidden min-w-[110px] flex-col items-end gap-1 text-right sm:flex">
+                                    <span className="text-xs font-semibold text-white/60">Duration</span>
+                                    <span className="text-sm font-semibold text-white">{durationLabel}</span>
+                                  </div>
+                                ) : null}
+                              </div>
+                            </div>
+                          </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
+                  {section.key === "past" ? (
+                    <div className="mb-6 flex items-center justify-between py-3">
+                      <div>
+                        <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Past Visits</h2>
+                      </div>
+                      <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">{section.visits.length}</div>
+                    </div>
+                  ) : null}
+                  {section.key !== "live" && section.key !== "upcoming" ? (
+                    <div className="space-y-5 sm:space-y-5">
+                      {section.visits.map((visit, visitIndex) => {
+                        const start = coerceVisitDate(visit.visit_start_time ?? visit.start_time ?? visit.start_date ?? visit.start);
+                        const end = coerceVisitDate(visit.visit_end_time ?? visit.end_time ?? visit.end_date ?? visit.end);
+                        const accountName = visit.destination_name || visit.destination_username || visit.destination_instagram_handle || "Artist";
+                        const title = visit.visit_title || visit.title || accountName;
+                        const location = visit.visit_location || visit.destination_name || visit.destination_instagram_handle || "Location TBA";
+                        const visitTypeLabel = formatVisitType(visit.visit_type);
+                        const dateRange = formatVisitDateRange(start, end);
+                        const isResidency = visit.visit_type === "residency";
+                        const dayLabel = isResidency ? `#${visitIndex + 1}` : start ? String(start.getDate()).padStart(2, "0") : "—";
+                        const residencyRoles = ["owner", "co owner", "trainee"];
+                        const residencyRole = isResidency ? residencyRoles[visitIndex % residencyRoles.length] : "";
+                        const monthLabel = isResidency ? residencyRole : start ? start.toLocaleString("en-US", { month: "short" }) : "";
+                        const yearLabel = isResidency ? "" : start ? start.toLocaleString("en-US", { year: "numeric" }) : "";
+                        const now = new Date();
+                        const isLive = start && start <= now && (!end || end >= now);
+                        const durationLabel =
+                          start && end
+                            ? (() => {
+                                const totalMinutes = Math.max(1, Math.round((end - start) / (1000 * 60)));
+                                const days = Math.floor(totalMinutes / (60 * 24));
+                                const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+                                if (days > 0 && hours > 0) return `${days}d ${hours}h`;
+                                if (days > 0) return `${days}d`;
+                                if (hours > 0) return `${hours}h`;
+                                return `${totalMinutes}m`;
+                              })()
+                            : "Ongoing";
+                        const cardTone = isLive ? "bg-green-400 dark:bg-green-600" : "bg-white/90 dark:bg-slate-950/80";
+                        const liveTone = "text-slate-900 dark:text-slate-100";
+                        const badgeTone = isLive
+                          ? "border-white/20 bg-white/10 text-white/80 dark:border-slate-200 dark:bg-slate-100 dark:text-slate-900"
+                          : "border-slate-200 bg-slate-50 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70";
+                        const bannerImage = pickRandom(BANNER_IMAGES, `banner-${visit.id}`);
+                        const profileImage = pickRandom(PROFILE_IMAGES, `profile-${visit.id}`);
+                        const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
+                        const handle = `@${String(handleBase).replace(/^@/, "")}`;
+                        return (
+                          <button key={visit.id} type="button" onClick={() => openVisit(visit)} className="group flex w-full flex-row items-center gap-3 text-left transition-transform lg:hover:translate-x-2 sm:gap-6">
+                            <div className="w-[45px] px-1 text-base font-semibold text-center text-slate-900 sm:w-auto sm:min-w-[110px] sm:text-lg dark:text-slate-100">
+                              <div className="text-3xl font-bold leading-none sm:text-4xl text-center text-slate-900 dark:text-slate-100">{dayLabel}</div>
+                              {monthLabel ? <div className="text-[12px] font-medium text-slate-900 text-center dark:text-slate-100">{monthLabel}</div> : null}
+                              {yearLabel ? <div className="text-[10px] font-medium text-slate-400 text-center dark:text-slate-500">{yearLabel}</div> : null}
+                            </div>
+                            <div className="relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-transparent px-3 py-3 transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/70 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/10">
+                              <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+                                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:h-20 sm:w-20">
+                                  <div className="h-full w-full bg-cover bg-center transition-transform duration-300 lg:group-hover:scale-110" style={{ backgroundImage: `url(${bannerImage})` }} />
+                                </div>
+                                <div className="min-w-0 flex-1 space-y-1">
+                                  <div className="flex min-w-0 items-center gap-2 ml-2">
+                                    <div className="min-w-0 truncate text-lg font-semibold text-slate-900 sm:text-xl dark:text-white">
+                                      <span>{title}</span>
+                                      <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 lg:hidden"> / {location}</span>
+                                      <span className="hidden lg:inline text-sm font-semibold text-slate-500 dark:text-slate-300"> / {visitTypeLabel} / {location}</span>
+                                    </div>
+                                  </div>
+                                  <div className="flex min-w-0 items-center gap-1.5 pl-2">
+                                    <Avatar className="h-7 w-7 border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5">
+                                      <AvatarImage src={profileImage} alt={handle} />
+                                      <AvatarFallback className="text-[10px] font-semibold text-slate-500 dark:text-slate-300">AR</AvatarFallback>
+                                    </Avatar>
+                                    <div className="min-w-0 truncate text-sm font-semibold text-slate-900 dark:text-white">
+                                      <span>{handle}</span>
+                                      <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 lg:hidden"> • {visitTypeLabel}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                {!isResidency ? (
+                                  <div className="ml-auto hidden min-w-[110px] flex-col items-end gap-1 text-right sm:flex">
+                                    <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">Duration</span>
+                                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{durationLabel}</span>
+                                  </div>
+                                ) : null}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                      {section.key === "past" ? (
+                        <div className="pt-6 flex justify-center">
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
+                          >
+                            <ChevronDown className="h-4 w-4" />
+                            Load more
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
               ))}
           </div>
