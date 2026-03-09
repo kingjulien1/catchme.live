@@ -104,14 +104,15 @@ export default async function ArtistProfileLayout({ children, modal, params }) {
                   <span className="mb-0.5 text-sm font-semibold text-slate-400 dark:text-slate-500">/ {accountTypeLabel}</span>
                 </h1>
                 {profile.username ? (
-                  <div className="mt-2 header-fade-rise" style={{ animationDelay: "140ms" }}>
+                  <div className="mt-3 header-fade-rise" style={{ animationDelay: "140ms" }}>
                     <HandleBadge
                       href={`/artists/${profile.username}`}
                       avatarUrl={profile.profile_picture_url || avatarUrl}
                       alt={displayName}
                       handle={`@${profile.username}`}
-                      size="sm"
-                      className="border border-slate-200 bg-white/90 px-3 py-1.5 text-sm text-slate-700 shadow-sm dark:border-white/15 dark:bg-white/10 dark:text-white/90"
+                      size="md"
+                      variant="header"
+                      className="border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
                     />
                   </div>
                 ) : null}

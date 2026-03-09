@@ -6,7 +6,7 @@ import { formatShortDate, formatVisitDateRange, formatVisitType, getVisitParam, 
 import HandleBadge from "@/components/handle-badge";
 import { useCountdown } from "@/lib/hooks/use-countdown";
 import { motion } from "motion/react";
-import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, Tag } from "lucide-react";
 
 const BANNER_IMAGES = [
   "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80",
@@ -196,25 +196,17 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
       ? "border border-white/15 bg-white/10 text-[11px] text-white/90 sm:text-xs lg:px-3 lg:py-2 lg:text-xs"
       : "border border-slate-200/80 bg-white/90 text-[11px] text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:text-xs lg:px-3 lg:py-2 lg:text-xs";
     const dotClasses = isActive ? "text-white/60" : "text-slate-400 dark:text-white/60";
-    const visitTypeBadgeClasses = isActive ? "inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-white/90" : "inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-white/90";
+    const visitTypeBadgeClasses = isActive
+      ? "inline-flex items-center rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold text-white/90 sm:px-2.5 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs"
+      : "inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:px-2.5 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs";
     const durationLabelClasses = isActive ? "text-white" : "text-slate-900 dark:text-slate-100";
     const durationMetaClasses = isActive ? "text-white/60" : "text-slate-400 dark:text-slate-500";
 
     return (
-      <motion.div
-        className="relative group"
-        initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
-      >
+      <motion.div className="relative group" initial={{ opacity: 0, y: 18, filter: "blur(8px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.45, ease: "easeOut" }}>
         {!isResidency && isUpcoming ? <UpcomingCountdownBadge target={start} isMounted={isMounted} /> : null}
         {!isResidency && isLive ? <LiveCountdownBadge target={end} isMounted={isMounted} /> : null}
-        <motion.button
-          type="button"
-          onClick={() => openVisit(visit)}
-          className="flex w-full cursor-pointer flex-row items-center gap-3 text-left transition-transform lg:hover:translate-x-2 sm:gap-6"
-        >
+        <motion.button type="button" onClick={() => openVisit(visit)} className="flex w-full cursor-pointer flex-row items-center gap-3 text-left transition-transform lg:hover:translate-x-2 sm:gap-6">
           <div className={`w-[45px] px-1 text-[15px] font-semibold text-center sm:w-auto sm:min-w-[110px] sm:text-base ${dateClasses}`}>
             <div className={`text-[26px] font-bold leading-none sm:text-[34px] text-center ${dateClasses}`}>{dayLabel}</div>
             {monthLabel ? <div className={`text-[11px] font-medium text-center ${monthClasses}`}>{monthLabel}</div> : null}
@@ -236,9 +228,9 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
                     </span>
                   </div>
                 </div>
-                <div className="pl-2 flex items-center gap-2 lg:gap-0">
+                <div className="pl-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
                   <HandleBadge href={`/artists/${handleBase}`} avatarUrl={profileImage} alt={handle} handle={handle} size="sm" className={handleBadgeClasses} />
-                  <span className="inline-flex items-center gap-2 lg:hidden">
+                  <span className="inline-flex items-center gap-2">
                     <span className={`text-[10px] ${dotClasses}`}>•</span>
                     <span className={visitTypeBadgeClasses}>{visitTypeLabel}</span>
                   </span>
