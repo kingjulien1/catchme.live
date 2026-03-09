@@ -1,8 +1,8 @@
 "use client";
 
 import HandleBadge from "@/components/handle-badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Dialog, DialogDescription, DialogHeader, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
+import { Drawer, DrawerDescription, DrawerHeader, DrawerOverlay, DrawerPortal, DrawerTitle } from "@/components/ui/drawer";
 import ShareDialog from "@/components/share-dialog";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useCountdown } from "@/lib/hooks/use-countdown";
@@ -11,6 +11,9 @@ import { cn, hashSeed, safeCapitalize } from "@/lib/utils";
 import { Link2, MoreHorizontal, Share2, Tag } from "lucide-react";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { Dialog as DialogPrimitive } from "radix-ui";
+import { Drawer as DrawerPrimitive } from "vaul";
 
 export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -21,22 +24,46 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogPortal>
-          <DialogOverlay className="backdrop-blur-xl" />
-          <DialogContent showCloseButton={false} className="p-0 m-0 overflow-hidden rounded-3xl ring-1 ring-purple-400/80 shadow-[0_20px_60px_rgba(168,85,247,0.45),0_0_120px_rgba(168,85,247,0.45)]" onOpenAutoFocus={(event) => event.preventDefault()}>
-            <div className="rounded-3xl ring-1 ring-purple-300/80">
-              <DialogHeader className="sr-only">
-                <VisuallyHidden>
-                  <DialogTitle>Visit Details</DialogTitle>
-                </VisuallyHidden>
-                <VisuallyHidden>
-                  <DialogDescription>Visit details dialog</DialogDescription>
-                </VisuallyHidden>
-              </DialogHeader>
-              <div className="max-h-[85vh] w-[min(94vw,26rem)] no-scrollbar overflow-y-auto overflow-x-hidden rounded-3xl bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-[12px] text-slate-100 sm:w-full sm:max-w-xl sm:text-base [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
-              </div>
-            </div>
-          </DialogContent>
+          <AnimatePresence>
+            {open ? (
+              <>
+                <DialogOverlay asChild className="data-[state=open]:animate-none data-[state=closed]:animate-none">
+                  <motion.div
+                    className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xl"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  />
+                </DialogOverlay>
+                <DialogPrimitive.Content asChild forceMount>
+                  <motion.div
+                    className="fixed left-1/2 top-1/2 z-50 w-[min(94vw,26rem)] -translate-x-1/2 -translate-y-1/2 sm:w-full sm:max-w-xl"
+                    initial={{ opacity: 0, y: 36, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 36, scale: 0.95 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  >
+                    <div className="p-0 m-0 overflow-hidden rounded-3xl ring-1 ring-purple-400/80 shadow-[0_20px_60px_rgba(168,85,247,0.45),0_0_120px_rgba(168,85,247,0.45)]">
+                      <div className="rounded-3xl ring-1 ring-purple-300/80">
+                        <DialogHeader className="sr-only">
+                          <VisuallyHidden>
+                            <DialogTitle>Visit Details</DialogTitle>
+                          </VisuallyHidden>
+                          <VisuallyHidden>
+                            <DialogDescription>Visit details dialog</DialogDescription>
+                          </VisuallyHidden>
+                        </DialogHeader>
+                        <div className="max-h-[85vh] w-[min(94vw,26rem)] no-scrollbar overflow-y-auto overflow-x-hidden rounded-3xl bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-[12px] text-slate-100 sm:w-full sm:max-w-xl sm:text-base [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                          <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </DialogPrimitive.Content>
+              </>
+            ) : null}
+          </AnimatePresence>
         </DialogPortal>
       </Dialog>
     );
@@ -44,13 +71,38 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="w-full mx-auto !top-[12vh] !bottom-0 !mt-0 !max-h-none data-[vaul-drawer-direction=bottom]:!rounded-t-2xl border border-purple-500/60 shadow-[0_24px_70px_rgba(168,85,247,0.5),0_0_140px_rgba(168,85,247,0.45)] bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-slate-100">
-        <DrawerHeader className="sr-only">
-          <DrawerTitle>Visit Details</DrawerTitle>
-          <DrawerDescription>Visit details drawer</DrawerDescription>
-        </DrawerHeader>
-        <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
-      </DrawerContent>
+      <DrawerPortal>
+        <AnimatePresence>
+          {open ? (
+            <>
+              <DrawerOverlay asChild className="data-[state=open]:animate-none data-[state=closed]:animate-none">
+                <motion.div
+                  className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.9, ease: "easeOut" }}
+                />
+              </DrawerOverlay>
+              <DrawerPrimitive.Content asChild forceMount>
+                <motion.div
+                  className="w-full mx-auto !top-[12vh] !bottom-0 !mt-0 !max-h-none data-[vaul-drawer-direction=bottom]:!rounded-t-2xl border border-purple-500/60 shadow-[0_24px_70px_rgba(168,85,247,0.5),0_0_140px_rgba(168,85,247,0.45)] bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-slate-100 fixed z-50 flex h-auto flex-col data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0"
+                  initial={{ opacity: 0, y: 48, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 36, scale: 0.985 }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <DrawerHeader className="sr-only">
+                    <DrawerTitle>Visit Details</DrawerTitle>
+                    <DrawerDescription>Visit details drawer</DrawerDescription>
+                  </DrawerHeader>
+                  <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
+                </motion.div>
+              </DrawerPrimitive.Content>
+            </>
+          ) : null}
+        </AnimatePresence>
+      </DrawerPortal>
     </Drawer>
   );
 }
