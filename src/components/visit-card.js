@@ -34,7 +34,7 @@ export default function VisitCard({ visit, isLive = false, isPast = false, defau
         <article
           className={`relative overflow-hidden rounded-3xl border transition duration-300 ease-out shadow-[0_18px_40px_rgba(15,23,42,0.22)] dark:shadow-[0_18px_40px_rgba(0,0,0,0.55)] sm:shadow-none ${isOpen ? "p-5" : "px-5 pt-5 pb-5 sm:group-hover:shadow-xl sm:group-hover:shadow-slate-100/60 dark:sm:group-hover:shadow-slate-900/20"} ${
             isLive
-              ? "border-transparent bg-black text-white shadow-[0_0_22px_rgba(16,185,129,0.12)] dark:bg-gray-900 dark:text-white dark:shadow-[0_0_18px_rgba(16,185,129,0.18)]"
+              ? "border-slate-200/70 bg-gradient-to-br from-slate-100/90 via-purple-100/60 to-purple-50/30 text-slate-900 dark:border-slate-800/70 dark:from-slate-900/90 dark:via-purple-400/20 dark:to-purple-500/10 dark:text-slate-100"
               : isUpcoming
                 ? "border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-black dark:text-slate-100"
                 : "border-slate-200 bg-gray-400/20 text-slate-900 dark:border-slate-800 dark:bg-gray-700/40  dark:text-slate-100"

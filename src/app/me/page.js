@@ -40,25 +40,30 @@ export default async function Me() {
         <div className="w-full max-w-6xl mx-auto">
           <div className="grid gap-6">
             {hasInstagramConnection ? (
-              <div className="flex flex-col gap-3 rounded-2xl border border-emerald-200/70 bg-emerald-50/60 p-4 text-sm text-emerald-800 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100">
+              <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-gradient-to-br from-sky-50/70 via-white to-violet-50/70 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-slate-800/80 dark:from-sky-500/10 dark:via-slate-950 dark:to-violet-500/10">
                 <div className="flex items-start gap-3">
-                  <span className="mt-0.5 inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-white shadow-sm dark:bg-slate-100 dark:text-slate-900">
                     <Settings className="h-4 w-4" />
                   </span>
                   <div>
-                    <p className="text-sm font-semibold">Your Instagram is already connected.</p>
-                    <p className="text-xs text-emerald-700/80 dark:text-emerald-100/80">Keep your sync settings, notifications, and profile visibility up to date in the settings dashboard.</p>
-                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-emerald-700/80 dark:text-emerald-100/80">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Your Instagram is already connected.</p>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                      Keep your sync settings, notifications, and profile visibility up to date in the settings dashboard.
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
                       <span>Signed in as</span>
                       {handle ? (
-                        <NextLink href={`/artists/${user.username}`} className="text-xs font-semibold text-emerald-900 hover:underline dark:text-emerald-100">
+                        <NextLink href={`/artists/${user.username}`} className="text-xs font-semibold text-slate-900 hover:underline dark:text-slate-100">
                           {handle}
                         </NextLink>
                       ) : null}
                     </div>
                   </div>
                 </div>
-                <a href="/me/settings" className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                <a
+                  href="/me/settings"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                >
                   <ExternalLink className="h-4 w-4" />
                   Open Settings
                 </a>

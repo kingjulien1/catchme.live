@@ -2,11 +2,11 @@ import { redirect } from "next/navigation";
 import { getSessionUser, sql } from "@/lib/db";
 import VisitForm from "./visit-form";
 
-const allowedVisitTypes = ["guest", "residency", "convention", "workshop", "popup", "custom", "other"];
+const allowedVisitTypes = ["guest", "residency", "seasonal_residency", "workshop", "popup", "collab_session", "tour_stop", "custom", "other"];
 
 export default async function NewVisitPage() {
   const user = await getSessionUser();
-  if (!user) redirect("/me");
+  // if (!user) redirect("/me");
 
   async function createVisit(_prevState, formData) {
     "use server";
@@ -22,8 +22,6 @@ export default async function NewVisitPage() {
       if (!resolvedTime) return "";
       return `${dateValue}T${resolvedTime}`;
     };
-    const visitStartValue = raw.visit_start_time || mergeDateTime(raw.visit_start_date, raw.visit_start_clock, "00:00");
-    const visitEndValue = raw.visit_end_time || mergeDateTime(raw.visit_end_date, raw.visit_end_clock, "23:59");
     const errors = {};
 
     const parseHandles = (value) =>
@@ -34,16 +32,31 @@ export default async function NewVisitPage() {
     const destinationHandles = parseHandles(raw.destination_accounts);
     const partnerHandles = parseHandles(raw.linked_accounts);
 
-    if (!destinationHandles.length) {
-      errors.destination_accounts = "Please add at least one destination Instagram handle.";
+    if (!raw.visit_type || !allowedVisitTypes.includes(raw.visit_type)) {
+      errors.visit_type = "Please select a valid visit type.";
     }
 
-    if (!raw.visit_location?.trim()) {
-      errors.visit_location = "Please add a visit location.";
+    const isResidency = raw.visit_type === "residency" || raw.visit_type === "seasonal_residency";
+
+    if (!destinationHandles.length && !raw.visit_location?.trim()) {
+      errors.destination_accounts = "Add at least one destination account or a visit location.";
+      errors.visit_location = "Add a visit location or at least one destination account.";
     }
 
-    if (!visitStartValue) {
-      errors.visit_start_time = "Please select a start date.";
+    let visitStartValue = "";
+    let visitEndValue = "";
+    if (!isResidency) {
+      if (!raw.visit_start_date) {
+        errors.visit_start_time = "Please select a start date.";
+      }
+      if (!raw.visit_end_date) {
+        errors.visit_end_time = "Please select an end date.";
+      }
+      visitStartValue = raw.visit_start_time || mergeDateTime(raw.visit_start_date, raw.visit_start_clock, "00:00");
+      visitEndValue = raw.visit_end_time || mergeDateTime(raw.visit_end_date, raw.visit_end_clock, "23:59");
+    } else {
+      visitStartValue = raw.visit_start_time || mergeDateTime(raw.visit_start_date, raw.visit_start_clock, "00:00");
+      visitEndValue = raw.visit_end_time || mergeDateTime(raw.visit_end_date, raw.visit_end_clock, "23:59");
     }
 
     if (visitStartValue && visitEndValue) {
@@ -54,13 +67,10 @@ export default async function NewVisitPage() {
       }
     }
 
-    if (!raw.visit_type || !allowedVisitTypes.includes(raw.visit_type)) {
-      errors.visit_type = "Please select a valid visit type.";
-    }
-
     if (Object.keys(errors).length > 0) {
       return { errors, message: "Please fix the highlighted fields." };
     }
+    const visitStartTime = visitStartValue ? new Date(visitStartValue) : null;
     const visitEndTime = visitEndValue ? new Date(visitEndValue) : null;
     const visitTypeValue = raw.visit_type === "custom" ? "other" : raw.visit_type;
 
@@ -77,7 +87,7 @@ export default async function NewVisitPage() {
     const primaryDestinationHandle = destinationHandles[0];
     const primaryDestinationUserId = primaryDestinationHandle ? usersByHandle.get(primaryDestinationHandle) : null;
 
-    if (!primaryDestinationUserId) {
+    if (destinationHandles.length > 0 && !primaryDestinationUserId) {
       return { errors: { form: "Unable to resolve destination account." }, message: "Could not create the visit. Try again." };
     }
 
@@ -109,7 +119,7 @@ export default async function NewVisitPage() {
         ${sessionUser.id},
         ${venueId},
         ${raw.visit_location?.trim()},
-        ${new Date(visitStartValue)},
+        ${visitStartTime},
         ${visitEndTime},
         ${visitTypeValue},
         ${"draft"}

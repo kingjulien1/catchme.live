@@ -46,14 +46,18 @@ export default function DestinationAccountField({ onLocationChange, error, onFie
   return (
     <div className="grid items-center w-full gap-3">
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none">
-        <InputGroup className={`h-11 rounded-xl border-slate-200 bg-white shadow-none dark:border-slate-800 dark:bg-slate-950 ${hasError ? "border-red-400 focus-within:border-red-400 focus-within:ring-red-300/40 focus-within:ring-[3px]" : ""}`}>
+        <InputGroup
+          className={`h-11 rounded-xl border-slate-200 bg-white shadow-none dark:border-slate-800 dark:bg-slate-950 ${
+            hasError ? "border-red-400 bg-rose-50/40 focus-within:border-red-400 focus-within:ring-red-300/40 focus-within:ring-[3px] dark:bg-rose-500/10" : ""
+          }`}
+        >
           <InputGroupInput
             id="instagram-handle"
             name="destination_instagram_handle"
             placeholder="Search..."
             value={handle}
             aria-invalid={hasError}
-            className="py-3"
+            className={`py-3 ${hasError ? "bg-rose-50/40 dark:bg-rose-500/10" : ""}`}
             onChange={(event) => {
               setHandle(event.target.value);
               onFieldChange?.("destination_instagram_handle");

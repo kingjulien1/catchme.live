@@ -159,7 +159,7 @@ export default async function VisitOptionsPage({ params }) {
   const initialValues = visitOptions
     ? {
         bookings_open: visitOptions.booking_status ? visitOptions.booking_status !== "closed" : null,
-        appointment_only: visitOptions.appointment_only ?? (visitOptions.booking_status === "limited"),
+        appointment_only: visitOptions.appointment_only ?? visitOptions.booking_status === "limited",
         age_18_plus: visitOptions.age_policy ? visitOptions.age_policy.toLowerCase().includes("18") : null,
         deposit_required: visitOptions.deposit_required ?? false,
         digital_payments: visitOptions.digital_payments ?? false,

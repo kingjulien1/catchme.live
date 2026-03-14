@@ -3,32 +3,29 @@
 import * as React from "react";
 import { useActionState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BadgeCheck, CheckCircle2, HandCoins, Hourglass, ImageIcon, Info, MessageCircle, ShieldAlert, ShieldCheck, Sparkles, Tag, Type, Users, Wand2, XCircle, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, BadgeCheck, CheckCircle2, Clock, Eye, FileText, HandCoins, Hourglass, ImageIcon, Info, LayersPlus, MessageCircle, ShieldAlert, ShieldCheck, Sparkles, Tag, Type, Users, Wand2, XCircle, Zap } from "lucide-react";
 
 import SettingsSubmitButton from "@/components/settings-submit-button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { getRadioCardClasses } from "@/components/ui/radio-card-styles";
 import Section from "@/components/Section";
 import { Button } from "@/components/ui/button";
+import VisitFormFooter from "../../visit-form-footer";
 
 const initialState = {};
+const SECTION_ICON_CHIP = "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900";
+
+// THIS IS THE MAIN GRADIENT
+// bg-gradient-to-br from-slate-100/90 via-purple-100/60 to-purple-50/30 dark:from-slate-900/90 dark:via-purple-400/20 dark:to-purple-500/10
 
 function BookingStatusCard({ active, title, description, icon, tone, onClick }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "w-full rounded-2xl border bg-white px-4 py-5 text-center shadow-sm transition dark:bg-slate-900/70 dark:shadow-none",
-        active ? "border-emerald-400 bg-emerald-50/40 dark:border-emerald-400/60 dark:bg-emerald-500/10" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800/80 dark:hover:border-slate-700 dark:hover:bg-slate-900/90",
-      )}
-    >
+    <button type="button" onClick={onClick} aria-pressed={active} className={cn("w-full rounded-2xl px-4 py-5 text-center", getRadioCardClasses({ selected: active }))}>
       <div className="flex flex-col items-center gap-2">
         <div className={`grid h-11 w-11 place-items-center rounded-full ${tone}`}>{icon}</div>
         <div className="min-w-0">
@@ -46,7 +43,7 @@ function AdditionalOptionCard({ id, name, title, description, icon, checked, onC
       <input type="hidden" name={name} value={checked ? "true" : "false"} />
       <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">{icon}</div>
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">{icon}</div>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</p>
             <p className="text-xs text-slate-500 dark:text-slate-300">{description}</p>
@@ -124,62 +121,96 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
 
   return (
     <form action={formAction} className="w-full mx-auto pb-20">
-      <Alert className="mb-6 rounded-2xl border border-slate-200 bg-sky-50/60 text-slate-700 shadow-sm dark:border-slate-800/80 dark:bg-sky-500/10 dark:text-slate-200">
-        <Info className="h-4 w-4 text-sky-700 dark:text-sky-200" />
-        <AlertTitle className="text-sm font-semibold text-slate-900 dark:text-slate-100">This form is optional, you can skip it</AlertTitle>
-        <AlertDescription className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-          This section is optional and can be skipped for now. For the best client experience, we recommend adding as many details as you can to set expectations clearly and reduce back-and-forth.
-        </AlertDescription>
-      </Alert>
+      <div className="mb-6 rounded-2xl border border-slate-200 bg-gradient-to-br from-sky-50/70 via-white to-violet-50/70 p-4 shadow-sm dark:border-slate-800/80 dark:from-sky-500/10 dark:via-slate-950 dark:to-violet-500/10">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-white shadow-sm dark:bg-slate-100 dark:text-slate-900">
+              <Info className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">This form is optional</p>
+              <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">You can skip this for now. Adding details helps set expectations and reduces back-and-forth with clients.</p>
+            </div>
+          </div>
+          <Button asChild size="sm" className="rounded-full px-4">
+            <Link href="/me/visits">Skip for now</Link>
+          </Button>
+        </div>
+      </div>
       <Section
-        title="Visit Options"
-        subtitle="Set availability and booking preferences for this visit."
-        icon={<BadgeCheck className="h-6 w-6" />}
-        headerRight={
-          <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200">Step 2 of 3</span>
+        title={null}
+        subtitle={null}
+        icon={null}
+        headerRight={null}
+        headerContent={
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-medium text-slate-500 dark:text-slate-400 sm:text-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                <LayersPlus className="h-4 w-4 text-emerald-500" />
+                Configuring Visit Options
+              </span>
+              <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 text-xs font-semibold">Step 2 of 3</span>
+            </div>
+
+            <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-900 text-white shadow-sm dark:bg-slate-100 dark:text-slate-900 sm:h-14 sm:w-14">
+                <BadgeCheck className="h-6 w-6 sm:h-7 sm:w-7" />
+              </div>
+              <div className="flex-1 space-y-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-slate-100 sm:text-3xl">
+                    Visit Options
+                  </h1>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold tracking-wide text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                    <Sparkles className="h-3.5 w-3.5 text-slate-500 dark:text-slate-300" />
+                    Optional
+                  </span>
+                </div>
+                <p className="line-clamp-4 sm:line-clamp-none text-sm text-gray-500 dark:text-slate-400 sm:text-base">
+                  Set availability and booking preferences for this visit so clients know how to reach you and what to expect. These options help reduce back-and-forth and keep your calendar aligned. You can update them anytime.
+                </p>
+                <div className="flex flex-col gap-3 text-sm text-slate-500 dark:text-slate-400 sm:flex-row sm:items-center sm:gap-6">
+                  <span className="inline-flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    ~2 minutes to complete
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    Auto-saved as you type
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <Eye className="h-4 w-4 text-blue-500" />
+                    Preview before publishing
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 h-px w-full bg-slate-200/80 dark:bg-slate-800/80" />
+          </div>
         }
       >
         <input type="hidden" name="bookings_open" value={options.bookingsOpen ? "true" : "false"} />
 
         <div className="mt-6">
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200">
+            <span className={`grid h-7 w-7 place-items-center rounded-lg ${SECTION_ICON_CHIP}`}>
               <CheckCircle2 className="h-4 w-4" />
             </span>
             Booking Status
           </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <BookingStatusCard
-              active={bookingStatus === "open"}
-              title="Open"
-              description="Accepting bookings"
-              icon={<CheckCircle2 className="h-5 w-5" />}
-              tone="bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200"
-              onClick={() => setBookingStatus("open")}
-            />
-            <BookingStatusCard
-              active={bookingStatus === "waitlist"}
-              title="Limited"
-              description="Few slots left"
-              icon={<Hourglass className="h-5 w-5" />}
-              tone="bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200"
-              onClick={() => setBookingStatus("waitlist")}
-            />
-            <BookingStatusCard
-              active={bookingStatus === "closed"}
-              title="Closed"
-              description="Not accepting"
-              icon={<XCircle className="h-5 w-5" />}
-              tone="bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200"
-              onClick={() => setBookingStatus("closed")}
-            />
+          <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none">
+            <div className="grid gap-3 sm:grid-cols-3">
+              <BookingStatusCard active={bookingStatus === "open"} title="Open" description="Accepting bookings" icon={<CheckCircle2 className="h-5 w-5" />} tone={SECTION_ICON_CHIP} onClick={() => setBookingStatus("open")} />
+              <BookingStatusCard active={bookingStatus === "waitlist"} title="Limited" description="Few slots left" icon={<Hourglass className="h-5 w-5" />} tone={SECTION_ICON_CHIP} onClick={() => setBookingStatus("waitlist")} />
+              <BookingStatusCard active={bookingStatus === "closed"} title="Closed" description="Not accepting" icon={<XCircle className="h-5 w-5" />} tone={SECTION_ICON_CHIP} onClick={() => setBookingStatus("closed")} />
+            </div>
           </div>
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
                 <MessageCircle className="h-4 w-4" />
               </span>
               Booking Method
@@ -196,7 +227,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
           </div>
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
                 <ShieldAlert className="h-4 w-4" />
               </span>
               Cancellation Policy
@@ -216,7 +247,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
                 <HandCoins className="h-4 w-4" />
               </span>
               Required Deposit
@@ -234,7 +265,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
           </div>
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
                 <Tag className="h-4 w-4" />
               </span>
               Pricing Range
@@ -259,7 +290,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
         <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
                 <ShieldCheck className="h-4 w-4" />
               </span>
               Age Policy
@@ -274,7 +305,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
           </div>
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-500/20 dark:text-fuchsia-200">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
                 <Type className="h-4 w-4" />
               </span>
               Languages Spoken
@@ -288,7 +319,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
 
         <div className="mt-8">
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200">
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
               <Sparkles className="h-4 w-4" />
             </span>
             Additional Options
@@ -301,7 +332,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
               description="Bookings by appointment only."
               checked={options.appointmentOnly}
               onCheckedChange={setOption("appointmentOnly")}
-              icon={<ShieldAlert className="h-5 w-5 text-rose-500 dark:text-rose-300" />}
+              icon={<ShieldAlert className="h-5 w-5" />}
             />
             <AdditionalOptionCard
               id="opt-custom"
@@ -310,7 +341,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
               description="Accept custom design ideas."
               checked={options.customRequests}
               onCheckedChange={setOption("customRequests")}
-              icon={<Sparkles className="h-5 w-5 text-blue-500 dark:text-blue-300" />}
+              icon={<Sparkles className="h-5 w-5" />}
             />
             <AdditionalOptionCard
               id="opt-digital-payments"
@@ -319,17 +350,9 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
               description="Accept card and digital payments."
               checked={options.digitalPayments}
               onCheckedChange={setOption("digitalPayments")}
-              icon={<HandCoins className="h-5 w-5 text-emerald-500 dark:text-emerald-300" />}
+              icon={<HandCoins className="h-5 w-5" />}
             />
-            <AdditionalOptionCard
-              id="opt-walkins"
-              name="walk_ins_welcome"
-              title="Walk-ins Welcome"
-              description="Accept walk-in clients."
-              checked={options.walkIns}
-              onCheckedChange={setOption("walkIns")}
-              icon={<Users className="h-5 w-5 text-violet-500 dark:text-violet-300" />}
-            />
+            <AdditionalOptionCard id="opt-walkins" name="walk_ins_welcome" title="Walk-ins Welcome" description="Accept walk-in clients." checked={options.walkIns} onCheckedChange={setOption("walkIns")} icon={<Users className="h-5 w-5" />} />
             <AdditionalOptionCard
               id="opt-portfolio"
               name="portfolio_photos"
@@ -337,17 +360,9 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
               description="Allow work photography."
               checked={options.portfolioPhotos}
               onCheckedChange={setOption("portfolioPhotos")}
-              icon={<ImageIcon className="h-5 w-5 text-emerald-500 dark:text-emerald-300" />}
+              icon={<ImageIcon className="h-5 w-5" />}
             />
-            <AdditionalOptionCard
-              id="opt-flash"
-              name="flash_designs"
-              title="Flash Designs"
-              description="Pre-made designs available."
-              checked={options.flashDesigns}
-              onCheckedChange={setOption("flashDesigns")}
-              icon={<Zap className="h-5 w-5 text-rose-500 dark:text-rose-300" />}
-            />
+            <AdditionalOptionCard id="opt-flash" name="flash_designs" title="Flash Designs" description="Pre-made designs available." checked={options.flashDesigns} onCheckedChange={setOption("flashDesigns")} icon={<Zap className="h-5 w-5" />} />
             <AdditionalOptionCard
               id="opt-touchups"
               name="touch_ups_included"
@@ -355,7 +370,7 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
               description="Free touch-up session."
               checked={options.touchUpsIncluded}
               onCheckedChange={setOption("touchUpsIncluded")}
-              icon={<Wand2 className="h-5 w-5 text-amber-500 dark:text-amber-300" />}
+              icon={<Wand2 className="h-5 w-5" />}
             />
             <AdditionalOptionCard
               id="opt-coverups"
@@ -364,14 +379,14 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
               description="Cover existing work."
               checked={options.coverUpsAccepted}
               onCheckedChange={setOption("coverUpsAccepted")}
-              icon={<ShieldCheck className="h-5 w-5 text-cyan-500 dark:text-cyan-300" />}
+              icon={<ShieldCheck className="h-5 w-5" />}
             />
           </div>
         </div>
 
         <div className="mt-8">
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200">
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
               <Tag className="h-4 w-4" />
             </span>
             Special Notes & Requirements
@@ -382,10 +397,42 @@ export default function VisitOptionsForm({ action, initialValues, defaultBooking
           </div>
         </div>
 
-        <div className="mt-10 border-t border-slate-200 pt-6 dark:border-slate-800 flex justify-end">
-          <SettingsSubmitButton isPending={isPending} label="Save & Continue to Preview" />
+        <div className="mt-10 border-t border-slate-200 pt-6 dark:border-slate-800 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="order-2 flex w-full flex-col gap-3 sm:order-1 sm:w-auto">
+            <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-medium text-slate-500 dark:text-slate-400 sm:justify-start sm:text-sm">
+              <Link
+                href="/help"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 transition hover:text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+              >
+                <Info className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+                Need Help?
+              </Link>
+              <Link
+                href="/me/settings#autosave"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 transition hover:text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
+              >
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                Auto-saved
+              </Link>
+              <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                <FileText className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+                Draft
+              </span>
+            </div>
+          </div>
+          <div className="order-1 w-full sm:order-2 sm:w-auto">
+            <SettingsSubmitButton isPending={isPending} label="Save & Continue to Preview" icon={<Sparkles className="h-4 w-4" />} />
+          </div>
         </div>
       </Section>
+      <Section
+        title={null}
+        icon={null}
+        subtitle={null}
+        headerRight={null}
+        className="opacity-90"
+        headerContent={<VisitFormFooter />}
+      />
     </form>
   );
 }

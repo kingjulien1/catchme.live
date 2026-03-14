@@ -99,7 +99,7 @@ function LiveCountdownBadge({ target, isMounted }) {
 }
 
 export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVisits, pastVisits, artistSlug }) {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(true);
   const residencyVisits = useMemo(() => [...liveVisits, ...upcomingVisits, ...pastVisits].filter((visit) => visit.visit_type === "residency"), [liveVisits, upcomingVisits, pastVisits]);
   const liveOnlyVisits = useMemo(() => liveVisits.filter((visit) => visit.visit_type !== "residency"), [liveVisits]);
   const liveResidencyVisits = useMemo(() => liveVisits.filter((visit) => visit.visit_type === "residency"), [liveVisits]);
@@ -115,6 +115,13 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
     ],
     [residencyVisits, liveOnlyVisits, upcomingOnlyVisits, pastOnlyVisits],
   );
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   const latestLiveCountdown = useMemo(() => {
     if (!liveOnlyVisits.length) return "No live visits";
     const withEnd = [...liveOnlyVisits]
@@ -125,7 +132,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
       .filter((item) => item.end);
     if (!withEnd.length) return "Ongoing";
     const latest = withEnd.sort((a, b) => b.end.getTime() - a.end.getTime())[0];
-    const diffMs = latest.end.getTime() - Date.now();
+    const diffMs = latest.end.getTime() - now.getTime();
     if (diffMs <= 0) return "Ending now";
     const totalMinutes = Math.ceil(diffMs / (1000 * 60));
     const days = Math.floor(totalMinutes / (60 * 24));
@@ -134,7 +141,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
     if (days > 0) return `${days}d`;
     if (hours > 0) return `${hours}h`;
     return `${totalMinutes}m`;
-  }, [liveOnlyVisits]);
+  }, [liveOnlyVisits, now]);
   const allVisits = useMemo(() => orderedSections.flatMap((section) => section.visits), [orderedSections]);
   const [activeVisit, setActiveVisit] = useState(null);
 
@@ -155,7 +162,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
     const now = new Date();
     const isLive = start && start <= now && (!end || end >= now);
     const isUpcoming = !isLive && Boolean(start && start > now);
-    const isActive = isLive || isUpcoming;
+    const isActive = false;
     const isResidency = visit.visit_type === "residency";
     const accountName = visit.destination_name || visit.destination_username || visit.destination_instagram_handle || "Artist";
     const title = visit.visit_title || visit.title || accountName;
@@ -182,25 +189,25 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
     const handle = `@${String(handleBase).replace(/^@/, "")}`;
 
     const titleClasses = isActive
-      ? "min-w-0 overflow-hidden whitespace-nowrap text-base font-semibold text-white [text-overflow:clip] sm:text-lg"
+      ? "min-w-0 overflow-hidden whitespace-nowrap text-base font-semibold text-slate-900 [text-overflow:clip] sm:text-lg dark:text-white"
       : "min-w-0 overflow-hidden whitespace-nowrap text-base font-semibold text-slate-900 [text-overflow:clip] sm:text-lg dark:text-white";
-    const titleMetaClasses = isActive ? "text-[11px] font-semibold text-white/60 lg:hidden" : "text-[11px] font-semibold text-slate-400 dark:text-slate-500 lg:hidden";
-    const titleMetaLgClasses = isActive ? "hidden lg:inline text-sm font-semibold text-white/80" : "hidden lg:inline text-sm font-semibold text-slate-500 dark:text-slate-300";
+    const titleMetaClasses = isActive ? "text-[11px] font-semibold text-slate-500 lg:hidden dark:text-slate-400" : "text-[11px] font-semibold text-slate-400 dark:text-slate-500 lg:hidden";
+    const titleMetaLgClasses = isActive ? "hidden lg:inline text-sm font-semibold text-slate-600 dark:text-slate-300" : "hidden lg:inline text-sm font-semibold text-slate-500 dark:text-slate-300";
     const cardClasses = isActive
-      ? "relative flex flex-1 flex-col gap-3 rounded-3xl border border-white/25 bg-white/15 backdrop-blur-xl px-3 py-3 shadow-[0_14px_28px_rgba(236,72,153,0.18)] transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/70 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/20 dark:bg-black/20"
-      : "relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-transparent px-3 py-3 transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/70 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/10";
-    const dateClasses = isActive ? "text-white/90" : "text-slate-900 dark:text-slate-100";
-    const monthClasses = isActive ? "text-white/80" : "text-slate-900 dark:text-slate-100";
-    const yearClasses = isActive ? "text-white/50" : "text-slate-400 dark:text-slate-500";
+      ? "relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-white/70 px-3 py-3 shadow-sm transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/40 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/15 dark:bg-black/20"
+      : "relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-transparent px-3 py-3 transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/40 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/10";
+    const dateClasses = isActive ? "text-slate-900 dark:text-slate-100" : "text-slate-900 dark:text-slate-100";
+    const monthClasses = isActive ? "text-slate-700 dark:text-slate-100" : "text-slate-900 dark:text-slate-100";
+    const yearClasses = isActive ? "text-slate-400 dark:text-slate-500" : "text-slate-400 dark:text-slate-500";
     const handleBadgeClasses = isActive
-      ? "border border-white/15 bg-white/10 text-[11px] text-white/90 sm:text-xs lg:px-3 lg:py-2 lg:text-xs"
+      ? "border border-slate-200/80 bg-white/80 text-[11px] text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:text-xs lg:px-3 lg:py-2 lg:text-xs"
       : "border border-slate-200/80 bg-white/90 text-[11px] text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:text-xs lg:px-3 lg:py-2 lg:text-xs";
-    const dotClasses = isActive ? "text-white/60" : "text-slate-400 dark:text-white/60";
+    const dotClasses = isActive ? "text-slate-400 dark:text-white/60" : "text-slate-400 dark:text-white/60";
     const visitTypeBadgeClasses = isActive
-      ? "inline-flex items-center rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold text-white/90 sm:px-2.5 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs"
+      ? "inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:px-2.5 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs"
       : "inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:px-2.5 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs";
-    const durationLabelClasses = isActive ? "text-white" : "text-slate-900 dark:text-slate-100";
-    const durationMetaClasses = isActive ? "text-white/60" : "text-slate-400 dark:text-slate-500";
+    const durationLabelClasses = isActive ? "text-slate-900 dark:text-slate-100" : "text-slate-900 dark:text-slate-100";
+    const durationMetaClasses = isActive ? "text-slate-500 dark:text-slate-500" : "text-slate-400 dark:text-slate-500";
 
     return (
       <motion.div className="relative group" initial={{ opacity: 0, y: 18, filter: "blur(8px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.45, ease: "easeOut" }}>
@@ -253,12 +260,11 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
     if (!allVisits.length) return;
     const current = resolveVisitById(allVisits, getVisitParam());
     if (current) {
-      setActiveVisit(current);
+      Promise.resolve().then(() => setActiveVisit(current));
     }
   }, [allVisits]);
 
   useEffect(() => {
-    setIsMounted(true);
     const handlePopState = () => {
       const current = resolveVisitById(allVisits, getVisitParam());
       setActiveVisit(current);
@@ -280,14 +286,14 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
                 <div key={section.key} className={section.key === "upcoming" || section.key === "past" ? "mt-10 sm:mt-12" : sectionIndex ? "mt-6" : ""}>
                   {section.key === "live" ? (
                     <motion.div
-                      className="-mx-4 rounded-2xl overflow-hidden border border-fuchsia-400/70 bg-[radial-gradient(140%_140%_at_12%_88%,rgba(236,72,153,0.55)_0%,rgba(236,72,153,0.2)_35%,rgba(109,40,217,0.15)_62%,rgba(49,20,78,0.6)_100%),radial-gradient(120%_120%_at_90%_12%,rgba(244,114,182,0.55)_0%,rgba(219,39,119,0.3)_30%,rgba(147,51,234,0.2)_65%,rgba(49,20,78,0.6)_100%),linear-gradient(135deg,#7b2b7a_0%,#b12b6d_38%,#8a2a69_62%,#3a2852_100%)] px-4 pt-4 pb-8 shadow-[0_0_32px_rgba(236,72,153,0.48),0_0_75px_rgba(236,72,153,0.26),0_22px_54px_rgba(88,28,135,0.32)] sm:mx-0 sm:p-6"
+                      className="-mx-4 rounded-2xl overflow-hidden bg-transparent px-4 pt-4 pb-8 sm:mx-0 sm:p-6"
                       initial={{ opacity: 0, scale: 0.96, y: 18 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div className="mb-4 flex items-center justify-between pt-2 pb-3 border-b border-white/10">
-                        <h2 className="text-3xl font-semibold text-white">Now Live</h2>
-                        <div className="text-sm font-semibold text-white/70">{liveResidencyVisits.length + liveOnlyVisits.length}</div>
+                        <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Now Live</h2>
+                        <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">{liveResidencyVisits.length + liveOnlyVisits.length}</div>
                       </div>
                       <div className="space-y-5 sm:space-y-5">
                         {[...liveResidencyVisits, ...liveOnlyVisits].map((visit) => (
@@ -298,14 +304,14 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
                   ) : null}
                   {section.key === "upcoming" ? (
                     <motion.div
-                      className="-mx-4 rounded-2xl overflow-hidden border border-fuchsia-400/70 bg-[radial-gradient(140%_140%_at_12%_88%,rgba(99,102,241,0.55)_0%,rgba(99,102,241,0.2)_35%,rgba(79,70,229,0.15)_62%,rgba(30,27,75,0.6)_100%),radial-gradient(120%_120%_at_90%_12%,rgba(129,140,248,0.55)_0%,rgba(79,70,229,0.3)_30%,rgba(67,56,202,0.2)_65%,rgba(30,27,75,0.6)_100%),linear-gradient(135deg,#2f1f4f_0%,#3b2a70_38%,#2b1b4a_62%,#1a112d_100%)] px-4 pt-4 pb-6 shadow-[0_0_32px_rgba(99,102,241,0.48),0_0_75px_rgba(99,102,241,0.26),0_22px_54px_rgba(88,28,135,0.32)] sm:mx-0 sm:p-6"
+                      className="-mx-4 rounded-2xl overflow-hidden bg-transparent px-4 pt-4 pb-6 sm:mx-0 sm:p-6"
                       initial={{ opacity: 0, scale: 0.96, y: 18 }}
                       whileInView={{ opacity: 1, scale: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.15 }}
                       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div className="mb-4 flex items-center justify-between pt-2 pb-3 border-b border-white/10">
-                        <h2 className="text-3xl font-semibold text-white">Next Up</h2>
+                        <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Next Up</h2>
                       </div>
                       <div className="relative mt-5 space-y-5 sm:space-y-5">
                         {section.visits.map((visit) => (
@@ -316,7 +322,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
                   ) : null}
                   {section.key === "past" ? (
                     <motion.div
-                      className="-mx-4 rounded-2xl overflow-hidden bg-transparent px-4 pt-4 pb-6 shadow-[0_0_32px_rgba(99,102,241,0.18),0_0_75px_rgba(99,102,241,0.12),0_22px_54px_rgba(88,28,135,0.18)] sm:mx-0 sm:p-6"
+                      className="-mx-4 rounded-2xl overflow-hidden bg-transparent px-4 pt-4 pb-6 sm:mx-0 sm:p-6"
                       initial={{ opacity: 0, scale: 0.96, y: 18 }}
                       whileInView={{ opacity: 1, scale: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.15 }}

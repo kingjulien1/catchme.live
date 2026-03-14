@@ -16,6 +16,9 @@ export default function LinkedAccountsInput({
   defaultValue = "",
   name = "linked_accounts",
   description = "Link others that are related to this visit, e.g. collegues or friends that are joining you in the visit.",
+  error = false,
+  onFieldChange,
+  inputId,
 }) {
   const inputRef = useRef(null);
   const initialTags = useMemo(() => {
@@ -34,6 +37,7 @@ export default function LinkedAccountsInput({
       const updated = prev.includes(next) ? prev : [...prev, next];
       return updated;
     });
+    onFieldChange?.(name);
   };
 
   const removeTag = (tag) => {
@@ -70,31 +74,34 @@ export default function LinkedAccountsInput({
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none">
-      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-none dark:border-slate-800 dark:bg-slate-950" onClick={() => inputRef.current?.focus()}>
+      <div
+        className={`flex flex-wrap items-center gap-2 rounded-xl border px-3 py-2 shadow-none transition-[color,box-shadow] focus-within:ring-[3px] ${
+          error
+            ? "border-red-400 bg-rose-50/40 dark:bg-rose-500/10 dark:border-red-400 focus-within:ring-red-300/40"
+            : "border-slate-200 bg-white dark:border-slate-800 dark:bg-input/30 focus-within:ring-ring/50"
+        }`}
+        onClick={() => inputRef.current?.focus()}
+      >
         {tags.map((tag) => (
-          <Badge key={tag} className="gap-1 border border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-500/30 dark:bg-violet-500/10 dark:text-violet-200">
+          <Badge key={tag} className="gap-1 border border-purple-200 bg-purple-100 text-purple-700 dark:border-purple-400/40 dark:bg-purple-500/20 dark:text-purple-200">
             {tag}
-            <button type="button" aria-label={`Remove ${tag}`} className="rounded-full p-0.5 hover:bg-violet-100 dark:hover:bg-violet-500/20" onClick={() => removeTag(tag)}>
+            <button type="button" aria-label={`Remove ${tag}`} className="rounded-full p-0.5 hover:bg-purple-200/70 dark:hover:bg-purple-500/30" onClick={() => removeTag(tag)}>
               <X className="h-3 w-3" />
             </button>
           </Badge>
         ))}
         <Input
           ref={inputRef}
+          id={inputId}
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
           placeholder="@ Add another account..."
           className="h-7 w-[180px] border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
+          aria-invalid={error}
         />
-        <Button
-          type="button"
-          size="sm"
-          className="ml-auto w-auto rounded-lg bg-purple-600 text-white transition-colors hover:bg-purple-500 dark:bg-purple-500 dark:text-white dark:hover:bg-purple-400 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-purple-600 dark:disabled:hover:bg-purple-500"
-          onClick={handleAddClick}
-          disabled={!inputValue.trim()}
-        >
+        <Button type="button" size="sm" className="ml-auto w-auto rounded-full px-4" onClick={handleAddClick} disabled={!inputValue.trim()}>
           <PlusCircle className="h-4 w-4" />
           Add Account
         </Button>

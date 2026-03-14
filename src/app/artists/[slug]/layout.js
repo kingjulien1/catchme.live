@@ -61,8 +61,8 @@ export default async function ArtistProfileLayout({ children, modal, params }) {
         <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-6 sm:px-8">
           <div className="flex flex-col gap-6 sm:gap-8">
             <div className="-mt-16 flex items-end justify-between gap-4 sm:-mt-20">
-              <div className="relative rounded-[28px] bg-white shadow-md dark:bg-slate-950 header-pop" style={{ animationDelay: "40ms" }}>
-                <Avatar className="h-24 w-24 rounded-2xl border-4 border-slate-300 bg-slate-100 sm:h-28 sm:w-28 dark:border-slate-700 dark:bg-slate-900">
+              <div className="relative header-pop" style={{ animationDelay: "40ms" }}>
+                <Avatar className="h-28 w-28 rounded-2xl bg-slate-100 sm:h-32 sm:w-32 dark:bg-slate-900">
                   <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" />
                   <AvatarFallback className="text-lg font-semibold text-slate-600 dark:text-slate-200">{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
