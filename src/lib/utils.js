@@ -166,6 +166,24 @@ export function safeCapitalize(str) {
 }
 
 /**
+ * Convert a string to lowercase and capitalize the first letter of each word.
+ *
+ * @param {string | null | undefined} str
+ * @returns {string}
+ */
+export function toTitleCase(str) {
+  if (typeof str !== "string" || str.length === 0) {
+    return "";
+  }
+  return str
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word[0]?.toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+/**
  * Generate a simple hash from a string value by summing character codes.
  * This is not cryptographically secure and is intended for non-sensitive use cases like color generation or bucketing.
  *

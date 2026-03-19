@@ -66,10 +66,10 @@ function UpcomingCountdownBadge({ target, isMounted }) {
 
   return (
     <div className="absolute -top-3 right-4 z-10 hidden lg:block">
-      <div className="inline-flex w-[160px] items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-semibold text-white shadow-[0_8px_20px_rgba(236,72,153,0.25)] backdrop-blur-xl transition sm:text-xs dark:border-white/20 dark:bg-black/30">
-        <ArrowUp className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
+      <div className="inline-flex w-[160px] items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-xl transition sm:text-xs dark:border-white/20 dark:bg-black/30">
+        <ArrowUp className="h-3.5 w-3.5 text-white/80" />
         {label}
-        <ArrowUp className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
+        <ArrowUp className="h-3.5 w-3.5 text-white/80" />
       </div>
     </div>
   );
@@ -89,10 +89,10 @@ function LiveCountdownBadge({ target, isMounted }) {
 
   return (
     <div className="absolute -top-3 right-4 z-10 hidden lg:block">
-      <div className="inline-flex w-[160px] items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-semibold text-white shadow-[0_8px_20px_rgba(236,72,153,0.25)] backdrop-blur-xl transition sm:text-xs dark:border-white/20 dark:bg-black/30">
-        <ArrowDown className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
+      <div className="inline-flex w-[160px] items-center justify-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-xl transition sm:text-xs dark:border-white/20 dark:bg-black/30">
+        <ArrowDown className="h-3.5 w-3.5 text-white/80" />
         {label}
-        <ArrowDown className="h-3.5 w-3.5 text-white/80 transition lg:group-hover:animate-bounce" />
+        <ArrowDown className="h-3.5 w-3.5 text-white/80" />
       </div>
     </div>
   );
@@ -188,39 +188,37 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
     const handleBase = visit.destination_username || visit.destination_instagram_handle || "artist";
     const handle = `@${String(handleBase).replace(/^@/, "")}`;
 
-    const titleClasses = isActive
-      ? "min-w-0 overflow-hidden whitespace-nowrap text-base font-semibold text-slate-900 [text-overflow:clip] sm:text-lg dark:text-white"
-      : "min-w-0 overflow-hidden whitespace-nowrap text-base font-semibold text-slate-900 [text-overflow:clip] sm:text-lg dark:text-white";
-    const titleMetaClasses = isActive ? "text-[11px] font-semibold text-slate-500 lg:hidden dark:text-slate-400" : "text-[11px] font-semibold text-slate-400 dark:text-slate-500 lg:hidden";
-    const titleMetaLgClasses = isActive ? "hidden lg:inline text-sm font-semibold text-slate-600 dark:text-slate-300" : "hidden lg:inline text-sm font-semibold text-slate-500 dark:text-slate-300";
+    const titleClasses =
+      "min-w-0 overflow-hidden whitespace-nowrap text-[15px] font-semibold text-slate-900 [text-overflow:clip] sm:text-base dark:text-white";
+    const titleMetaClasses = "text-[11px] font-semibold text-slate-400 dark:text-slate-500 lg:hidden";
+    const titleMetaLgClasses = "hidden lg:inline text-sm font-semibold text-slate-500 dark:text-slate-300";
     const cardClasses = isActive
       ? "relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-white/70 px-3 py-3 shadow-sm transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/40 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/15 dark:bg-black/20"
       : "relative flex flex-1 flex-col gap-3 rounded-3xl border border-slate-200/80 bg-transparent px-3 py-3 transition lg:group-hover:ring-2 lg:group-hover:ring-fuchsia-300/40 sm:gap-4 sm:px-5 sm:py-4 dark:border-white/10";
-    const dateClasses = isActive ? "text-slate-900 dark:text-slate-100" : "text-slate-900 dark:text-slate-100";
-    const monthClasses = isActive ? "text-slate-700 dark:text-slate-100" : "text-slate-900 dark:text-slate-100";
-    const yearClasses = isActive ? "text-slate-400 dark:text-slate-500" : "text-slate-400 dark:text-slate-500";
+    const dateClasses = "text-slate-900 dark:text-slate-100";
+    const monthClasses = "text-slate-900 dark:text-slate-100";
+    const yearClasses = "text-slate-400 dark:text-slate-500";
     const handleBadgeClasses = isActive
       ? "border border-slate-200/80 bg-white/80 text-[11px] text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:text-xs lg:px-3 lg:py-2 lg:text-xs"
       : "border border-slate-200/80 bg-white/90 text-[11px] text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:text-xs lg:px-3 lg:py-2 lg:text-xs";
-    const dotClasses = isActive ? "text-slate-400 dark:text-white/60" : "text-slate-400 dark:text-white/60";
+    const dotClasses = "text-slate-400 dark:text-white/60";
     const visitTypeBadgeClasses = isActive
       ? "inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:px-2.5 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs"
       : "inline-flex items-center rounded-full border border-slate-200/80 bg-white/80 px-1.5 py-0.5 text-[10px] font-semibold text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-white/90 sm:px-2.5 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs";
-    const durationLabelClasses = isActive ? "text-slate-900 dark:text-slate-100" : "text-slate-900 dark:text-slate-100";
-    const durationMetaClasses = isActive ? "text-slate-500 dark:text-slate-500" : "text-slate-400 dark:text-slate-500";
+    const durationLabelClasses = "text-slate-900 dark:text-slate-100";
+    const durationMetaClasses = "text-slate-400 dark:text-slate-500";
 
     return (
       <motion.div className="relative group" initial={{ opacity: 0, y: 18, filter: "blur(8px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.45, ease: "easeOut" }}>
         {!isResidency && isUpcoming ? <UpcomingCountdownBadge target={start} isMounted={isMounted} /> : null}
         {!isResidency && isLive ? <LiveCountdownBadge target={end} isMounted={isMounted} /> : null}
         <motion.button type="button" onClick={() => openVisit(visit)} className="flex w-full cursor-pointer flex-row items-center gap-3 text-left transition-transform lg:hover:translate-x-2 sm:gap-6">
-          <div className={`w-[45px] px-1 text-[15px] font-semibold text-center sm:w-auto sm:min-w-[110px] sm:text-base ${dateClasses}`}>
-            <div className={`text-[26px] font-bold leading-none sm:text-[34px] text-center ${dateClasses}`}>{dayLabel}</div>
-            {monthLabel ? <div className={`text-[11px] font-medium text-center ${monthClasses}`}>{monthLabel}</div> : null}
-            {yearLabel ? <div className={`text-[9px] font-medium text-center ${yearClasses}`}>{yearLabel}</div> : null}
-          </div>
           <div className={cardClasses}>
             <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+              <div className="flex w-[56px] shrink-0 flex-col items-center justify-center rounded-2xl bg-transparent px-0.5 py-2 text-center sm:w-[80px] sm:px-1.5 sm:py-3">
+                <div className={`text-[24px] font-bold leading-none sm:text-[32px] ${dateClasses}`}>{dayLabel}</div>
+                {monthLabel ? <div className={`mt-1 text-[10px] font-medium uppercase tracking-[0.18em] ${monthClasses}`}>{monthLabel}</div> : null}
+              </div>
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100 sm:h-20 sm:w-20">
                 <div className="h-full w-full bg-cover bg-center transition-transform duration-300 lg:group-hover:scale-110" style={{ backgroundImage: `url(${bannerImage})` }} />
               </div>
@@ -286,14 +284,14 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
                 <div key={section.key} className={section.key === "upcoming" || section.key === "past" ? "mt-10 sm:mt-12" : sectionIndex ? "mt-6" : ""}>
                   {section.key === "live" ? (
                     <motion.div
-                      className="-mx-4 rounded-2xl overflow-hidden bg-transparent px-4 pt-4 pb-8 sm:mx-0 sm:p-6"
+                      id="now-live"
+                      className="-mx-4 rounded-2xl overflow-hidden bg-transparent px-4 pt-4 pb-6 sm:mx-0 sm:p-6"
                       initial={{ opacity: 0, scale: 0.96, y: 18 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div className="mb-4 flex items-center justify-between pt-2 pb-3 border-b border-white/10">
                         <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">Now Live</h2>
-                        <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">{liveResidencyVisits.length + liveOnlyVisits.length}</div>
                       </div>
                       <div className="space-y-5 sm:space-y-5">
                         {[...liveResidencyVisits, ...liveOnlyVisits].map((visit) => (

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Download, Eye, HelpCircle, ShieldCheck } from "lucide-react";
+import { Bug } from "lucide-react";
 
 export default function VisitFormFooter() {
   return (
@@ -13,15 +14,15 @@ export default function VisitFormFooter() {
             className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
           >
             <HelpCircle className="h-4 w-4" />
-            Cancel
+            FAQ
           </button>
           <span className="text-slate-300 dark:text-slate-700">•</span>
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
           >
-            <Download className="h-4 w-4" />
-            Report Bug
+            <Bug className="h-4 w-4" />
+            Report Issue
           </button>
           <span className="text-slate-300 dark:text-slate-700">•</span>
           <button
@@ -48,9 +49,7 @@ export default function VisitFormFooter() {
           Terms
         </Link>
       </div>
-      <div className="text-center text-xs text-slate-400 dark:text-slate-500">
-        Visit ID: e55352fc-cf5d-49fa-a402-d232cc305ae0
-      </div>
+      <div className="text-center text-xs text-slate-400 dark:text-slate-500">Visit ID: e55352fc-cf5d-49fa-a402-d232cc305ae0</div>
     </div>
   );
 }

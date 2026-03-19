@@ -11,6 +11,8 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
   const [startClock, setStartClock] = useState("");
   const [endDate, setEndDate] = useState("");
   const [endClock, setEndClock] = useState("");
+  const [startClockFocused, setStartClockFocused] = useState(false);
+  const [endClockFocused, setEndClockFocused] = useState(false);
 
   const combineDateTime = (dateValue, timeValue, fallbackTime = "") => {
     if (!dateValue) return "";
@@ -43,7 +45,7 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none">
             <input type="hidden" name="visit_start_time" value={startDateTime} />
             <div className="grid w-full gap-4 grid-cols-3">
-              <div className="relative col-span-2 overflow-hidden">
+              <div className="relative col-span-2 overflow-visible">
                 {!startDate ? <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-slate-500">Select date</span> : null}
                 <Input
                   id="start-date"
@@ -66,8 +68,7 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
                   }}
                 />
               </div>
-              <div className="relative col-span-1 overflow-hidden">
-                {!startClock ? <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-slate-500">Select time</span> : null}
+              <div className="relative col-span-1 overflow-visible">
                 <Input
                   id="start-time"
                   name="visit_start_clock"
@@ -77,6 +78,8 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
                   } ${errors.visit_start_time ? "border-red-400 bg-rose-50/40 focus-visible:ring-red-300/40 dark:bg-rose-500/10 dark:border-red-400" : ""}`}
                   value={startClock}
                   aria-invalid={Boolean(errors.visit_start_time)}
+                  onFocus={() => setStartClockFocused(true)}
+                  onBlur={() => setStartClockFocused(false)}
                   onChange={(event) => {
                     const next = event.target.value;
                     setStartClock(next);
@@ -112,7 +115,7 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/70 dark:shadow-none">
             <input type="hidden" name="visit_end_time" value={endDateTime} />
             <div className="grid w-full gap-4 grid-cols-3">
-              <div className="relative col-span-2 overflow-hidden">
+              <div className="relative col-span-2 overflow-visible">
                 {!endDate ? <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-slate-500">Select date</span> : null}
                 <Input
                   id="end-date"
@@ -135,8 +138,7 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
                   }}
                 />
               </div>
-              <div className="relative col-span-1 overflow-hidden">
-                {!endClock ? <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-slate-500">Select time</span> : null}
+              <div className="relative col-span-1 overflow-visible">
                 <Input
                   id="end-time"
                   name="visit_end_clock"
@@ -146,6 +148,8 @@ export default function VisitScheduleField({ errors = {}, onFieldChange }) {
                   } ${errors.visit_end_time ? "border-red-400 bg-rose-50/40 focus-visible:ring-red-300/40 dark:bg-rose-500/10 dark:border-red-400" : ""}`}
                   value={endClock}
                   aria-invalid={Boolean(errors.visit_end_time)}
+                  onFocus={() => setEndClockFocused(true)}
+                  onBlur={() => setEndClockFocused(false)}
                   onChange={(event) => {
                     const next = event.target.value;
                     setEndClock(next);
