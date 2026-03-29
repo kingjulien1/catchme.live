@@ -215,7 +215,7 @@ export default function ArtistVisitsClient({ visitsCount, liveVisits, upcomingVi
         <motion.button type="button" onClick={() => openVisit(visit)} className="flex w-full cursor-pointer flex-row items-center gap-3 text-left transition-transform lg:hover:translate-x-2 sm:gap-6">
           <div className={cardClasses}>
             <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
-              <div className="flex w-[56px] shrink-0 flex-col items-center justify-center rounded-2xl bg-transparent px-0.5 py-2 text-center sm:w-[80px] sm:px-1.5 sm:py-3">
+              <div className="flex w-[56px] shrink-0 flex-col items-center justify-center rounded-2xl bg-transparent px-0 py-2 text-center sm:w-[80px] sm:px-0.5 sm:py-3">
                 <div className={`text-[24px] font-bold leading-none sm:text-[32px] ${dateClasses}`}>{dayLabel}</div>
                 {monthLabel ? <div className={`mt-1 text-[10px] font-medium uppercase tracking-[0.18em] ${monthClasses}`}>{monthLabel}</div> : null}
               </div>

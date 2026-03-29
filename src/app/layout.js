@@ -28,6 +28,8 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Danfo&display=swap" rel="stylesheet" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f9fafb" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
