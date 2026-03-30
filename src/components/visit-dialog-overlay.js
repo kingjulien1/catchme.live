@@ -11,7 +11,6 @@ import { cn, hashSeed, safeCapitalize } from "@/lib/utils";
 import { Eye, Flag, Instagram, Link2, MoreHorizontal, Navigation, Share2, ShieldCheck, Tag, UserRoundPlus } from "lucide-react";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { Drawer as DrawerPrimitive } from "vaul";
 
@@ -24,40 +23,20 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogPortal>
-          <AnimatePresence>
-            {open ? (
-              <>
-                <DialogOverlay asChild className="data-[state=open]:animate-none data-[state=closed]:animate-none">
-                  <motion.div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} />
-                </DialogOverlay>
-                <DialogPrimitive.Content asChild forceMount>
-                  <motion.div
-                    className="fixed left-1/2 top-1/2 z-50 w-[min(94vw,26rem)] -translate-x-1/2 -translate-y-1/2 sm:w-full sm:max-w-xl"
-                    initial={{ opacity: 0, y: 36, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 36, scale: 0.95 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
-                    <div className="p-0 m-0 overflow-hidden rounded-3xl ring-2 ring-purple-400/80 shadow-[0_20px_60px_rgba(168,85,247,0.45),0_0_120px_rgba(168,85,247,0.45)]">
-                      <div className="rounded-3xl ring-1 ring-purple-300/80">
-                        <DialogHeader className="sr-only">
-                          <VisuallyHidden>
-                            <DialogTitle>Visit Details</DialogTitle>
-                          </VisuallyHidden>
-                          <VisuallyHidden>
-                            <DialogDescription>Visit details dialog</DialogDescription>
-                          </VisuallyHidden>
-                        </DialogHeader>
-                        <div className="max-h-[85vh] w-[min(94vw,26rem)] no-scrollbar overflow-y-auto overflow-x-hidden rounded-3xl bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-[12px] text-slate-100 sm:w-full sm:max-w-xl sm:text-base [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                          <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </DialogPrimitive.Content>
-              </>
-            ) : null}
-          </AnimatePresence>
+          <DialogOverlay className="fixed inset-0 z-50 bg-transparent backdrop-blur-sm" />
+          <DialogPrimitive.Content className="fixed left-1/2 top-1/2 z-50 w-[min(92vw,32rem)] -translate-x-1/2 -translate-y-1/2">
+            <DialogHeader className="sr-only">
+              <VisuallyHidden>
+                <DialogTitle>Visit Details</DialogTitle>
+              </VisuallyHidden>
+              <VisuallyHidden>
+                <DialogDescription>Visit details dialog</DialogDescription>
+              </VisuallyHidden>
+            </DialogHeader>
+            <div className="relative flex max-h-[85vh] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950 text-slate-100 shadow-[0_30px_80px_rgba(0,0,0,0.45)] dark:border-slate-200/80 dark:bg-white dark:text-slate-900">
+              <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
+            </div>
+          </DialogPrimitive.Content>
         </DialogPortal>
       </Dialog>
     );
@@ -66,30 +45,18 @@ export default function VisitDialogOverlay({ visit, open, onOpenChange }) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerPortal>
-        <AnimatePresence>
-          {open ? (
-            <>
-              <DrawerOverlay asChild className="data-[state=open]:animate-none data-[state=closed]:animate-none">
-                <motion.div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.9, ease: "easeOut" }} />
-              </DrawerOverlay>
-              <DrawerPrimitive.Content asChild forceMount>
-                <motion.div
-                  className="w-full mx-auto !top-[12vh] !bottom-0 !mt-0 !max-h-none data-[vaul-drawer-direction=bottom]:!rounded-t-2xl border-x-2 border-t-2 border-purple-500/60 shadow-[0_24px_70px_rgba(168,85,247,0.5),0_0_140px_rgba(168,85,247,0.45)] bg-[radial-gradient(140%_120%_at_50%_-10%,rgba(145,95,255,0.35)_0%,rgba(59,29,94,0.22)_42%,rgba(24,12,48,0.6)_68%,rgba(15,8,30,0.95)_100%),linear-gradient(180deg,#3a1b62_0%,#2a1651_35%,#22103f_60%,#140a2a_100%)] text-slate-100 fixed z-50 flex h-auto flex-col data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0"
-                  initial={{ opacity: 0, y: 48, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 36, scale: 0.985 }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <DrawerHeader className="sr-only">
-                    <DrawerTitle>Visit Details</DrawerTitle>
-                    <DrawerDescription>Visit details drawer</DrawerDescription>
-                  </DrawerHeader>
-                  <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
-                </motion.div>
-              </DrawerPrimitive.Content>
-            </>
-          ) : null}
-        </AnimatePresence>
+        <DrawerOverlay className="fixed inset-0 z-50 bg-transparent backdrop-blur-sm" />
+        <DrawerPrimitive.Content className="fixed inset-x-0 bottom-0 z-50">
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Visit Details</DrawerTitle>
+            <DrawerDescription>Visit details drawer</DrawerDescription>
+          </DrawerHeader>
+          <div className="px-4 pb-6 pt-4">
+            <div className="relative flex max-h-[85vh] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950 text-slate-100 shadow-[0_30px_80px_rgba(0,0,0,0.45)] dark:border-slate-200/80 dark:bg-white dark:text-slate-900">
+              <VisitDetailsContent visit={visit} open={open} onOpenChange={onOpenChange} />
+            </div>
+          </div>
+        </DrawerPrimitive.Content>
       </DrawerPortal>
     </Drawer>
   );
@@ -203,9 +170,9 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
   return (
     <div className="flex-1 rounded-md overflow-y-auto px-4 pb-0 text-white/90 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="pt-4">
-        <div className="mt-3 flex flex-col items-center gap-4 text-center text-white">
-          <div className="mb-6 flex flex-col items-center justify-center gap-2">
-            <div className="flex items-center justify-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide px-2">
+          <div className="mt-3 flex flex-col items-center gap-4 text-center text-white">
+            <div className="mb-6 flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide px-2">
               <span
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-[0.18em]",
@@ -220,10 +187,10 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
                 <Tag className="h-3 w-3" />
                 {safeCapitalize(visit.visit_type ? visit.visit_type.replace(/_/g, " ") : "Visit")}
               </span>
+              </div>
             </div>
-          </div>
-          {!isResidency ? (
-            <>
+            {!isResidency ? (
+              <>
               {!isResidency && countdownTarget ? (
                 <div className="flex flex-col items-center gap-1.5">
                   <div className="text-[12px] font-semibold text-white/90">{countdownLabel}</div>
@@ -270,7 +237,7 @@ function VisitDetailsContent({ visit, open, onOpenChange }) {
               ) : null}
             </>
           ) : null}
-          <div className="mt-8 flex flex-col items-center gap-1.5 mb-6">
+          <div className="mt-4 flex flex-col items-center gap-1.5 mb-6">
             <div className="flex items-center gap-2">
               <HandleBadge
                 href={`/artists/${visit.destination_username || visit.destination_instagram_handle || ""}`}

@@ -84,10 +84,12 @@
 html {
   scrollbar-gutter: stable both-edges;
   overflow-y: scroll;
+  background-color: #f9fafb;
 }
 
 body {
   overflow-y: scroll;
+  background-color: #f9fafb;
 }
 
 body[data-scroll-locked] {
@@ -130,6 +132,11 @@ html[data-scroll-locked] {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+.dark html,
+.dark body {
+  background-color: #0f172a;
 }
 
 @layer base {
